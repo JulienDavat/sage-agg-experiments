@@ -11,9 +11,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import picocli.CommandLine;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,8 +28,7 @@ public class SageJenaVoid implements Runnable {
     @CommandLine.Option(names = "dataset", description = "Dataset URI")
     String dataset = null;
 
-    @CommandLine.Option(names = { "--format" }, description = "Results format (Result set: raw, XML, JSON, CSV, TSV; Graph: RDF serialization)")
-    public String format = "xml";
+    String format = "xml";
 
     @CommandLine.Option(names = { "--time" }, description = "Display the the query execution time at the end")
     public boolean time = true;
@@ -57,6 +56,24 @@ public class SageJenaVoid implements Runnable {
      * @param queries
      */
     private void executeVoidQueries(JSONArray queries) {
+        // create the result dir
+        URL voidUriURL = null;
+        try {
+            voidUriURL = new URL(voidUri);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        String path = voidUriURL.getHost() + voidUriURL.getPath().replace('/', '_');
+        File file = new File(System.getProperty("user.dir"), path);
+        System.out.println("Output dir: " + file.getAbsolutePath());
+        Boolean success = file.mkdirs();
+        if(success) {
+            System.out.println("Successfully created the output dir to: " + file.getAbsolutePath());
+        } else {
+            System.out.println("Output path already exists: " + file.getAbsolutePath());
+        }
+
         queries.forEach(bucket -> {
             JSONObject buc = (JSONObject) bucket;
             String group = (String) buc.get("group");
@@ -66,10 +83,23 @@ public class SageJenaVoid implements Runnable {
             for (Object q : arr) {
                 JSONObject queryJson = (JSONObject) q;
                 String query = (String) queryJson.get("query");
+                String label = (String) queryJson.get("label");
+                File queryFile = new File(file.getAbsolutePath(), label + "-result.xml");
+                FileOutputStream out = null;
+                try {
+                    out = new FileOutputStream(queryFile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+                System.out.println("[" + label + "] Execute query: " + query);
 
-                System.out.println("Execute query: " + query);
+                try {
+                    executeVoidQuery(query, new PrintStream(out));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                executeVoidQuery(query);
             }
         });
     }
@@ -79,51 +109,52 @@ public class SageJenaVoid implements Runnable {
      * This code is based on https://github.com/sage-org/sage-jena/blob/master/src/main/java/org/gdd/sage/cli/CLI.java
      * @param queryString
      */
-    private void executeVoidQuery(String queryString) {
-        try {
-            Dataset federation;
-            SageConfigurationFactory factory;
-            ExecutionStats spy = new ExecutionStats();
+    private void executeVoidQuery(String queryString, PrintStream out) {
+        Dataset federation;
+        SageConfigurationFactory factory;
+        ExecutionStats spy = new ExecutionStats();
 
-            Query parseQuery = QueryFactory.create(queryString);
-            factory = new SageAutoConfiguration(dataset, parseQuery, spy);
+        Query parseQuery = QueryFactory.create(queryString);
+        factory = new SageAutoConfiguration(dataset, parseQuery, spy);
 
-            // Init Sage dataset (maybe federated)
-            factory.configure();
-            factory.buildDataset();
-            parseQuery = factory.getQuery();
-            federation = factory.getDataset();
+        // Init Sage dataset (maybe federated)
+        factory.configure();
+        factory.buildDataset();
+        parseQuery = factory.getQuery();
+        federation = factory.getDataset();
 
-            // Evaluate SPARQL query
-            QueryExecutor executor;
+        PrintStream originalOut = System.out;
+        System.setOut(out);
 
-            if (parseQuery.isSelectType()) {
-                executor = new SelectQueryExecutor(format);
-            } else if (parseQuery.isAskType()) {
-                executor = new AskQueryExecutor(format);
-            } else if (parseQuery.isConstructType()) {
-                executor = new ConstructQueryExecutor(format);
-            } else {
-                executor = new DescribeQueryExecutor(format);
-            }
-            spy.startTimer();
-            executor.execute(federation, parseQuery);
-            spy.stopTimer();
 
-            // display execution time (if needed)
-            if (this.time) {
-                double duration = spy.getExecutionTime();
-                int nbQueries = spy.getNbCalls();
-                System.err.println(MessageFormat.format("SPARQL query executed in {0}s with {1} HTTP requests", duration, nbQueries));
-            }
+        // Evaluate SPARQL query
+        QueryExecutor executor;
 
-            // cleanup connections
-            federation.close();
-            factory.close();
-        } catch(Exception e ) {
-            e.printStackTrace();
-            System.exit(1);
+        if (parseQuery.isSelectType()) {
+            executor = new SelectQueryExecutor(format);
+        } else if (parseQuery.isAskType()) {
+            executor = new AskQueryExecutor(format);
+        } else if (parseQuery.isConstructType()) {
+            executor = new ConstructQueryExecutor(format);
+        } else {
+            executor = new DescribeQueryExecutor(format);
         }
+        spy.startTimer();
+        executor.execute(federation, parseQuery);
+        spy.stopTimer();
+
+        // System.setOut(originalOut);
+        // display execution time (if needed)
+        if (this.time) {
+            double duration = spy.getExecutionTime();
+            int nbQueries = spy.getNbCalls();
+            System.err.println(MessageFormat.format("SPARQL query executed in {0}s with {1} HTTP requests", duration, nbQueries));
+        }
+
+        // cleanup connections
+        federation.close();
+        factory.close();
+        System.setOut(originalOut);
     }
 
     /**
