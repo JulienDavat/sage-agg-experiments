@@ -1,6 +1,8 @@
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.gdd.sage.cli.*;
 import org.gdd.sage.core.factory.SageAutoConfiguration;
 import org.gdd.sage.core.factory.SageConfigurationFactory;
@@ -21,17 +23,18 @@ import java.util.regex.Pattern;
 @CommandLine.Command(name = "ssv", footer = "Copyright(c) 2017",
         description = "Generate a VoID summary over a Sage dataset")
 public class SageJenaVoid implements Runnable {
+    @CommandLine.Option(names = {"--time"}, description = "Display the the query execution time at the end")
+    public boolean time = true;
     @CommandLine.Option(names = "voidUri", description = "New URI for the new VoID graph")
     String voidUri = null;
-
-
     @CommandLine.Option(names = "dataset", description = "Dataset URI")
     String dataset = null;
-
     String format = "xml";
 
-    @CommandLine.Option(names = { "--time" }, description = "Display the the query execution time at the end")
-    public boolean time = true;
+    @CommandLine.Option(names = "process", description = "Result folder, if set this wont execute SPARQL VoID queries but will only process result.xml files to provide a void.ttl file")
+    String folder = null;
+
+
 
     public static void main(String... args) {
         new CommandLine(new SageJenaVoid()).execute(args);
@@ -39,20 +42,27 @@ public class SageJenaVoid implements Runnable {
 
     @Override
     public void run() {
-        if (dataset == null || voidUri == null) {
-            CommandLine.usage(this, System.out);
+        if (folder != null) {
+            mergeResultFile(folder);
         } else {
-            System.out.println("New VoID graph URI: " + voidUri);
-            System.out.println("Executing the void on: " + dataset);
-            // load the void queries
-            JSONArray queries = loadVoidQueries(dataset);
-            // Now execute queries by group
-            executeVoidQueries(queries);
+            if (dataset == null || voidUri == null) {
+                CommandLine.usage(this, System.out);
+            } else {
+                System.out.println("New VoID graph URI: " + voidUri);
+                System.out.println("Executing the void on: " + dataset);
+
+                // load the void queries
+                JSONArray queries = loadVoidQueries(dataset);
+                // Now execute queries by group
+                executeVoidQueries(queries);
+            }
         }
+
     }
 
     /**
      * Execute each VoID query
+     *
      * @param queries
      */
     private void executeVoidQueries(JSONArray queries) {
@@ -68,7 +78,7 @@ public class SageJenaVoid implements Runnable {
         File file = new File(System.getProperty("user.dir"), path);
         System.out.println("Output dir: " + file.getAbsolutePath());
         Boolean success = file.mkdirs();
-        if(success) {
+        if (success) {
             System.out.println("Successfully created the output dir to: " + file.getAbsolutePath());
         } else {
             System.out.println("Output path already exists: " + file.getAbsolutePath());
@@ -81,9 +91,11 @@ public class SageJenaVoid implements Runnable {
             JSONArray arr = (JSONArray) buc.get("queries");
             System.out.println("Group: " + group + " Description: " + description);
             for (Object q : arr) {
+
                 JSONObject queryJson = (JSONObject) q;
                 String query = (String) queryJson.get("query");
                 String label = (String) queryJson.get("label");
+
                 File queryFile = new File(file.getAbsolutePath(), label + "-result.xml");
                 FileOutputStream out = null;
                 try {
@@ -92,24 +104,68 @@ public class SageJenaVoid implements Runnable {
                     e.printStackTrace();
                     System.exit(1);
                 }
+
                 System.out.println("[" + label + "] Execute query: " + query);
 
                 try {
-                    executeVoidQuery(query, new PrintStream(out));
+                    String type = executeVoidQuery(query, new PrintStream(out));
+                    queryJson.put("type", type);
+                    queryJson.put("response", true);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    queryJson.put("response", false);
                 }
-
             }
         });
+
+        // write the json modified into the
+        File jsonOutput = new File(file.getAbsolutePath(), "queries.json");
+        try {
+            queries.writeJSONString(new FileWriter(jsonOutput));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Read all result files then output the summury into a void.ttl file in the generated output folder
+     * The generated folder will contain all results as well as the json file used to generate results.
+     */
+    private void mergeResultFile(String folder) {
+        File dir = new File(folder);
+        File output = new File(dir.getAbsolutePath(), "void.ttl");
+        File[] listOfFiles = dir.listFiles();
+        System.out.println(dir.getAbsolutePath());
+
+        Model m = ModelFactory.createDefaultModel();
+        for (File file : listOfFiles) {
+            if(file.getAbsolutePath().contains(".xml") && !file.getAbsolutePath().contains("QA")) {
+                System.out.println("Processing: " + file.getAbsolutePath());
+                Model tmp = ModelFactory.createDefaultModel();
+                try {
+                    tmp.read(new FileInputStream(file.getAbsoluteFile()), null, "RDFXML");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                m.add(tmp);
+            }
+        }
+
+        try {
+            m.write(new FileOutputStream(output), "TURTLE");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Execute a SELECT VoID query over the sepecified dataset using Sage-Jena engine
      * This code is based on https://github.com/sage-org/sage-jena/blob/master/src/main/java/org/gdd/sage/cli/CLI.java
+     *
      * @param queryString
      */
-    private void executeVoidQuery(String queryString, PrintStream out) {
+    private String executeVoidQuery(String queryString, PrintStream out) {
+        String type;
         Dataset federation;
         SageConfigurationFactory factory;
         ExecutionStats spy = new ExecutionStats();
@@ -132,19 +188,21 @@ public class SageJenaVoid implements Runnable {
 
         if (parseQuery.isSelectType()) {
             executor = new SelectQueryExecutor(format);
+            type = "select";
         } else if (parseQuery.isAskType()) {
             executor = new AskQueryExecutor(format);
+            type = "ask";
         } else if (parseQuery.isConstructType()) {
             executor = new ConstructQueryExecutor(format);
+            type = "construct";
         } else {
             executor = new DescribeQueryExecutor(format);
+            type = "describe";
         }
         spy.startTimer();
         executor.execute(federation, parseQuery);
         spy.stopTimer();
 
-        // System.setOut(originalOut);
-        // display execution time (if needed)
         if (this.time) {
             double duration = spy.getExecutionTime();
             int nbQueries = spy.getNbCalls();
@@ -155,6 +213,7 @@ public class SageJenaVoid implements Runnable {
         federation.close();
         factory.close();
         System.setOut(originalOut);
+        return type;
     }
 
     /**
@@ -190,6 +249,7 @@ public class SageJenaVoid implements Runnable {
 
     /**
      * Load a JSON file as a string, the file must begins by an Object (JSONObject)
+     *
      * @param file
      * @return
      */
@@ -219,6 +279,7 @@ public class SageJenaVoid implements Runnable {
 
     /**
      * Determine if the string is an url
+     *
      * @param s
      * @return
      */
