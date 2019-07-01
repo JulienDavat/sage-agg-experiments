@@ -1,0 +1,36 @@
+{
+  "datasetUri": "datasetUri",
+  "void": [
+    {
+      "group": "B",
+      "description": "Queries for dataset-level VoID statistics",
+      "queries": [
+        {
+          "description": "Count the total number of triples",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT {  <datasetUri> void:triples ?count } WHERE { SELECT (COUNT(*) AS ?count)  WHERE { ?s ?p ?o } } ",
+          "label": "QB1"
+        },
+        {
+          "description": "Count the total number of distinct classes",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:classes ?count} WHERE { SELECT (COUNT(DISTINCT ?o) AS ?count) WHERE { ?s a ?o } } ",
+          "label": "QB2"
+        },
+        {
+          "description": "Count the total number of distinct properties",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:properties ?count} WHERE { SELECT (COUNT(DISTINCT ?p) AS ?count)  WHERE { ?s ?p ?o } } ",
+          "label": "QB3"
+        },
+        {
+          "description": "Count the total number of distinct subjects",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:distinctSubjects ?count } WHERE { SELECT (COUNT(DISTINCT ?s ) AS ?count)  WHERE {  ?s ?p ?o   } } ",
+          "label": "QB4"
+        },
+        {
+          "description": "Count the total number of distinct objects",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:distinctObjects ?count } WHERE { SELECT (COUNT(DISTINCT ?o ) AS ?count)  WHERE {  ?s ?p ?o   } } ",
+          "label": "QB5"
+        }
+      ]
+    }
+  ]
+}

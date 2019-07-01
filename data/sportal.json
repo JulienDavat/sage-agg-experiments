@@ -54,7 +54,7 @@
             "queries": [
                 {
                     "description": "List of classes in dataset (SPARQL 1.0)",
-                    "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri>  void:classPartition [ void:class ?c ] } WHERE { ?s a ?c }",
+                    "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri>  void:classPartition [ void:class ?c ] } WHERE { SELECT DISTINCT ?c WHERE { ?s a ?c } }",
                     "label": "QC1"
                 },
                 {
@@ -90,7 +90,7 @@
             "queries": [
                 {
                     "description": "List of properties in dataset (SPARQL 1.0)",
-                    "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:propertyPartition [ void:property ?p ] } WHERE { ?s ?p ?o }",
+                    "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:propertyPartition [ void:property ?p ] } WHERE { SELECT DISTINCT ?p WHERE { ?s ?p ?o } }",
                     "label": "QD1"
                 },
                 {
@@ -116,7 +116,7 @@
             "queries": [
                 {
                     "description": "List of properties within class in dataset (SPARQL 1.0)",
-                    "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:classPartition [  void:class ?c ; void:propertyPartition [ void:property ?p  ] ] } WHERE { ?s a ?c ; ?p ?o .}",
+                    "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:classPartition [  void:class ?c ; void:propertyPartition [ void:property ?p  ] ] } WHERE { SELECT DISTINCT ?p WHERE { ?s a ?c ; ?p ?o .} }",
                     "label": "QE1"
                 },
                 {
