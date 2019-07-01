@@ -14,7 +14,7 @@ public class SelectQueryExecutor extends org.gdd.sage.cli.SelectQueryExecutor im
 
     public void execute(String format, Dataset dataset, Query query, PrintStream out) {
         if (query.isSelectType()) {
-            try(QueryExecution qexec = QueryExecutionFactory.create(query, dataset) ){
+            try (QueryExecution qexec = QueryExecutionFactory.create(query, dataset)) {
                 ResultSet results = qexec.execSelect();
                 switch (format) {
                     case "raw":

@@ -1,9 +1,9 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-
 import org.gdd.sage.core.factory.SageAutoConfiguration;
 import org.gdd.sage.core.factory.SageConfigurationFactory;
 import org.gdd.sage.http.ExecutionStats;
@@ -14,6 +14,8 @@ import org.json.simple.parser.ParseException;
 import picocli.CommandLine;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +28,20 @@ import java.util.regex.Pattern;
 public class SageJenaVoid implements Runnable {
     @CommandLine.Option(names = {"--time"}, description = "Display the the query execution time at the end")
     public boolean time = true;
-    @CommandLine.Option(names = "dataset", description = "Dataset URI")
+    @CommandLine.Option(names = "dataset", description = "Dataset URI <...>/sparql/<...>")
     String dataset = null;
+
+    @CommandLine.Option(names = "voidUri", description = "Name of the new void dataset generated (replace the <datasetUri> )")
+    String voidUri = null;
+
+    String outputLocation = "./output/";
 
     String format = "xml";
 
     @CommandLine.Option(names = "process", description = "Result folder, if set this wont execute SPARQL VoID queries but will only process result.xml files to provide a void.ttl file")
     String folder = null;
 
-    private String voidUri = null;
-    private String voidPath = null;
+    private URL voidUrl = null;
 
     public static void main(String... args) {
         new CommandLine(new SageJenaVoid()).execute(args);
@@ -44,13 +50,23 @@ public class SageJenaVoid implements Runnable {
     @Override
     public void run() {
         if (folder != null) {
-            mergeResultFile(folder);
+            mergeResultFile(folder, null);
         } else {
             if (dataset == null) {
                 CommandLine.usage(this, System.out);
             } else {
                 System.out.println("Executing the void on: " + dataset);
-                this.voidUri = dataset; //dataset.replace('/', '_').replace(':', '_');
+
+                if (voidUri == null)
+                    this.voidUri = dataset;
+
+                try {
+                    this.voidUrl = new URL(voidUri);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+
                 // load the void queries
                 JSONArray queries = loadVoidQueries(dataset);
                 // Now execute queries by group
@@ -67,7 +83,7 @@ public class SageJenaVoid implements Runnable {
      */
     private void executeVoidQueries(JSONArray queries) {
         // create the result dir
-        File file = new File(System.getProperty("user.dir"), this.voidUri);
+        File file = new File(System.getProperty("user.dir"), outputLocation + dataset.replace('/', '-').replace(':', '-'));
         System.out.println("Output dir: " + file.getAbsolutePath());
         Boolean success = file.mkdirs();
         if (success) {
@@ -105,10 +121,10 @@ public class SageJenaVoid implements Runnable {
 
                             JSONObject result = new JSONObject();
                             result.put("query", queryJson);
-                            try{
+                            try {
                                 executeVoidQuery(query, new PrintStream(out));
                                 result.put("response", true);
-                            } catch(Exception e) {
+                            } catch (Exception e) {
                                 result.put("response", false);
                                 result.put("error", e);
                             }
@@ -121,47 +137,51 @@ public class SageJenaVoid implements Runnable {
             }
         });
 
-        JSONArray resultOfVoid = new JSONArray();
         try {
             List<Future<JSONObject>> futures = executorService.invokeAll(callables);
-            int i = 0;
             for (Future<JSONObject> future : futures) {
-                JSONObject result = future.get();
-                resultOfVoid.add(result);
+                future.get();
             }
+            executorService.shutdown();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
-        // write the json modified into the
-        File jsonOutput = new File(file.getAbsolutePath(), "result.json");
-        try {
-            resultOfVoid.writeJSONString(new FileWriter(jsonOutput));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        executorService.shutdown();
     }
 
     /**
      * Read all result files then output the summury into a void.ttl file in the generated output folder
      * The generated folder will contain all results as well as the json file used to generate results.
      */
-    private void mergeResultFile(String folder) {
+    public void mergeResultFile(String folder, Model m) {
         File dir = new File(folder);
+        Model model = mergeResultFileModel(folder, m);
         File output = new File(dir.getAbsolutePath(), "void.ttl");
+        try {
+            model.write(new FileOutputStream(output), "TURTLE");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Read all result files then output the summury into a void.ttl file in the generated output folder
+     * The generated folder will contain all results as well as the json file used to generate results.
+     */
+    public Model mergeResultFileModel(String folder, Model m) {
+        File dir = new File(folder);
         File[] listOfFiles = dir.listFiles();
 
-        Model m = ModelFactory.createDefaultModel();
+        if (m == null) {
+            ModelFactory.createDefaultModel();
+        }
         for (File file : listOfFiles) {
-            if(file.getAbsolutePath().contains(".xml") && !file.getAbsolutePath().contains("QA")) {
+            if (file.getAbsolutePath().contains(".xml") && !file.getAbsolutePath().contains("QA")) {
                 System.out.println("Processing: " + file.getAbsolutePath());
                 Model tmp = ModelFactory.createDefaultModel();
                 try {
-                    tmp.read(new FileInputStream(file.getAbsoluteFile()), voidUri, "RDFXML");
+                    tmp.read(new FileInputStream(file.getAbsoluteFile()), this.voidUrl.toString(), "RDFXML");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -169,11 +189,7 @@ public class SageJenaVoid implements Runnable {
             }
         }
 
-        try {
-            m.write(new FileOutputStream(output), "TURTLE");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        return m;
     }
 
     /**
@@ -244,8 +260,8 @@ public class SageJenaVoid implements Runnable {
             for (Object q : queries) {
                 JSONObject queryJson = (JSONObject) q;
                 String query = (String) queryJson.get("query");
-                // System.out.println("Replacing " + uri + " by " + voidUri);
-                query = query.replaceAll(uri, voidUri);
+                // System.out.println("Replacing " + uri + " by " + this.voidUrl.toString());
+                query = query.replaceAll(uri, this.voidUrl.toString());
                 queryJson.put("query", query);
             }
         });
