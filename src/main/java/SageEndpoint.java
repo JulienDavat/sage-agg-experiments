@@ -8,6 +8,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import picocli.CommandLine;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,18 +18,38 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 
-public class GetSageUnivNantesVoid {
-    private static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+@CommandLine.Command(name = "endpoint", footer = "Copyright(c) 2019",
+        description = "Generate a VoID summary over a Sage Endpoint")
+public class SageEndpoint implements Runnable{
+    @CommandLine.Parameters(arity = "1", description= "Sage VoID address <http(s)://domain/void>")
+    public URL sageUrl = new URL("https://sage.univ-nantes.fr/void/");
+
+    @CommandLine.Option(names="output", description = "Output directory of the generated VoID description")
+    String outputLocation = "./output/";
+
+    public static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     HttpRequestFactory requestFactory
             = HTTP_TRANSPORT.createRequestFactory();
-    String prefixes = "PREFIX void: <http://rdfs.org/ns/void#> " +
+    public String prefixes = "PREFIX void: <http://rdfs.org/ns/void#> " +
             "PREFIX sage: <http://sage.univ-nantes.fr/sage-voc#> " +
             "PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>";
-    String sageQuery = prefixes + " SELECT DISTINCT ?graph ?sparql WHERE { ?graph a sage:SageDataset . ?graph sd:endpoint ?sparql FILTER (?graph = <http://sage.univ-nantes.fr/sparql/eventskg-r2>) } ";
-    Model voidModel = ModelFactory.createDefaultModel();
-    private URL sageUrl = new URL("https://sage.univ-nantes.fr/void/");
+    public String sageQuery = prefixes + " SELECT DISTINCT ?graph ?sparql WHERE { ?graph a sage:SageDataset . ?graph sd:endpoint ?sparql FILTER (?graph = <http://sage.univ-nantes.fr/sparql/eventskg-r2>) } ";
+    public Model voidModel = ModelFactory.createDefaultModel();
 
-    public GetSageUnivNantesVoid() throws MalformedURLException {
+
+
+    public SageEndpoint() throws MalformedURLException { }
+
+    static public void main(String[] args) {
+        try {
+            new CommandLine(new SageEndpoint()).execute(args);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void run() {
         System.err.println("Get sage void description of <" + sageUrl.toString() + ">...");
         HttpResponse response = null;
 
@@ -58,7 +79,7 @@ public class GetSageUnivNantesVoid {
         try (QueryExecution qexec = QueryExecutionFactory.create(query, voidModel)) {
             ResultSet results = qexec.execSelect();
 
-            SageJenaVoid dataset = new SageJenaVoid();
+            SageDataset dataset = new SageDataset();
             for (; results.hasNext(); ) {
                 QuerySolution solution = results.next();
 
@@ -67,7 +88,7 @@ public class GetSageUnivNantesVoid {
                 System.err.println("Querying: " + sageUri + " with <datasetUri> = " + graphUri);
 
                 dataset.voidUri = graphUri;
-                dataset.dataset = sageUri;
+                dataset.datasetUri = sageUri;
 
                 dataset.run();
 
@@ -75,7 +96,7 @@ public class GetSageUnivNantesVoid {
             }
 
 
-            Files.walk(new File("./output").toPath())
+            Files.walk(new File(outputLocation).toPath())
                     .parallel()
                     .filter(Files::isDirectory).forEach(dir -> {
                 System.err.println("Reading content of: " + dir);
@@ -83,15 +104,6 @@ public class GetSageUnivNantesVoid {
             });
             RDFDataMgr.write(new FileOutputStream("./output/void.ttl"), voidModel, Lang.TURTLE);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    static public void main(String[] args) {
-        try {
-            GetSageUnivNantesVoid sageVoid = new GetSageUnivNantesVoid();
-        } catch (MalformedURLException e) {
             e.printStackTrace();
             System.exit(1);
         }

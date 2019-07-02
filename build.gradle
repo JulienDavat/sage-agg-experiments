@@ -1,11 +1,35 @@
-plugins {
-    id 'java'
-}
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
 
-group 'sage-sparql-void'
-version '1.0-SNAPSHOT'
+group = 'ssv'
+version = '1.0'
+
+description = """A Sage approach approach to generate VoID indexes"""
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+mainClassName = "Cli"
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'ssv',
+                'Implementation-Version': version,
+                'Main-Class': mainClassName
+    }
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'ssv',
+                'Implementation-Version': version,
+                'Main-Class': mainClassName
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
 
 repositories {
     mavenCentral()

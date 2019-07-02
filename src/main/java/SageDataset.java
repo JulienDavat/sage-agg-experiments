@@ -1,4 +1,3 @@
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -23,28 +22,29 @@ import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@CommandLine.Command(name = "ssv", footer = "Copyright(c) 2017",
+@CommandLine.Command(name = "dataset", footer = "Copyright(c) 2019",
         description = "Generate a VoID summary over a Sage dataset")
-public class SageJenaVoid implements Runnable {
-    @CommandLine.Option(names = {"--time"}, description = "Display the the query execution time at the end")
-    public boolean time = true;
-    @CommandLine.Option(names = "dataset", description = "Dataset URI <...>/sparql/<...>")
-    String dataset = null;
+public class SageDataset implements Runnable {
+    @CommandLine.Parameters(arity = "1", description = "Dataset URI <...>/sparql/<...>")
+    String datasetUri = null;
 
-    @CommandLine.Option(names = "voidUri", description = "Name of the new void dataset generated (replace the <datasetUri> )")
+    @CommandLine.Parameters(description = "Name of the new void dataset generated (replace the <datasetUri> )")
     String voidUri = null;
 
+    @CommandLine.Parameters(arity = "1", description = "Output directory of the generated VoID description")
     String outputLocation = "./output/";
 
-    String format = "xml";
+    @CommandLine.Option(names = {"--time"}, description = "Display the the query execution time at the end")
+    public boolean time = true;
 
     @CommandLine.Option(names = "process", description = "Result folder, if set this wont execute SPARQL VoID queries but will only process result.xml files to provide a void.ttl file")
     String folder = null;
 
+    private String format = "xml";
     private URL voidUrl = null;
 
     public static void main(String... args) {
-        new CommandLine(new SageJenaVoid()).execute(args);
+        new CommandLine(new SageDataset()).execute(args);
     }
 
     @Override
@@ -52,13 +52,13 @@ public class SageJenaVoid implements Runnable {
         if (folder != null) {
             mergeResultFile(folder, null);
         } else {
-            if (dataset == null) {
+            if (datasetUri == null) {
                 CommandLine.usage(this, System.out);
             } else {
-                System.out.println("Executing the void on: " + dataset);
+                System.out.println("Executing the void on: " + datasetUri);
 
                 if (voidUri == null)
-                    this.voidUri = dataset;
+                    this.voidUri = datasetUri;
 
                 try {
                     this.voidUrl = new URL(voidUri);
@@ -68,7 +68,7 @@ public class SageJenaVoid implements Runnable {
                 }
 
                 // load the void queries
-                JSONArray queries = loadVoidQueries(dataset);
+                JSONArray queries = loadVoidQueries(datasetUri);
                 // Now execute queries by group
                 executeVoidQueries(queries);
             }
@@ -83,7 +83,7 @@ public class SageJenaVoid implements Runnable {
      */
     private void executeVoidQueries(JSONArray queries) {
         // create the result dir
-        File file = new File(System.getProperty("user.dir"), outputLocation + dataset.replace('/', '-').replace(':', '-'));
+        File file = new File(System.getProperty("user.dir"), outputLocation + datasetUri.replace('/', '-').replace(':', '-'));
         System.out.println("Output dir: " + file.getAbsolutePath());
         Boolean success = file.mkdirs();
         if (success) {
@@ -178,7 +178,7 @@ public class SageJenaVoid implements Runnable {
         }
         for (File file : listOfFiles) {
             if (file.getAbsolutePath().contains(".xml") && !file.getAbsolutePath().contains("QA")) {
-                System.out.println("Processing: " + file.getAbsolutePath());
+                System.err.println("Processing: " + file.getAbsolutePath());
                 Model tmp = ModelFactory.createDefaultModel();
                 try {
                     tmp.read(new FileInputStream(file.getAbsoluteFile()), this.voidUrl.toString(), "RDFXML");
@@ -205,7 +205,7 @@ public class SageJenaVoid implements Runnable {
         ExecutionStats spy = new ExecutionStats();
 
         Query parseQuery = QueryFactory.create(queryString);
-        factory = new SageAutoConfiguration(dataset, parseQuery, spy);
+        factory = new SageAutoConfiguration(datasetUri, parseQuery, spy);
 
         // Init Sage dataset (maybe federated)
         factory.configure();
