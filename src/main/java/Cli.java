@@ -1,7 +1,7 @@
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "sage-sparql-void",
-        footer = "Copyright(c) 2019",
+        footer = "Copyright(c) 2019 GRALL Arnaud",
         synopsisSubcommandLabel = "COMMAND",
         description = "Generation of VoID description for Sage Endpoint(s)/Dataset(s)",
         subcommands = {SageDataset.class, SageEndpoint.class},

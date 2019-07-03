@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'application'
 
-group = 'ssv'
+group = 'sage-sparql-void'
 version = '1.0'
 
 description = """A Sage approach approach to generate VoID indexes"""
@@ -14,7 +14,7 @@ mainClassName = "Cli"
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'ssv',
+        attributes 'Implementation-Title': 'sage-sparql-void',
                 'Implementation-Version': version,
                 'Main-Class': mainClassName
     }
@@ -22,11 +22,11 @@ jar {
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Implementation-Title': 'ssv',
+        attributes 'Implementation-Title': 'sage-sparql-void',
                 'Implementation-Version': version,
                 'Main-Class': mainClassName
     }
-    baseName = project.name + '-all'
+    baseName = project.name + '-fat'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
@@ -42,7 +42,8 @@ dependencies {
     compile group: 'info.picocli', name: 'picocli', version: '4.0.0-beta-2'
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-    implementation 'com.github.sage-org:sage-jena:master'
+    // ALWAYS PUT COMPILE FOR A JITPACK PACKAGE
+    compile 'com.github.sage-org:sage-jena:master'
     // https://mvnrepository.com/artifact/org.apache.jena/jena-arq
     compile group: 'org.apache.jena', name: 'jena-arq', version: '3.12.0'
     compile group: 'org.apache.jena', name: 'apache-jena-libs', version:'3.7.0'
@@ -50,5 +51,4 @@ dependencies {
     compile group: 'com.google.http-client', name: 'google-http-client', version: '1.30.1'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.9'
-
 }

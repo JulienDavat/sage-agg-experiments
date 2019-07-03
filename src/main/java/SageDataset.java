@@ -22,7 +22,7 @@ import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@CommandLine.Command(name = "dataset", footer = "Copyright(c) 2019",
+@CommandLine.Command(name = "dataset", footer = "Copyright(c) 2019 GRALL Arnaud",
         description = "Generate a VoID summary over a Sage dataset")
 public class SageDataset implements Runnable {
     @CommandLine.Parameters(arity = "1", description = "Dataset URI <...>/sparql/<...>")
@@ -55,7 +55,7 @@ public class SageDataset implements Runnable {
             if (datasetUri == null) {
                 CommandLine.usage(this, System.out);
             } else {
-                System.out.println("Executing the void on: " + datasetUri);
+                System.err.println("Executing the void on: " + datasetUri);
 
                 if (voidUri == null)
                     this.voidUri = datasetUri;
@@ -84,12 +84,12 @@ public class SageDataset implements Runnable {
     private void executeVoidQueries(JSONArray queries) {
         // create the result dir
         File file = new File(System.getProperty("user.dir"), outputLocation + datasetUri.replace('/', '-').replace(':', '-'));
-        System.out.println("Output dir: " + file.getAbsolutePath());
+        System.err.println("Output dir: " + file.getAbsolutePath());
         Boolean success = file.mkdirs();
         if (success) {
-            System.out.println("Successfully created the output dir to: " + file.getAbsolutePath());
+            System.err.println("Successfully created the output dir to: " + file.getAbsolutePath());
         } else {
-            System.out.println("Output path already exists: " + file.getAbsolutePath());
+            System.err.println("Output path already exists: " + file.getAbsolutePath());
         }
 
         ExecutorService executorService = Executors.newFixedThreadPool(50);
@@ -99,21 +99,24 @@ public class SageDataset implements Runnable {
             String group = (String) buc.get("group");
             String description = (String) buc.get("description");
             JSONArray arr = (JSONArray) buc.get("queries");
-            System.out.println("Group: " + group + " Description: " + description);
+            System.err.println("Group: " + group + " Description: " + description);
 
             for (Object q : arr) {
                 JSONObject queryJson = (JSONObject) q;
                 String query = (String) queryJson.get("query");
                 String label = (String) queryJson.get("label");
-                System.out.println("[" + label + "] Execute query: " + query);
+                System.err.println("[" + label + "] Execute query: " + query);
                 try {
                     callables.add(new Callable<JSONObject>() {
                         @Override
                         public JSONObject call() throws Exception {
                             File queryFile = new File(file.getAbsolutePath(), label + "-result.xml");
+                            File querySpy = new File(file.getAbsolutePath(), label + "-spy-result.txt");
                             FileOutputStream out = null;
+                            FileOutputStream outSpy = null;
                             try {
                                 out = new FileOutputStream(queryFile);
+                                outSpy = new FileOutputStream(querySpy);
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                                 System.exit(1);
@@ -122,7 +125,7 @@ public class SageDataset implements Runnable {
                             JSONObject result = new JSONObject();
                             result.put("query", queryJson);
                             try {
-                                executeVoidQuery(query, new PrintStream(out));
+                                executeVoidQuery(label, query, new PrintStream(out), new PrintStream(outSpy));
                                 result.put("response", true);
                             } catch (Exception e) {
                                 result.put("response", false);
@@ -198,7 +201,7 @@ public class SageDataset implements Runnable {
      *
      * @param queryString
      */
-    private String executeVoidQuery(String queryString, PrintStream out) {
+    private String executeVoidQuery(String label, String queryString, PrintStream out, PrintStream spyOut) {
         String type;
         Dataset federation;
         SageConfigurationFactory factory;
@@ -233,7 +236,8 @@ public class SageDataset implements Runnable {
         if (this.time) {
             double duration = spy.getExecutionTime();
             int nbQueries = spy.getNbCalls();
-            System.err.println(MessageFormat.format("SPARQL query executed in {0}s with {1} HTTP requests", duration, nbQueries));
+            System.err.println(MessageFormat.format("[" + label + "] SPARQL query executed in {0}s with {1} HTTP requests", duration, nbQueries));
+            spyOut.println(duration + " " + nbQueries);
         }
 
         // cleanup connections
@@ -260,7 +264,7 @@ public class SageDataset implements Runnable {
             for (Object q : queries) {
                 JSONObject queryJson = (JSONObject) q;
                 String query = (String) queryJson.get("query");
-                // System.out.println("Replacing " + uri + " by " + this.voidUrl.toString());
+                // System.err.println("Replacing " + uri + " by " + this.voidUrl.toString());
                 query = query.replaceAll(uri, this.voidUrl.toString());
                 queryJson.put("query", query);
             }
