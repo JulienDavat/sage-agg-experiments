@@ -33,6 +33,7 @@ task fatJar(type: Jar) {
 
 repositories {
     mavenCentral()
+    jcenter()
     maven { url "https://jitpack.io" }
 }
 
@@ -42,8 +43,7 @@ dependencies {
     compile group: 'info.picocli', name: 'picocli', version: '4.0.0-beta-2'
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-    // ALWAYS PUT COMPILE FOR A JITPACK PACKAGE
-    compile 'com.github.sage-org:sage-jena:master'
+    compile group: 'com.google.http-client', name: 'google-http-client-jackson2', version: '1.23.0'
     // https://mvnrepository.com/artifact/org.apache.jena/jena-arq
     compile group: 'org.apache.jena', name: 'jena-arq', version: '3.12.0'
     compile group: 'org.apache.jena', name: 'apache-jena-libs', version:'3.7.0'
@@ -51,4 +51,6 @@ dependencies {
     compile group: 'com.google.http-client', name: 'google-http-client', version: '1.30.1'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.9'
+    // ALWAYS PUT COMPILE FOR A JITPACK PACKAGE
+    compile 'com.github.folkvir:sage-jena:master-SNAPSHOT'
 }

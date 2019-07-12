@@ -4,20 +4,21 @@ import picocli.CommandLine;
         footer = "Copyright(c) 2019 GRALL Arnaud",
         synopsisSubcommandLabel = "COMMAND",
         description = "Generation of VoID description for Sage Endpoint(s)/Dataset(s)",
-        subcommands = {SageDataset.class, SageEndpoint.class},
+        subcommands = {SportalSparqlEndpoint.class, SparqlEndpoint.class, SageJena.class, SageDataset.class, SageEndpoint.class},
         mixinStandardHelpOptions = true)
 public class Cli implements Runnable {
+    @CommandLine.Spec
+    CommandLine.Model.CommandSpec spec;
+
     public static void main(String... args) {
         try {
             new CommandLine(new Cli()).execute(args);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
-    @CommandLine.Spec
-    CommandLine.Model.CommandSpec spec;
     @Override
     public void run() {
         throw new CommandLine.ParameterException(spec.commandLine(), "Missing required subcommand");

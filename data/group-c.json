@@ -1,0 +1,41 @@
+{
+  "datasetUri": "datasetUri",
+  "void": [
+    {
+      "group": "C",
+      "description": "Queries for statistics about classes",
+      "queries": [
+        {
+          "description": "List of classes in dataset (SPARQL 1.0)",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri>  void:classPartition [ void:class ?c ] } WHERE { SELECT DISTINCT ?c WHERE { ?s a ?c } }",
+          "label": "QC1"
+        },
+        {
+          "description": "Number of triples per class partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:classPartition [ void:class ?c ; void:triples ?count ] } WHERE { SELECT (COUNT(?p) AS ?count) ?c WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c } ",
+          "label": "QC2"
+        },
+        {
+          "description": "Number of classes per class partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:classPartition [ void:class ?c ; void:classes ?count ] } WHERE { SELECT (COUNT(DISTINCT ?c2) AS ?count) ?c  WHERE { ?s a ?c ; a ?c2 . } GROUP BY ?c }",
+          "label": "QC3"
+        },
+        {
+          "description": "Number of properties per class partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT {  <datasetUri> void:classPartition [ void:class ?c ; void:properties ?count ] } WHERE { SELECT (COUNT(DISTINCT ?p) AS ?count) ?c  WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c }",
+          "label": "QC4"
+        },
+        {
+          "description": "Number of subjects per class partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT {  <datasetUri> void:classPartition [ void:class ?c ; void:distinctSubjects ?count ] } WHERE { SELECT (COUNT(DISTINCT ?s) AS ?count) ?c   WHERE { ?s a ?c . } GROUP BY ?c } ",
+          "label": "QC5"
+        },
+        {
+          "description": "Number of objects per class partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT {  <datasetUri> void:classPartition [ void:class ?c ; void:distinctObjects ?count ] } WHERE { SELECT (COUNT(DISTINCT ?o) AS ?count) ?c   WHERE { ?s a ?c ; ?p ?o } GROUP BY ?c } ",
+          "label": "QC6"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "datasetUri": "datasetUri",
+  "void": [
+    {
+      "group": "D",
+      "description": "Queries for statistics about properties",
+      "queries": [
+        {
+          "description": "List of properties in dataset (SPARQL 1.0)",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:propertyPartition [ void:property ?p ] } WHERE { SELECT DISTINCT ?p WHERE { ?s ?p ?o } }",
+          "label": "QD1"
+        },
+        {
+          "description": "Number of triples per property partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:propertyPartition [ void:property ?p ; void:triples ?count ] } WHERE { SELECT (COUNT(?o) AS ?count) ?p  WHERE { ?s ?p ?o . } GROUP BY ?p } ",
+          "label": "QD2"
+        },
+        {
+          "description": "Number of subjects per property partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:propertyPartition  [ void:property ?p ; void:distinctSubjects ?count ]  } WHERE { SELECT (COUNT(DISTINCT ?s) AS ?count) ?p WHERE { ?s ?p ?o . } GROUP BY ?p }",
+          "label": "QD3"
+        },
+        {
+          "description": "Number of objects per property partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:propertyPartition [ void:property ?p ; void:distinctObjects ?count ] } WHERE { SELECT (COUNT(DISTINCT ?o) AS ?count) ?p WHERE { ?s ?p ?o . } GROUP BY ?p } ",
+          "label": "QD4"
+        }
+      ]
+    }
+  ]
+}

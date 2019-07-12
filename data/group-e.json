@@ -1,0 +1,31 @@
+{
+  "datasetUri": "datasetUri",
+  "void": [
+    {
+      "group": "E",
+      "description": "Queries for nested property/class statistics",
+      "queries": [
+        {
+          "description": "List of properties within class in dataset (SPARQL 1.0)",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:classPartition [  void:class ?c ; void:propertyPartition [ void:property ?p  ] ] } WHERE { SELECT DISTINCT ?p WHERE { ?s a ?c ; ?p ?o .} }",
+          "label": "QE1"
+        },
+        {
+          "description": "Number of triples per property partition inside class partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT { <datasetUri> void:classPartition [ void:class ?c ; void:propertyPartition [ void:property ?p ; void:triples ?count ]] . } WHERE { SELECT (COUNT(?o) AS ?count) ?p  WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c ?p }",
+          "label": "QE2"
+        },
+        {
+          "description": "Number of subjects per property partition inside class partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT {  <datasetUri> void:classPartition [ void:class ?c ; void:propertyPartition [ void:distinctSubjects ?count ] ] } WHERE { SELECT (COUNT(DISTINCT ?s) AS ?count) ?c ?p   WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c ?p } ",
+          "label": "QE3"
+        },
+        {
+          "description": "Number of objects per property partition inside class partition",
+          "query": "PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT {  <datasetUri> void:classPartition  [ void:class ?c ; void:propertyPartition [ void:distinctObjects ?count ; void:property ?p ] ]} WHERE { SELECT (COUNT(DISTINCT ?o) AS ?count) ?c ?p WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c ?p }",
+          "label": "QE4"
+        }
+      ]
+    }
+  ]
+}

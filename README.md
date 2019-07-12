@@ -20,3 +20,9 @@ cd sage-sparql-void
 gradle clean fatjar
 java -jar build/libs/sage-sparql-void-fat-1.0.jar
 ```
+
+Run sage server:
+```
+docker pull callidon/sage
+docker run -d -v $(pwd)/data/:/opt/data/ -p 8000:8000 callidon/sage sage /opt/data/void.yaml -w 4 -p 8000
+```

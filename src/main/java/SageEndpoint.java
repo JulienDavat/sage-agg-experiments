@@ -9,7 +9,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
-import org.json.simple.JSONObject;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -21,30 +20,31 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @CommandLine.Command(name = "endpoint", footer = "Copyright(c) 2019 GRALL Arnaud",
         description = "Generate a VoID summary over a Sage Endpoint through a simple VoID description <http(s)://sage/void/>." +
                 " It iterates on all Sage Datasets and create global VoID description")
-public class SageEndpoint implements Runnable{
-    @CommandLine.Parameters(arity = "1", description= "Sage VoID address <http(s)://domain/void>")
-    public URL sageUrl = new URL("https://sage.univ-nantes.fr/void/");
-
-    @CommandLine.Option(names="output", description = "Output directory of the generated VoID description")
-    String outputLocation = "./output/";
-
+public class SageEndpoint implements Runnable {
     public static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-    HttpRequestFactory requestFactory
-            = HTTP_TRANSPORT.createRequestFactory();
+    @CommandLine.Parameters(arity = "1", description = "Sage VoID address <http(s)://domain/void>")
+    public URL sageUrl = new URL("https://sage.univ-nantes.fr/void/");
     public String prefixes = "PREFIX void: <http://rdfs.org/ns/void#> " +
             "PREFIX sage: <http://sage.univ-nantes.fr/sage-voc#> " +
             "PREFIX sd: <http://www.w3.org/ns/sparql-service-description#>";
     public String sageQuery = prefixes + " SELECT DISTINCT ?graph ?sparql WHERE { ?graph a sage:SageDataset . ?graph sd:endpoint ?sparql  } "; // FILTER (?graph = <http://sage.univ-nantes.fr/sparql/eventskg-r2>)
     public Model voidModel = ModelFactory.createDefaultModel();
+    @CommandLine.Option(names = "output", description = "Output directory of the generated VoID description")
+    String outputLocation = "./output/";
+    HttpRequestFactory requestFactory
+            = HTTP_TRANSPORT.createRequestFactory();
 
 
-
-    public SageEndpoint() throws MalformedURLException { }
+    public SageEndpoint() throws MalformedURLException {
+    }
 
     static public void main(String[] args) {
         try {
