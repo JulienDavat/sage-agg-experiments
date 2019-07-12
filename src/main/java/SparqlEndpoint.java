@@ -45,7 +45,7 @@ public class SparqlEndpoint implements Runnable {
             HttpResponse response = null;
             try {
                 HttpHeaders header = request.getHeaders();
-                header.set("Accept", "application/sparql-results+xml");
+                header.set("Accept", "application/sparql-results+xml, application/rdf+xml");
                 request.setHeaders(header);
                 response = request.execute();
 
