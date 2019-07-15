@@ -1,0 +1,11 @@
+name: SaGe Experiment server
+maintainer: Grall Arnaud
+public_url: http://localhost:7720
+quota: 150
+max_results: 100000
+datasets:
+  -
+    name: wikidata
+    description: Wikidata (2B triples) dump
+    backend: hdt-file
+    file: /opt/data/wikidata2017.hdt
