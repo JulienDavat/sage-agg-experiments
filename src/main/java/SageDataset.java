@@ -240,21 +240,20 @@ public class SageDataset implements Runnable {
             spy.startTimer();
             executor.execute(format, federation, parseQuery, out);
             spy.stopTimer();
-            if (time) {
-                double duration = spy.getExecutionTime();
-                int nbQueries = spy.getNbCalls();
-                double meanHttpTimes = spy.getMeanHttpTimes();
-                double meanResumeTime = spy.getMeanResumeTime();
-                double meanSuspendTime = spy.getMeanSuspendTime();
-                double transferSize = spy.getTransferSize();
-                System.err.println(MessageFormat.format("[" + label + "] SPARQL query executed in {0}s with {1} HTTP requests with {2} Bytes received", duration, nbQueries, transferSize));
-                spyOut.println(duration + " " +
-                        nbQueries + " " +
-                        meanHttpTimes + " " +
-                        meanResumeTime + " " +
-                        meanSuspendTime + " " +
-                        transferSize);
-            }
+
+            double duration = spy.getExecutionTime();
+            int nbQueries = spy.getNbCalls();
+            double meanHttpTimes = spy.getMeanHttpTimes();
+            double meanResumeTime = spy.getMeanResumeTime();
+            double meanSuspendTime = spy.getMeanSuspendTime();
+            double transferSize = spy.getTransferSize();
+            if (time) System.err.println(MessageFormat.format("[" + label + "] SPARQL query executed in {0}s with {1} HTTP requests with {2} Bytes received", duration, nbQueries, transferSize));
+            spyOut.println(duration + " " +
+                    nbQueries + " " +
+                    meanHttpTimes + " " +
+                    meanResumeTime + " " +
+                    meanSuspendTime + " " +
+                    transferSize);
 
             // cleanup connections
             federation.close();
