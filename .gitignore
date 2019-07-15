@@ -1,3 +1,5 @@
+output/*/*/*.xml
+output/*/*/*.log
 .DS_Store
 sage-sparql-void.iml
 .idea
