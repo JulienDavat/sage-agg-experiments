@@ -12,6 +12,10 @@ public class Cli implements Runnable {
 
     public static void main(String... args) {
         try {
+            // =============================
+            // https://stackoverflow.com/questions/54905185/how-to-debug-nullpointerexception-at-apache-jena-queryexecutionfactory-during-cr
+            org.apache.jena.query.ARQ.init();
+            // =============================
             new CommandLine(new Cli()).execute(args);
         } catch (Exception e) {
             e.printStackTrace();
