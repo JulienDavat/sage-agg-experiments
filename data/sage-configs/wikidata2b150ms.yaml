@@ -8,4 +8,4 @@ datasets:
     name: wikidata
     description: Wikidata (2B triples) dump
     backend: hdt-file
-    file: /opt/data/wikidata2017.hdt
+    file: /opt/data/wikidata-20170313-all-BETA.hdt
