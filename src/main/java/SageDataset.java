@@ -132,6 +132,7 @@ public class SageDataset implements Runnable {
                                 executeVoidQuery(label, query, new PrintStream(out), new PrintStream(outSpy), time);
                                 result.put("response", true);
                             } catch (Exception e) {
+                                System.err.println(e);
                                 result.put("response", false);
                                 result.put("error", e);
                             }
