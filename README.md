@@ -1,4 +1,5 @@
 # sage-sparql-void
+
 Execution of VoID description over Sage endpoints
 
 ## Install
@@ -21,6 +22,15 @@ gradle clean fatjar
 java -jar build/libs/sage-sparql-void-fat-1.0.jar
 ```
 
+## Running the Sage server for the experiment
+
+**Due to proxy settings: change any proxy values inside the Dockerfile or the gradle command to fit your settings.**
+
+```bash
+# build the project
+gradle -Dhttp.proxyHost=cache.ha.univ-nantes.fr -Dhttp.proxyPort=3128 -Dhttps.proxyHost=cache.ha.univ-nantes.fr -Dhttps.proxyPort=3128 clean build fatJar
+```
+
 Run sage server using a custom GUnicorn configuration
 ```bash
 #
@@ -31,17 +41,15 @@ cd ..
 ```
 Then:
 ```bash
+cd experiments/
 docker-compose up -d
 ```
 
+Then for running the experiments:
+
 ```bash
+# 2017 (2B)
 nohup java -Xms50g -Xmx50g -jar build/libs/sage-sparql-void-fat-1.0.jar dataset http://172.16.8.50:7120/sparql/wikidata http://172.16.8.50:7120/sparql/wikidata ./output/ &
+# 2018 (8B)
 nohup java -Xms50g -Xmx50g -jar build/libs/sage-sparql-void-fat-1.0.jar dataset http://172.16.8.50:7180/sparql/wikidata http://172.16.8.50:7180/sparql/wikidata ./output/ &
 ```
-
-````bash
-# 2018 (8B)
-java -Xms50g -Xmx50g -jar build/libs/sage-sparql-void-fat-1.0.jar dataset http://172.16.8.50:7120/sparql/wikidata http://172.16.8.50:7780/sparql/wikidata ./output/
-# 2017 (2B)
-java -Xms50g -Xmx50g -jar build/libs/sage-sparql-void-fat-1.0.jar dataset http://172.16.8.50:7180/sparql/wikidata http://172.16.8.50:7720/sparql/wikidata ./output/
-````
