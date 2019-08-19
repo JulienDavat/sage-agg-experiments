@@ -19,5 +19,5 @@ services:
     tty: true         # to have nice outputs
     stdin_open: true  # to be able to use CTRL+C to stop the container
     ports:
-      - 7120:7120
+      - 7180:7180
     command: sage /opt/data/sage-configs/wikidata8b150ms.yaml --gunicorn-config /opt/data/gunicorn-configs/sage-engine-7180.py
