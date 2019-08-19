@@ -17,10 +17,9 @@ cd "$CUR/../"
 # build sage-sparql-void
 gradle clean fatJar
 
-# comeback to root project location
-cd $CUR
-
-OUTPUTLOCATION="$CUR/../output"
+# relative path to the folder we execute the jar, dont forhget the last /
+OUTPUTLOCATION="./output/"
+# jar location
 JAR_LOCATION="$CUR/../build/libs/sage-sparql-void-fat-1.0.jar"
 
 java $DEFAULT_JVM_OPTS -jar $JAR_LOCATION dataset $sageEndpoint $sageEndpoint $OUTPUTLOCATION
