@@ -8,7 +8,7 @@ set -e
 
 DEFAULT_JVM_OPTS="-Xms50g -Xmx50g"
 
-sageEndpoint="https://localhost:7120/sparql/wikidata"
+sageEndpoint="http://172.16.8.50:7120/sparql/wikidata"
 
 rm -rf "$CUR/../build/"
 
@@ -23,4 +23,4 @@ cd $CUR
 OUTPUTLOCATION="$CUR/../output"
 JAR_LOCATION="$CUR/../build/libs/sage-sparql-void-fat-1.0.jar"
 
-java $DEFAULT_JVM_OPTS -jar $JAR_LOCATION endpoint $sageEndpoint $sageEndpoint $OUTPUTLOCATION
+java $DEFAULT_JVM_OPTS -jar $JAR_LOCATION dataset $sageEndpoint $sageEndpoint $OUTPUTLOCATION
