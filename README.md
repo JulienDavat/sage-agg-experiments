@@ -49,7 +49,7 @@ Then for running the experiments:
 
 ```bash
 # 2017 (2B)
-nohup java -Xms50g -Xmx50g -jar build/libs/sage-sparql-void-fat-1.0.jar dataset http://172.16.8.50:7120/sparql/wikidata http://172.16.8.50:7120/sparql/wikidata ./output/ &
+nohup bash ./start_wikidata2b.bash &
 # 2018 (8B)
 nohup java -Xms50g -Xmx50g -jar build/libs/sage-sparql-void-fat-1.0.jar dataset http://172.16.8.50:7180/sparql/wikidata http://172.16.8.50:7180/sparql/wikidata ./output/ &
 ```

@@ -23,4 +23,4 @@ cd $CUR
 OUTPUTLOCATION="$CUR/../output"
 JAR_LOCATION="$CUR/../build/libs/sage-sparql-void-fat-1.0.jar"
 
-java $DEFAULT_JVM_OPTS -jar $JAR_LOCATION endpoint $sageEndpoint output=$OUTPUTLOCATION
+java $DEFAULT_JVM_OPTS -jar $JAR_LOCATION endpoint $sageEndpoint $sageEndpoint $OUTPUTLOCATION
