@@ -1,11 +1,25 @@
 version: '3.4'
 
 services:
+  # sage-engine-folkvir:
+  #   container_name: bsbm1k
+  #   build:
+  #     context: ./..
+  #     dockerfile: ./experiments/Dockerfile
+  #   volumes:
+  #     - ../data:/opt/data/
+  #   tty: true         # to have nice outputs
+  #   stdin_open: true  # to be able to use CTRL+C to stop the container
+  #   ports:
+  #     - 7100:7100
+  #   command: sage /opt/data/sage-configs/bsbm1k.yaml -p 7100 -w 4
   sage-engine-folkvir:
     container_name: wikidata2b
-    build: ./sage-engine/
+    build:
+      context: ./..
+      dockerfile: ./experiments/Dockerfile
     volumes:
-      - ./data:/opt/data/
+      - ../data:/opt/data/
     tty: true         # to have nice outputs
     stdin_open: true  # to be able to use CTRL+C to stop the container
     ports:
@@ -13,9 +27,11 @@ services:
     command: sage /opt/data/sage-configs/wikidata2b150ms.yaml --gunicorn-config /opt/data/gunicorn-configs/sage-engine-7120.py
   sage-engine-folkvir:
     container_name: wikidata8b
-    build: ./sage-engine/
+    build:
+      context: ./..
+      dockerfile: ./experiments/Dockerfile
     volumes:
-      - ./data:/opt/data/
+      - ../data:/opt/data/
     tty: true         # to have nice outputs
     stdin_open: true  # to be able to use CTRL+C to stop the container
     ports:

@@ -1,0 +1,22 @@
+FROM python:3.6.5-alpine3.7
+
+RUN apk add --no-cache git make g++
+
+# env proxy
+ENV http_proxy="http://cache.ha.univ-nantes.fr:3128/"
+ENV https_proxy="http://cache.ha.univ-nantes.fr:3128"
+
+# config git because we are behind a proxy
+RUN git config --global url."https://github.com/".insteadOf git@github.com:
+RUN git config --global -l
+
+WORKDIR /opt/sage-engine/
+
+COPY ./sage-engine/ .
+RUN pip install pybind11==2.2.4
+RUN pip install -r requirements.txt
+RUN pip install -e .[hdt]
+
+EXPOSE 8000
+
+CMD [ "sage" ]
