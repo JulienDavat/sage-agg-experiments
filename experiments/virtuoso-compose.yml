@@ -1,0 +1,15 @@
+version: '3.4'
+services:
+  virtuoso:
+    image: tenforce/virtuoso:1.3.2-virtuoso7.2.5
+    build:
+      context: "./../"
+      dockerfile: ./experiments/docker-virtuoso/Dockerfile
+    environment:
+      SPARQL_UPDATE: "true"
+      DEFAULT_GRAPH: "http://sage.univ-nantes.fr/wikidata"
+    volumes:
+      - "../data/virtuoso-data:/data"
+    ports:
+      - "7200:8890"
+      - "7201:1111"
