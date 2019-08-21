@@ -6,7 +6,7 @@ echo $CUR
 # exit on any error
 set -e
 
-DEFAULT_JVM_OPTS="-Xms50g -Xmx50g"
+DEFAULT_JVM_OPTS="-Xms5g -Xmx50g"
 
 sageEndpoint="http://172.16.8.50:7120/sparql/wikidata"
 

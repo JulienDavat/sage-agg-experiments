@@ -39,11 +39,12 @@ public class SageDataset implements Runnable {
     @CommandLine.Option(names = "process", description = "Result folder, if set this wont execute SPARQL VoID queries but will only process result.xml files to provide a void.ttl file")
     public String folder = null;
 
-    @CommandLine.Option(names = {"--parallel"}, description = "Parellel processing of the Sportal Workload")
+    @CommandLine.Option(names = {"--parallel"}, description = "Parallel processing of the Sportal Workload")
     public boolean parallel = false;
 
-
+    @CommandLine.Option(names = {"--sportal-file"}, description = "Specify the location of the sportal file wich will be executed")
     public String sportalFile = "data/original-sportal.json";
+    
     private String format = "xml";
     private URL voidUrl = null;
 

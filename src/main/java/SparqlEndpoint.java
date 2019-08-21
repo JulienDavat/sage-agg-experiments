@@ -15,16 +15,20 @@ public class SparqlEndpoint implements Runnable {
     String endpoint = "";
     @CommandLine.Parameters(index = "1", arity = "1", description = "The query to send to the SPARQL endpoint")
     String query = "";
+    @CommandLine.Parameters(index = "2", arity = "1", description = "The default graph tu use, null by default")
+    String default_graph = null;
     HttpRequestFactory requestFactory
             = HTTP_TRANSPORT.createRequestFactory(request -> request.setReadTimeout(0));
 
     @Override
     public void run() {
-        executeQuery(endpoint, query, System.err, System.out, System.out);
+        executeQuery(endpoint, query, default_graph, System.err, System.out, System.out);
     }
 
-    public void executeQuery(String endpoint, String query, PrintStream err, PrintStream out, PrintStream stats) {
+    public void executeQuery(String endpoint, String query, String graph, PrintStream err, PrintStream out, PrintStream stats) {
         class EndpointUrl extends GenericUrl {
+            @Key("default-graph-uri")
+            public String default_graph_uri = null;
             @Key
             public String query;
 
@@ -34,10 +38,12 @@ public class SparqlEndpoint implements Runnable {
         }
         String queryString = query;
         System.err.println("SPARQL endpoint: " + endpoint);
+        System.err.println("SPARQL graph: " + graph);
         System.err.println("SPARQL query: " + queryString);
 
         EndpointUrl end = new EndpointUrl(endpoint);
         end.query = queryString;
+        end.default_graph_uri = graph;
         long startTime = System.nanoTime();
         HttpRequest request;
         try {

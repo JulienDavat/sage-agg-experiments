@@ -16,6 +16,10 @@ public class SportalSparqlEndpoint implements Runnable {
     public boolean parallel = false;
     @CommandLine.Option(names = "--sportalFile", description = "Sportal file to execute")
     public String sportalFile = "./data/original-sportal.json";
+
+    @CommandLine.Option(names = "--default-graph", description = "Default Graph to use")
+    public String default_graph = null;
+
     @CommandLine.Parameters(index = "0", arity = "1", description = "Endpoint")
     String endpoint = "";
     @CommandLine.Parameters(index = "1", arity = "1", description = "Output directory of the response will generate two files for each query. <query>-result.xml and <query>-spy-result.txt")
@@ -72,7 +76,8 @@ public class SportalSparqlEndpoint implements Runnable {
                                 SparqlEndpoint end = new SparqlEndpoint();
                                 end.endpoint = endpoint;
                                 end.query = query;
-                                end.executeQuery(endpoint, query, new PrintStream(outputErr), new PrintStream(out), new PrintStream(outSpy));
+                                end.default_graph = default_graph;
+                                end.executeQuery(endpoint, query, default_graph, new PrintStream(outputErr), new PrintStream(out), new PrintStream(outSpy));
                                 result.put("response", true);
                             } catch (Exception e) {
                                 result.put("response", false);

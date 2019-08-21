@@ -9,7 +9,7 @@ services:
       SPARQL_UPDATE: "true"
       DEFAULT_GRAPH: "http://sage.univ-nantes.fr/wikidata"
     volumes:
-      - "../data/virtuoso-data:/data"
+      - "../data/virtuoso-wikidata2b-data:/data"
     ports:
       - "7200:8890"
       - "7201:1111"
