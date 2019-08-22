@@ -34,16 +34,16 @@ RUN pwd
 RUN ls
 
 # Add Virtuoso config
-COPY ./experiments/docker-virtuoso/virtuoso.ini /virtuoso.ini
+COPY ./experiments/virtuoso/virtuoso.ini /virtuoso.ini
 
 # Add dump_nquads_procedure
-COPY ./experiments/docker-virtuoso/dump_nquads_procedure.sql /dump_nquads_procedure.sql
+COPY ./experiments/virtuoso/dump_nquads_procedure.sql /dump_nquads_procedure.sql
 
 # Add Virtuoso log cleaning script
-COPY ./experiments/docker-virtuoso/clean-logs.sh /clean-logs.sh
+COPY ./experiments/virtuoso/clean-logs.sh /clean-logs.sh
 
 # Add startup script
-COPY ./experiments/docker-virtuoso/virtuoso.sh /virtuoso.sh
+COPY ./experiments/virtuoso/virtuoso.sh /virtuoso.sh
 
 VOLUME /data
 WORKDIR /data
