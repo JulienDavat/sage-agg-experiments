@@ -6,7 +6,7 @@ echo $CUR
 # exit on any error
 set -e
 
-DEFAULT_JVM_OPTS="-Xms5g -Xmx50g"
+DEFAULT_JVM_OPTS="-Xms5g -Xmx1000g"
 
 sageEndpoint="http://172.16.8.50:7120/sparql/wikidata"
 
@@ -22,4 +22,5 @@ OUTPUTLOCATION="./output/"
 # jar location
 JAR_LOCATION="$CUR/../build/libs/sage-sparql-void-fat-1.0.jar"
 
-java $DEFAULT_JVM_OPTS -jar $JAR_LOCATION dataset $sageEndpoint $sageEndpoint $OUTPUTLOCATION
+SPORTAL_FILE="$CUR/queries.json"
+java $DEFAULT_JVM_OPTS -jar $JAR_LOCATION dataset --sportal-file=$SPORTAL_FILE $sageEndpoint $sageEndpoint $OUTPUTLOCATION --time

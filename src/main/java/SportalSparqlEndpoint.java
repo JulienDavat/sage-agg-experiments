@@ -14,7 +14,7 @@ import java.util.concurrent.*;
 public class SportalSparqlEndpoint implements Runnable {
     @CommandLine.Option(names = {"--parallel"}, description = "Parellel processing of the Sportal Workload")
     public boolean parallel = false;
-    @CommandLine.Option(names = "--sportalFile", description = "Sportal file to execute")
+    @CommandLine.Option(names = "--sportal-file", description = "Sportal file to execute")
     public String sportalFile = "./data/original-sportal.json";
 
     @CommandLine.Option(names = "--default-graph", description = "Default Graph to use")
@@ -29,7 +29,7 @@ public class SportalSparqlEndpoint implements Runnable {
     public void run() {
         JSONArray queries = Utils.loadVoidQueries(endpoint, sportalFile, endpoint);
         System.err.println("Sparql endpoint: " + endpoint);
-        String directory = output + "/sportal-sparql-endpoint-" + endpoint.replace(":", "-").replace("/", "-");
+        String directory = output + "/sparql-endpoint-" + endpoint.replace(":", "-").replace("/", "-");
         File dir = new File(directory);
         Boolean success = dir.mkdirs();
         if (success) {
@@ -52,39 +52,36 @@ public class SportalSparqlEndpoint implements Runnable {
                 String label = (String) queryJson.get("label");
                 System.err.println("[" + label + "] Execute query: " + query);
                 try {
-                    Callable<JSONObject> callable = new Callable<JSONObject>() {
-                        @Override
-                        public JSONObject call() throws Exception {
-                            File queryFile = new File(dir.getAbsolutePath(), label + "-result.xml");
-                            File querySpy = new File(dir.getAbsolutePath(), label + "-spy-result.txt");
-                            File err = new File(dir.getAbsolutePath(), label + ".log");
-                            FileOutputStream outputErr = null;
-                            FileOutputStream out = null;
-                            FileOutputStream outSpy = null;
-                            try {
-                                out = new FileOutputStream(queryFile);
-                                outSpy = new FileOutputStream(querySpy);
-                                outputErr = new FileOutputStream(err);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                                System.exit(1);
-                            }
-
-                            JSONObject result = new JSONObject();
-                            result.put("query", queryJson);
-                            try {
-                                SparqlEndpoint end = new SparqlEndpoint();
-                                end.endpoint = endpoint;
-                                end.query = query;
-                                end.default_graph = default_graph;
-                                end.executeQuery(endpoint, query, default_graph, new PrintStream(outputErr), new PrintStream(out), new PrintStream(outSpy));
-                                result.put("response", true);
-                            } catch (Exception e) {
-                                result.put("response", false);
-                                result.put("error", e);
-                            }
-                            return result;
+                    Callable<JSONObject> callable = () -> {
+                        File queryFile = new File(dir.getAbsolutePath(), label + "-result.xml");
+                        File querySpy = new File(dir.getAbsolutePath(), label + "-spy-result.txt");
+                        File err = new File(dir.getAbsolutePath(), label + ".log");
+                        FileOutputStream outputErr = null;
+                        FileOutputStream out = null;
+                        FileOutputStream outSpy = null;
+                        try {
+                            out = new FileOutputStream(queryFile);
+                            outSpy = new FileOutputStream(querySpy);
+                            outputErr = new FileOutputStream(err);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            System.exit(1);
                         }
+
+                        JSONObject result = new JSONObject();
+                        result.put("query", queryJson);
+                        try {
+                            SparqlEndpoint end = new SparqlEndpoint();
+                            end.endpoint = endpoint;
+                            end.query = query;
+                            end.default_graph = default_graph;
+                            end.executeQuery(endpoint, query, default_graph, new PrintStream(outputErr), new PrintStream(out), new PrintStream(outSpy));
+                            result.put("response", true);
+                        } catch (Exception e) {
+                            result.put("response", false);
+                            result.put("error", e);
+                        }
+                        return result;
                     };
 
                     if (this.parallel) {
@@ -94,6 +91,8 @@ public class SportalSparqlEndpoint implements Runnable {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    executorService.shutdown();
+                    System.exit(1);
                 }
             }
         });

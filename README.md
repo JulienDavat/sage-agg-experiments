@@ -39,7 +39,7 @@ git submodule init
 git submodule update
 cd ..
 ```
-Then for loading the sage server
+Then for loading the sage server (make sure to put your data in the right place before!)
 ```bash
 cd experiments/
 docker-compose up -d
@@ -48,8 +48,8 @@ docker-compose up -d
 Then for running the experiments:
 
 ```bash
-# 2017 (2B)
-nohup bash ./start_wikidata2b.bash &
+# Using Wikidata 2017 (2B)
+nohup bash ./start_wikidata2b.bash >>wikidata2b.log 2>&1 &
 ```
 
 The address of the container is manually set inside the script. Modify it if you want it to work properly!
@@ -59,7 +59,7 @@ The address of the container is manually set inside the script. Modify it if you
 cd experiments
 docker-compose -f virtuoso-compose.yml up -d
 # then for running the experiment
-nohup bash ./start_virtuoso_wikidata2b.bash &
+nohup bash ./start_virtuoso_wikidata2b.bash >>wikidata2b-virtuoso.log 2>&1 &
 ```
 
 The address of the container is manually set inside the script. Modify it if you want it to work properly!
@@ -91,4 +91,21 @@ ServerThreads = 10
 ResultSetMaxRows           = 10000000000
 MaxQueryCostEstimationTime = 10000000000	; in seconds
 MaxQueryExecutionTime      = 10000000000	; in seconds
+[Parameters]
+TransactionAfterImageLimit = 500000000000
+;; Uncomment next two lines if there is 64 GB system memory free
+NumberOfBuffers          = 5450000
+MaxDirtyBuffers          = 4000000
 ```
+
+### Virtuoso helpers
+
+* Kill all running transactions inside a running docker container
+```bash
+docker exec -it <contname> bash
+isql 1111
+txn_killall(1);
+#ctrl+d
+#ctrl+d
+```
+

@@ -6,9 +6,10 @@ echo $CUR
 # exit on any error
 set -e
 
-DEFAULT_JVM_OPTS="-Xms4g -Xmx50g"
+DEFAULT_JVM_OPTS="-Xms4g -Xmx1000g"
 
-sparqlEndpoint="http://172.16.8.50:7200/sparql/"
+SPARQL_ENDPOINT="http://172.16.8.50:7200/sparql/"
+DEFAULT_GRAPH="http://sage.univ-nantes.fr/wikidata"
 
 rm -rf "$CUR/../build/"
 
@@ -22,4 +23,5 @@ OUTPUTLOCATION="./output/"
 # jar location
 JAR_LOCATION="$CUR/../build/libs/sage-sparql-void-fat-1.0.jar"
 
-java $DEFAULT_JVM_OPTS -jar $JAR_LOCATION sportal-sparql-endpoint $sageEndpoint $sparqlEndpoint $OUTPUTLOCATION --default-graph=http://sage.univ-nantes.fr/wikidata
+SPORTAL_FILE="$CUR/queries.json"
+java $DEFAULT_JVM_OPTS -jar $JAR_LOCATION sportal-sparql-endpoint $SPARQL_ENDPOINT $OUTPUTLOCATION --default-graph=$DEFAULT_GRAPH --sportal-file=$SPORTAL_FILE

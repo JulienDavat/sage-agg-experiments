@@ -88,7 +88,7 @@ public class SageDataset implements Runnable {
      */
     private void executeVoidQueries(JSONArray queries) {
         // create the result dir
-        File file = new File(System.getProperty("user.dir"), outputLocation + datasetUri.replace('/', '-').replace(':', '-'));
+        File file = new File(System.getProperty("user.dir"), outputLocation + "sage-" + datasetUri.replace('/', '-').replace(':', '-'));
         System.err.println("Output dir: " + file.getAbsolutePath());
         Boolean success = file.mkdirs();
         if (success) {
