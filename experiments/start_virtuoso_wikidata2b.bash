@@ -16,7 +16,7 @@ rm -rf "$CUR/../build/"
 cd "$CUR/../"
 
 # build sage-sparql-void
-gradle -Dhttp.proxyHost=cache.ha.univ-nantes.fr -Dhttp.proxyPort=3128 -Dhttps.proxyHost=cache.ha.univ-nantes.fr -Dhttps.proxyPort=3128 clean build  fatJar
+gradle clean build  fatJar
 
 # relative path to the folder we execute the jar, dont forhget the last /
 OUTPUTLOCATION="./output/"
