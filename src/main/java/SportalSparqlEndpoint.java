@@ -6,7 +6,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -29,7 +31,10 @@ public class SportalSparqlEndpoint implements Runnable {
     public void run() {
         JSONArray queries = Utils.loadVoidQueries(endpoint, sportalFile, endpoint);
         System.err.println("Sparql endpoint: " + endpoint);
-        String directory = output + "/sparql-endpoint-" + endpoint.replace(":", "-").replace("/", "-");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
+        Date date = new Date();
+        String stringdate = formatter.format(date);
+        String directory = output + "/sparql-endpoint-" + stringdate + "-" + endpoint.replace(":", "-").replace("/", "-");
         File dir = new File(directory);
         Boolean success = dir.mkdirs();
         if (success) {

@@ -17,7 +17,9 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -88,7 +90,10 @@ public class SageDataset implements Runnable {
      */
     private void executeVoidQueries(JSONArray queries) {
         // create the result dir
-        File file = new File(System.getProperty("user.dir"), outputLocation + "sage-" + datasetUri.replace('/', '-').replace(':', '-'));
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
+        Date date = new Date();
+        String stringdate = formatter.format(date);
+        File file = new File(System.getProperty("user.dir"), outputLocation + "sage-" + stringdate + "-" + datasetUri.replace('/', '-').replace(':', '-'));
         System.err.println("Output dir: " + file.getAbsolutePath());
         Boolean success = file.mkdirs();
         if (success) {

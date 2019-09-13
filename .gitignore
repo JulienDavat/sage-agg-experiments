@@ -1,5 +1,6 @@
 output/*/*/*.xml
 output/*/*/*.log
+output/*/*.png
 .DS_Store
 sage-sparql-void.iml
 .idea
