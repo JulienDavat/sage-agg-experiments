@@ -1,0 +1,2143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:void="http://rdfs.org/ns/void#" >
+  <rdf:Description rdf:about="http://172.16.8.50:7200/sparql/">
+    <void:classPartition rdf:nodeID="b233371676" />
+    <void:classPartition rdf:nodeID="b233371677" />
+    <void:classPartition rdf:nodeID="b233371674" />
+    <void:classPartition rdf:nodeID="b233371675" />
+    <void:classPartition rdf:nodeID="b233371672" />
+    <void:classPartition rdf:nodeID="b233371673" />
+    <void:classPartition rdf:nodeID="b233371670" />
+    <void:classPartition rdf:nodeID="b233371671" />
+    <void:classPartition rdf:nodeID="b233371668" />
+    <void:classPartition rdf:nodeID="b233371669" />
+    <void:classPartition rdf:nodeID="b233371666" />
+    <void:classPartition rdf:nodeID="b233371667" />
+    <void:classPartition rdf:nodeID="b233371664" />
+    <void:classPartition rdf:nodeID="b233371665" />
+    <void:classPartition rdf:nodeID="b233371694" />
+    <void:classPartition rdf:nodeID="b233371695" />
+    <void:classPartition rdf:nodeID="b233371692" />
+    <void:classPartition rdf:nodeID="b233371693" />
+    <void:classPartition rdf:nodeID="b233371690" />
+    <void:classPartition rdf:nodeID="b233371691" />
+    <void:classPartition rdf:nodeID="b233371688" />
+    <void:classPartition rdf:nodeID="b233371689" />
+    <void:classPartition rdf:nodeID="b233371686" />
+    <void:classPartition rdf:nodeID="b233371687" />
+    <void:classPartition rdf:nodeID="b233371684" />
+    <void:classPartition rdf:nodeID="b233371685" />
+    <void:classPartition rdf:nodeID="b233371682" />
+    <void:classPartition rdf:nodeID="b233371683" />
+    <void:classPartition rdf:nodeID="b233371680" />
+    <void:classPartition rdf:nodeID="b233371681" />
+    <void:classPartition rdf:nodeID="b233371710" />
+    <void:classPartition rdf:nodeID="b233371711" />
+    <void:classPartition rdf:nodeID="b233371708" />
+    <void:classPartition rdf:nodeID="b233371709" />
+    <void:classPartition rdf:nodeID="b233371706" />
+    <void:classPartition rdf:nodeID="b233371707" />
+    <void:classPartition rdf:nodeID="b233371704" />
+    <void:classPartition rdf:nodeID="b233371705" />
+    <void:classPartition rdf:nodeID="b233371702" />
+    <void:classPartition rdf:nodeID="b233371703" />
+    <void:classPartition rdf:nodeID="b233371700" />
+    <void:classPartition rdf:nodeID="b233371701" />
+    <void:classPartition rdf:nodeID="b233371698" />
+    <void:classPartition rdf:nodeID="b233371699" />
+    <void:classPartition rdf:nodeID="b233371696" />
+    <void:classPartition rdf:nodeID="b233371697" />
+    <void:classPartition rdf:nodeID="b233371294" />
+    <void:classPartition rdf:nodeID="b233371295" />
+    <void:classPartition rdf:nodeID="b233371292" />
+    <void:classPartition rdf:nodeID="b233371293" />
+    <void:classPartition rdf:nodeID="b233371290" />
+    <void:classPartition rdf:nodeID="b233371291" />
+    <void:classPartition rdf:nodeID="b233371288" />
+    <void:classPartition rdf:nodeID="b233371289" />
+    <void:classPartition rdf:nodeID="b233371286" />
+    <void:classPartition rdf:nodeID="b233371287" />
+    <void:classPartition rdf:nodeID="b233371285" />
+    <void:classPartition rdf:nodeID="b233371310" />
+    <void:classPartition rdf:nodeID="b233371311" />
+    <void:classPartition rdf:nodeID="b233371308" />
+    <void:classPartition rdf:nodeID="b233371309" />
+    <void:classPartition rdf:nodeID="b233371306" />
+    <void:classPartition rdf:nodeID="b233371307" />
+    <void:classPartition rdf:nodeID="b233371304" />
+    <void:classPartition rdf:nodeID="b233371305" />
+    <void:classPartition rdf:nodeID="b233371302" />
+    <void:classPartition rdf:nodeID="b233371303" />
+    <void:classPartition rdf:nodeID="b233371300" />
+    <void:classPartition rdf:nodeID="b233371301" />
+    <void:classPartition rdf:nodeID="b233371298" />
+    <void:classPartition rdf:nodeID="b233371299" />
+    <void:classPartition rdf:nodeID="b233371296" />
+    <void:classPartition rdf:nodeID="b233371297" />
+    <void:classPartition rdf:nodeID="b233371326" />
+    <void:classPartition rdf:nodeID="b233371327" />
+    <void:classPartition rdf:nodeID="b233371324" />
+    <void:classPartition rdf:nodeID="b233371325" />
+    <void:classPartition rdf:nodeID="b233371322" />
+    <void:classPartition rdf:nodeID="b233371323" />
+    <void:classPartition rdf:nodeID="b233371320" />
+    <void:classPartition rdf:nodeID="b233371321" />
+    <void:classPartition rdf:nodeID="b233371318" />
+    <void:classPartition rdf:nodeID="b233371319" />
+    <void:classPartition rdf:nodeID="b233371316" />
+    <void:classPartition rdf:nodeID="b233371317" />
+    <void:classPartition rdf:nodeID="b233371314" />
+    <void:classPartition rdf:nodeID="b233371315" />
+    <void:classPartition rdf:nodeID="b233371312" />
+    <void:classPartition rdf:nodeID="b233371313" />
+    <void:classPartition rdf:nodeID="b233371342" />
+    <void:classPartition rdf:nodeID="b233371343" />
+    <void:classPartition rdf:nodeID="b233371340" />
+    <void:classPartition rdf:nodeID="b233371341" />
+    <void:classPartition rdf:nodeID="b233371338" />
+    <void:classPartition rdf:nodeID="b233371339" />
+    <void:classPartition rdf:nodeID="b233371336" />
+    <void:classPartition rdf:nodeID="b233371337" />
+    <void:classPartition rdf:nodeID="b233371334" />
+    <void:classPartition rdf:nodeID="b233371335" />
+    <void:classPartition rdf:nodeID="b233371332" />
+    <void:classPartition rdf:nodeID="b233371333" />
+    <void:classPartition rdf:nodeID="b233371330" />
+    <void:classPartition rdf:nodeID="b233371331" />
+    <void:classPartition rdf:nodeID="b233371328" />
+    <void:classPartition rdf:nodeID="b233371329" />
+    <void:classPartition rdf:nodeID="b233371358" />
+    <void:classPartition rdf:nodeID="b233371359" />
+    <void:classPartition rdf:nodeID="b233371356" />
+    <void:classPartition rdf:nodeID="b233371357" />
+    <void:classPartition rdf:nodeID="b233371354" />
+    <void:classPartition rdf:nodeID="b233371355" />
+    <void:classPartition rdf:nodeID="b233371352" />
+    <void:classPartition rdf:nodeID="b233371353" />
+    <void:classPartition rdf:nodeID="b233371350" />
+    <void:classPartition rdf:nodeID="b233371351" />
+    <void:classPartition rdf:nodeID="b233371348" />
+    <void:classPartition rdf:nodeID="b233371349" />
+    <void:classPartition rdf:nodeID="b233371346" />
+    <void:classPartition rdf:nodeID="b233371347" />
+    <void:classPartition rdf:nodeID="b233371344" />
+    <void:classPartition rdf:nodeID="b233371345" />
+    <void:classPartition rdf:nodeID="b233371374" />
+    <void:classPartition rdf:nodeID="b233371375" />
+    <void:classPartition rdf:nodeID="b233371372" />
+    <void:classPartition rdf:nodeID="b233371373" />
+    <void:classPartition rdf:nodeID="b233371370" />
+    <void:classPartition rdf:nodeID="b233371371" />
+    <void:classPartition rdf:nodeID="b233371368" />
+    <void:classPartition rdf:nodeID="b233371369" />
+    <void:classPartition rdf:nodeID="b233371366" />
+    <void:classPartition rdf:nodeID="b233371367" />
+    <void:classPartition rdf:nodeID="b233371364" />
+    <void:classPartition rdf:nodeID="b233371365" />
+    <void:classPartition rdf:nodeID="b233371362" />
+    <void:classPartition rdf:nodeID="b233371363" />
+    <void:classPartition rdf:nodeID="b233371360" />
+    <void:classPartition rdf:nodeID="b233371361" />
+    <void:classPartition rdf:nodeID="b233371390" />
+    <void:classPartition rdf:nodeID="b233371391" />
+    <void:classPartition rdf:nodeID="b233371388" />
+    <void:classPartition rdf:nodeID="b233371389" />
+    <void:classPartition rdf:nodeID="b233371386" />
+    <void:classPartition rdf:nodeID="b233371387" />
+    <void:classPartition rdf:nodeID="b233371384" />
+    <void:classPartition rdf:nodeID="b233371385" />
+    <void:classPartition rdf:nodeID="b233371382" />
+    <void:classPartition rdf:nodeID="b233371383" />
+    <void:classPartition rdf:nodeID="b233371380" />
+    <void:classPartition rdf:nodeID="b233371381" />
+    <void:classPartition rdf:nodeID="b233371378" />
+    <void:classPartition rdf:nodeID="b233371379" />
+    <void:classPartition rdf:nodeID="b233371376" />
+    <void:classPartition rdf:nodeID="b233371377" />
+    <void:classPartition rdf:nodeID="b233371406" />
+    <void:classPartition rdf:nodeID="b233371407" />
+    <void:classPartition rdf:nodeID="b233371404" />
+    <void:classPartition rdf:nodeID="b233371405" />
+    <void:classPartition rdf:nodeID="b233371402" />
+    <void:classPartition rdf:nodeID="b233371403" />
+    <void:classPartition rdf:nodeID="b233371400" />
+    <void:classPartition rdf:nodeID="b233371401" />
+    <void:classPartition rdf:nodeID="b233371398" />
+    <void:classPartition rdf:nodeID="b233371399" />
+    <void:classPartition rdf:nodeID="b233371396" />
+    <void:classPartition rdf:nodeID="b233371397" />
+    <void:classPartition rdf:nodeID="b233371394" />
+    <void:classPartition rdf:nodeID="b233371395" />
+    <void:classPartition rdf:nodeID="b233371392" />
+    <void:classPartition rdf:nodeID="b233371393" />
+    <void:classPartition rdf:nodeID="b233371422" />
+    <void:classPartition rdf:nodeID="b233371423" />
+    <void:classPartition rdf:nodeID="b233371420" />
+    <void:classPartition rdf:nodeID="b233371421" />
+    <void:classPartition rdf:nodeID="b233371418" />
+    <void:classPartition rdf:nodeID="b233371419" />
+    <void:classPartition rdf:nodeID="b233371416" />
+    <void:classPartition rdf:nodeID="b233371417" />
+    <void:classPartition rdf:nodeID="b233371414" />
+    <void:classPartition rdf:nodeID="b233371415" />
+    <void:classPartition rdf:nodeID="b233371412" />
+    <void:classPartition rdf:nodeID="b233371413" />
+    <void:classPartition rdf:nodeID="b233371410" />
+    <void:classPartition rdf:nodeID="b233371411" />
+    <void:classPartition rdf:nodeID="b233371408" />
+    <void:classPartition rdf:nodeID="b233371409" />
+    <void:classPartition rdf:nodeID="b233371438" />
+    <void:classPartition rdf:nodeID="b233371439" />
+    <void:classPartition rdf:nodeID="b233371436" />
+    <void:classPartition rdf:nodeID="b233371437" />
+    <void:classPartition rdf:nodeID="b233371434" />
+    <void:classPartition rdf:nodeID="b233371435" />
+    <void:classPartition rdf:nodeID="b233371432" />
+    <void:classPartition rdf:nodeID="b233371433" />
+    <void:classPartition rdf:nodeID="b233371430" />
+    <void:classPartition rdf:nodeID="b233371431" />
+    <void:classPartition rdf:nodeID="b233371428" />
+    <void:classPartition rdf:nodeID="b233371429" />
+    <void:classPartition rdf:nodeID="b233371426" />
+    <void:classPartition rdf:nodeID="b233371427" />
+    <void:classPartition rdf:nodeID="b233371424" />
+    <void:classPartition rdf:nodeID="b233371425" />
+    <void:classPartition rdf:nodeID="b233371454" />
+    <void:classPartition rdf:nodeID="b233371455" />
+    <void:classPartition rdf:nodeID="b233371452" />
+    <void:classPartition rdf:nodeID="b233371453" />
+    <void:classPartition rdf:nodeID="b233371450" />
+    <void:classPartition rdf:nodeID="b233371451" />
+    <void:classPartition rdf:nodeID="b233371448" />
+    <void:classPartition rdf:nodeID="b233371449" />
+    <void:classPartition rdf:nodeID="b233371446" />
+    <void:classPartition rdf:nodeID="b233371447" />
+    <void:classPartition rdf:nodeID="b233371444" />
+    <void:classPartition rdf:nodeID="b233371445" />
+    <void:classPartition rdf:nodeID="b233371442" />
+    <void:classPartition rdf:nodeID="b233371443" />
+    <void:classPartition rdf:nodeID="b233371440" />
+    <void:classPartition rdf:nodeID="b233371441" />
+    <void:classPartition rdf:nodeID="b233371470" />
+    <void:classPartition rdf:nodeID="b233371471" />
+    <void:classPartition rdf:nodeID="b233371468" />
+    <void:classPartition rdf:nodeID="b233371469" />
+    <void:classPartition rdf:nodeID="b233371466" />
+    <void:classPartition rdf:nodeID="b233371467" />
+    <void:classPartition rdf:nodeID="b233371464" />
+    <void:classPartition rdf:nodeID="b233371465" />
+    <void:classPartition rdf:nodeID="b233371462" />
+    <void:classPartition rdf:nodeID="b233371463" />
+    <void:classPartition rdf:nodeID="b233371460" />
+    <void:classPartition rdf:nodeID="b233371461" />
+    <void:classPartition rdf:nodeID="b233371458" />
+    <void:classPartition rdf:nodeID="b233371459" />
+    <void:classPartition rdf:nodeID="b233371456" />
+    <void:classPartition rdf:nodeID="b233371457" />
+    <void:classPartition rdf:nodeID="b233371486" />
+    <void:classPartition rdf:nodeID="b233371487" />
+    <void:classPartition rdf:nodeID="b233371484" />
+    <void:classPartition rdf:nodeID="b233371485" />
+    <void:classPartition rdf:nodeID="b233371482" />
+    <void:classPartition rdf:nodeID="b233371483" />
+    <void:classPartition rdf:nodeID="b233371480" />
+    <void:classPartition rdf:nodeID="b233371481" />
+    <void:classPartition rdf:nodeID="b233371478" />
+    <void:classPartition rdf:nodeID="b233371479" />
+    <void:classPartition rdf:nodeID="b233371476" />
+    <void:classPartition rdf:nodeID="b233371477" />
+    <void:classPartition rdf:nodeID="b233371474" />
+    <void:classPartition rdf:nodeID="b233371475" />
+    <void:classPartition rdf:nodeID="b233371472" />
+    <void:classPartition rdf:nodeID="b233371473" />
+    <void:classPartition rdf:nodeID="b233371502" />
+    <void:classPartition rdf:nodeID="b233371503" />
+    <void:classPartition rdf:nodeID="b233371500" />
+    <void:classPartition rdf:nodeID="b233371501" />
+    <void:classPartition rdf:nodeID="b233371498" />
+    <void:classPartition rdf:nodeID="b233371499" />
+    <void:classPartition rdf:nodeID="b233371496" />
+    <void:classPartition rdf:nodeID="b233371497" />
+    <void:classPartition rdf:nodeID="b233371494" />
+    <void:classPartition rdf:nodeID="b233371495" />
+    <void:classPartition rdf:nodeID="b233371492" />
+    <void:classPartition rdf:nodeID="b233371493" />
+    <void:classPartition rdf:nodeID="b233371490" />
+    <void:classPartition rdf:nodeID="b233371491" />
+    <void:classPartition rdf:nodeID="b233371488" />
+    <void:classPartition rdf:nodeID="b233371489" />
+    <void:classPartition rdf:nodeID="b233371518" />
+    <void:classPartition rdf:nodeID="b233371519" />
+    <void:classPartition rdf:nodeID="b233371516" />
+    <void:classPartition rdf:nodeID="b233371517" />
+    <void:classPartition rdf:nodeID="b233371514" />
+    <void:classPartition rdf:nodeID="b233371515" />
+    <void:classPartition rdf:nodeID="b233371512" />
+    <void:classPartition rdf:nodeID="b233371513" />
+    <void:classPartition rdf:nodeID="b233371510" />
+    <void:classPartition rdf:nodeID="b233371511" />
+    <void:classPartition rdf:nodeID="b233371508" />
+    <void:classPartition rdf:nodeID="b233371509" />
+    <void:classPartition rdf:nodeID="b233371506" />
+    <void:classPartition rdf:nodeID="b233371507" />
+    <void:classPartition rdf:nodeID="b233371504" />
+    <void:classPartition rdf:nodeID="b233371505" />
+    <void:classPartition rdf:nodeID="b233371534" />
+    <void:classPartition rdf:nodeID="b233371535" />
+    <void:classPartition rdf:nodeID="b233371532" />
+    <void:classPartition rdf:nodeID="b233371533" />
+    <void:classPartition rdf:nodeID="b233371530" />
+    <void:classPartition rdf:nodeID="b233371531" />
+    <void:classPartition rdf:nodeID="b233371528" />
+    <void:classPartition rdf:nodeID="b233371529" />
+    <void:classPartition rdf:nodeID="b233371526" />
+    <void:classPartition rdf:nodeID="b233371527" />
+    <void:classPartition rdf:nodeID="b233371524" />
+    <void:classPartition rdf:nodeID="b233371525" />
+    <void:classPartition rdf:nodeID="b233371522" />
+    <void:classPartition rdf:nodeID="b233371523" />
+    <void:classPartition rdf:nodeID="b233371520" />
+    <void:classPartition rdf:nodeID="b233371521" />
+    <void:classPartition rdf:nodeID="b233371550" />
+    <void:classPartition rdf:nodeID="b233371551" />
+    <void:classPartition rdf:nodeID="b233371548" />
+    <void:classPartition rdf:nodeID="b233371549" />
+    <void:classPartition rdf:nodeID="b233371546" />
+    <void:classPartition rdf:nodeID="b233371547" />
+    <void:classPartition rdf:nodeID="b233371544" />
+    <void:classPartition rdf:nodeID="b233371545" />
+    <void:classPartition rdf:nodeID="b233371542" />
+    <void:classPartition rdf:nodeID="b233371543" />
+    <void:classPartition rdf:nodeID="b233371540" />
+    <void:classPartition rdf:nodeID="b233371541" />
+    <void:classPartition rdf:nodeID="b233371538" />
+    <void:classPartition rdf:nodeID="b233371539" />
+    <void:classPartition rdf:nodeID="b233371536" />
+    <void:classPartition rdf:nodeID="b233371537" />
+    <void:classPartition rdf:nodeID="b233371566" />
+    <void:classPartition rdf:nodeID="b233371567" />
+    <void:classPartition rdf:nodeID="b233371564" />
+    <void:classPartition rdf:nodeID="b233371565" />
+    <void:classPartition rdf:nodeID="b233371562" />
+    <void:classPartition rdf:nodeID="b233371563" />
+    <void:classPartition rdf:nodeID="b233371560" />
+    <void:classPartition rdf:nodeID="b233371561" />
+    <void:classPartition rdf:nodeID="b233371558" />
+    <void:classPartition rdf:nodeID="b233371559" />
+    <void:classPartition rdf:nodeID="b233371556" />
+    <void:classPartition rdf:nodeID="b233371557" />
+    <void:classPartition rdf:nodeID="b233371554" />
+    <void:classPartition rdf:nodeID="b233371555" />
+    <void:classPartition rdf:nodeID="b233371552" />
+    <void:classPartition rdf:nodeID="b233371553" />
+    <void:classPartition rdf:nodeID="b233371582" />
+    <void:classPartition rdf:nodeID="b233371583" />
+    <void:classPartition rdf:nodeID="b233371580" />
+    <void:classPartition rdf:nodeID="b233371581" />
+    <void:classPartition rdf:nodeID="b233371578" />
+    <void:classPartition rdf:nodeID="b233371579" />
+    <void:classPartition rdf:nodeID="b233371576" />
+    <void:classPartition rdf:nodeID="b233371577" />
+    <void:classPartition rdf:nodeID="b233371574" />
+    <void:classPartition rdf:nodeID="b233371575" />
+    <void:classPartition rdf:nodeID="b233371572" />
+    <void:classPartition rdf:nodeID="b233371573" />
+    <void:classPartition rdf:nodeID="b233371570" />
+    <void:classPartition rdf:nodeID="b233371571" />
+    <void:classPartition rdf:nodeID="b233371568" />
+    <void:classPartition rdf:nodeID="b233371569" />
+    <void:classPartition rdf:nodeID="b233371598" />
+    <void:classPartition rdf:nodeID="b233371599" />
+    <void:classPartition rdf:nodeID="b233371596" />
+    <void:classPartition rdf:nodeID="b233371597" />
+    <void:classPartition rdf:nodeID="b233371594" />
+    <void:classPartition rdf:nodeID="b233371595" />
+    <void:classPartition rdf:nodeID="b233371592" />
+    <void:classPartition rdf:nodeID="b233371593" />
+    <void:classPartition rdf:nodeID="b233371590" />
+    <void:classPartition rdf:nodeID="b233371591" />
+    <void:classPartition rdf:nodeID="b233371588" />
+    <void:classPartition rdf:nodeID="b233371589" />
+    <void:classPartition rdf:nodeID="b233371586" />
+    <void:classPartition rdf:nodeID="b233371587" />
+    <void:classPartition rdf:nodeID="b233371584" />
+    <void:classPartition rdf:nodeID="b233371585" />
+    <void:classPartition rdf:nodeID="b233371614" />
+    <void:classPartition rdf:nodeID="b233371615" />
+    <void:classPartition rdf:nodeID="b233371612" />
+    <void:classPartition rdf:nodeID="b233371613" />
+    <void:classPartition rdf:nodeID="b233371610" />
+    <void:classPartition rdf:nodeID="b233371611" />
+    <void:classPartition rdf:nodeID="b233371608" />
+    <void:classPartition rdf:nodeID="b233371609" />
+    <void:classPartition rdf:nodeID="b233371606" />
+    <void:classPartition rdf:nodeID="b233371607" />
+    <void:classPartition rdf:nodeID="b233371604" />
+    <void:classPartition rdf:nodeID="b233371605" />
+    <void:classPartition rdf:nodeID="b233371602" />
+    <void:classPartition rdf:nodeID="b233371603" />
+    <void:classPartition rdf:nodeID="b233371600" />
+    <void:classPartition rdf:nodeID="b233371601" />
+    <void:classPartition rdf:nodeID="b233371630" />
+    <void:classPartition rdf:nodeID="b233371631" />
+    <void:classPartition rdf:nodeID="b233371628" />
+    <void:classPartition rdf:nodeID="b233371629" />
+    <void:classPartition rdf:nodeID="b233371626" />
+    <void:classPartition rdf:nodeID="b233371627" />
+    <void:classPartition rdf:nodeID="b233371624" />
+    <void:classPartition rdf:nodeID="b233371625" />
+    <void:classPartition rdf:nodeID="b233371622" />
+    <void:classPartition rdf:nodeID="b233371623" />
+    <void:classPartition rdf:nodeID="b233371620" />
+    <void:classPartition rdf:nodeID="b233371621" />
+    <void:classPartition rdf:nodeID="b233371618" />
+    <void:classPartition rdf:nodeID="b233371619" />
+    <void:classPartition rdf:nodeID="b233371616" />
+    <void:classPartition rdf:nodeID="b233371617" />
+    <void:classPartition rdf:nodeID="b233371646" />
+    <void:classPartition rdf:nodeID="b233371647" />
+    <void:classPartition rdf:nodeID="b233371644" />
+    <void:classPartition rdf:nodeID="b233371645" />
+    <void:classPartition rdf:nodeID="b233371642" />
+    <void:classPartition rdf:nodeID="b233371643" />
+    <void:classPartition rdf:nodeID="b233371640" />
+    <void:classPartition rdf:nodeID="b233371641" />
+    <void:classPartition rdf:nodeID="b233371638" />
+    <void:classPartition rdf:nodeID="b233371639" />
+    <void:classPartition rdf:nodeID="b233371636" />
+    <void:classPartition rdf:nodeID="b233371637" />
+    <void:classPartition rdf:nodeID="b233371634" />
+    <void:classPartition rdf:nodeID="b233371635" />
+    <void:classPartition rdf:nodeID="b233371632" />
+    <void:classPartition rdf:nodeID="b233371633" />
+    <void:classPartition rdf:nodeID="b233371662" />
+    <void:classPartition rdf:nodeID="b233371663" />
+    <void:classPartition rdf:nodeID="b233371660" />
+    <void:classPartition rdf:nodeID="b233371661" />
+    <void:classPartition rdf:nodeID="b233371658" />
+    <void:classPartition rdf:nodeID="b233371659" />
+    <void:classPartition rdf:nodeID="b233371656" />
+    <void:classPartition rdf:nodeID="b233371657" />
+    <void:classPartition rdf:nodeID="b233371654" />
+    <void:classPartition rdf:nodeID="b233371655" />
+    <void:classPartition rdf:nodeID="b233371652" />
+    <void:classPartition rdf:nodeID="b233371653" />
+    <void:classPartition rdf:nodeID="b233371650" />
+    <void:classPartition rdf:nodeID="b233371651" />
+    <void:classPartition rdf:nodeID="b233371648" />
+    <void:classPartition rdf:nodeID="b233371649" />
+    <void:classPartition rdf:nodeID="b233371678" />
+    <void:classPartition rdf:nodeID="b233371679" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371285">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P413" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371286">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1401" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371287">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P494" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371288">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">16</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P156" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371289">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2462" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371290">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P747" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371291">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1027" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371292">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P220" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371293">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P536" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371294">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P158" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371295">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3340" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371296">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P935" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371297">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P50" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371298">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P22" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371299">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2882" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371300">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P264" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371301">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P172" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371302">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">13</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1365" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371303">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2421" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371304">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P786" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371305">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1408" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371306">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1142" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371307">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1839" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371308">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P150" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371309">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</void:classes>
+    <void:class rdf:resource="http://www.w3.org/2002/07/owl#Restriction" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371310">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3260" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371311">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1335" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371312">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2331" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371313">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">12</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P846" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371314">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P403" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371315">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3441" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371316">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2387" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371317">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1388" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371318">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P730" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371319">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P287" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371320">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P520" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371321">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3139" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371322">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P768" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371323">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P961" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371324">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P131" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371325">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2593" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371326">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P742" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371327">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P511" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371328">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1312" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371329">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">406</void:classes>
+    <void:class rdf:resource="http://wikiba.se/ontology-beta#Statement" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371330">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P279" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371331">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2306" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371332">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1265" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371333">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P137" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371334">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1421" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371335">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P21" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371336">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1071" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371337">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P176" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371338">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2522" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371339">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1442" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371340">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P78" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371341">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P414" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371342">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P15" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371343">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P527" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371344">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1018" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371345">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1684" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371346">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P405" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371347">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P575" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371348">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P439" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371349">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P509" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371350">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://wikiba.se/ontology-beta#GlobecoordinateValue" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371351">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P213" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371352">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1282" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371353">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P816" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371354">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P57" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371355">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P41" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371356">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2603" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371357">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P996" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371358">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1344" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371359">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P227" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371360">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2521" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371361">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3381" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371362">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1932" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371363">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P170" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371364">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">400</void:classes>
+    <void:class rdf:resource="http://wikiba.se/ontology-beta#BestRank" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371365">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1191" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371366">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P236" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371367">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2237" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371368">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2417" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371369">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P347" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371370">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2036" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371371">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1705" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371372">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P134" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371373">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P361" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371374">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1352" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371375">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1630" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371376">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2312" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371377">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P797" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371378">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1037" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371379">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P195" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371380">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2379" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371381">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P676" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371382">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P417" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371383">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P486" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371384">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P571" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371385">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P627" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371386">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P625" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371387">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P118" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371388">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P662" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371389">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2639" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371390">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1019" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371391">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3031" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371392">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P86" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371393">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P210" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371394">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P661" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371395">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P915" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371396">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1132" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371397">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2794" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371398">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1950" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371399">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1895" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371400">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P380" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371401">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2013" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371402">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1246" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371403">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P505" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371404">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1595" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371405">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1212" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371406">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P39" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371407">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P800" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371408">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P721" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371409">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">18</void:classes>
+    <void:class rdf:resource="http://wikiba.se/ontology-beta#Reference" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371410">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P167" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371411">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P740" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371412">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2002" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371413">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P652" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371414">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P108" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371415">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2860" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371416">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2114" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371417">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P466" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371418">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">12</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3240" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371419">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1448" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371420">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1334" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371421">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P642" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371422">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P6" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371423">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P371" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371424">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P592" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371425">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P97" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371426">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">20</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P345" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371427">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">363</void:classes>
+    <void:class rdf:resource="http://wikiba.se/ontology-beta#Item" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371428">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2826" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371429">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P84" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371430">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P102" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371431">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1473" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371432">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3548" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371433">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2047" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371434">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2781" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371435">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P464" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371436">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1879" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371437">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P194" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371438">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P200" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371439">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2519" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371440">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3321" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371441">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P201" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371442">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P930" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371443">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P189" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371444">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2500" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371445">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2321" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371446">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P47" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371447">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P512" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371448">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3248" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371449">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">12</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1366" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371450">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3084" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371451">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2873" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371452">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P112" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371453">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3301" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371454">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3064" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371455">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://wikiba.se/ontology-beta#GeoAutoPrecision" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371456">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1038" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371457">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2982" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371458">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1308" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371459">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P35" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371460">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3228" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371461">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P424" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371462">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P559" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371463">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3245" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371464">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P373" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371465">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P272" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371466">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P580" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371467">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P178" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371468">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P171" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371469">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P85" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371470">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P40" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371471">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3138" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371472">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P725" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371473">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1324" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371474">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">12</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P36" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371475">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P407" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371476">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P785" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371477">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P269" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371478">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">11</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1939" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371479">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P286" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371480">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P263" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371481">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P524" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371482">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2284" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371483">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3593" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371484">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P469" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371485">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1810" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371486">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P218" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371487">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P232" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371488">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2631" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371489">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2752" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371490">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1261" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371491">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">13</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P582" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371492">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P813" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371493">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P487" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371494">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3086" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371495">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1082" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371496">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2748" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371497">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2673" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371498">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3367" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371499">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1323" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371500">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P144" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371501">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3250" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371502">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">20</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P155" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371503">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1593" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371504">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P459" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371505">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1562" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371506">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P16" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371507">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P885" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371508">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P622" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371509">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1436" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371510">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P143" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371511">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P960" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371512">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P460" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371513">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P25" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371514">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1762" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371515">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P498" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371516">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</void:classes>
+    <void:class rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371517">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P54" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371518">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2582" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371519">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1249" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371520">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">12</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3405" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371521">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P301" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371522">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P61" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371523">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</void:classes>
+    <void:class rdf:resource="http://schema.org/Article" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371524">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3221" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371525">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3373" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371526">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P516" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371527">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2676" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371528">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P854" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371529">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">13</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P214" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371530">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2899" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371531">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P127" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371532">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</void:classes>
+    <void:class rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371533">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1447" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371534">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P599" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371535">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P958" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371536">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P300" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371537">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P219" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371538">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1157" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371539">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P450" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371540">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1661" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371541">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P837" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371542">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P161" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371543">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2124" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371544">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P18" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371545">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2436" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371546">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2093" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371547">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3143" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371548">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1454" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371549">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1800" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371550">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P823" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371551">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3107" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371552">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P735" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371553">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P991" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371554">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P281" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371555">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1998" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371556">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3383" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371557">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://schema.org/Dataset" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371558">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">14</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P94" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371559">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1451" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371560">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1814" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371561">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3302" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371562">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1326" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371563">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">14</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P646" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371564">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1643" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371565">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P119" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371566">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P449" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371567">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P105" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371568">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1875" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371569">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P276" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371570">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P411" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371571">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2368" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371572">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P20" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371573">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3075" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371574">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P366" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371575">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2992" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371576">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://wikiba.se/ontology-beta#Property" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371577">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P169" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371578">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">11</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P237" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371579">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2499" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371580">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1266" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371581">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P576" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371582">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2144" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371583">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.w3.org/2002/07/owl#Ontology" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371584">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P842" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371585">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P493" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371586">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P685" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371587">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1641" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371588">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1971" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371589">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">12</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P815" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371590">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1268" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371591">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P123" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371592">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P38" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371593">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P268" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371594">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1476" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371595">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P585" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371596">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P451" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371597">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P141" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371598">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2121" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371599">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P179" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371600">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P239" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371601">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P19" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371602">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P597" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371603">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1546" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371604">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P693" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371605">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P162" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371606">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P140" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371607">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1435" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371608">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P304" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371609">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2435" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371610">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1772" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371611">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P683" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371612">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P289" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371613">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P658" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371614">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P58" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371615">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3266" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371616">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P729" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371617">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3238" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371618">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</void:classes>
+    <void:class rdf:resource="http://wikiba.se/ontology-beta#QuantityValue" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371619">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P238" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371620">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2788" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371621">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P350" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371622">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1123" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371623">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1343" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371624">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1237" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371625">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1382" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371626">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</void:classes>
+    <void:class rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371627">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1196" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371628">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3097" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371629">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P30" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371630">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P807" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371631">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P197" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371632">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P225" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371633">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P106" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371634">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3096" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371635">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P166" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371636">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P344" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371637">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P138" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371638">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2626" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371639">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P655" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371640">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P393" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371641">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1545" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371642">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P92" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371643">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P26" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371644">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P159" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371645">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1114" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371646">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2437" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371647">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1793" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371648">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P569" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371649">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P488" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371650">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P27" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371651">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2555" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371652">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2898" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371653">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3151" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371654">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P175" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371655">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2715" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371656">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P364" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371657">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1449" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371658">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P877" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371659">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P37" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371660">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">12</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P856" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371661">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P275" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371662">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P577" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371663">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P348" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371664">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1657" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371665">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P98" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371666">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P528" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371667">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1001" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371668">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P126" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371669">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1411" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371670">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2824" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371671">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P734" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371672">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1678" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371673">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P217" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371674">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1070" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371675">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1258" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371676">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1619" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371677">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2043" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371678">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P282" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371679">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P248" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371680">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1189" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371681">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P910" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371682">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P828" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371683">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2674" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371684">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2052" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371685">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P938" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371686">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P53" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371687">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2032" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371688">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P69" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371689">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1030" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371690">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">15</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2529" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371691">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</void:classes>
+    <void:class rdf:resource="http://wikiba.se/ontology-beta#TimeValue" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371692">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P473" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371693">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1680" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371694">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">13</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P17" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371695">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1773" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371696">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">11</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1346" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371697">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P791" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371698">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P103" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371699">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P190" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371700">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P3361" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371701">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1319" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371702">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1813" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371703">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P570" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371704">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P870" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371705">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P230" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371706">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P850" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371707">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P299" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371708">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P1195" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371709">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P358" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371710">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P298" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="b233371711">
+    <void:classes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</void:classes>
+    <void:class rdf:resource="http://www.wikidata.org/prop/novalue/P2334" />
+  </rdf:Description>
+</rdf:RDF>
