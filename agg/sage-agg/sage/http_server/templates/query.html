@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>{{ query["name"] }} - SaGe queries</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>{{ query['name'] }}</h1>
+      <p><strong>Source dataset:</strong> <a href="{{ url_for('sparql-interface.sparql_query', graph_name=graph_name, _external=True) }}">{{ url_for('sparql-interface.sparql_query', graph_name=graph_name, _external=True) }}</a></p>
+
+      <h2><i class="fas fa-info-circle"></i> Description</h2>
+      <p>{{ query["description"] }}</p>
+
+      <h2><i class="fab fa-hubspot"></i> SPARQL query</h2>
+      <pre>{{ query["value"] }}</pre>
+
+      <p><a class="btn btn-success" href="{{ query_url }}" target="_blank"><i class="fas fa-play"></i>  Execute this query</a></p>
+
+      <h2><i class="fas fa-pencil-alt"></i> JSON-LD description</h2>
+      <div class="well">
+        <pre>{{ description | safe }}</pre>
+      </div>
+    </div>
+    <script type="application/ld+json">
+    {{ description | safe }}
+    </script>
+  </body>
+</html>

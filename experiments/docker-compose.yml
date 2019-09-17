@@ -13,18 +13,6 @@ services:
   #   ports:
   #     - 7100:7100
   #   command: sage /opt/data/sage-configs/bsbm1k.yaml -p 7100 -w 4
-  # sage-engine-bsbm1k2:
-  #   container_name: bsbm1k2
-  #   build:
-  #     context: ./..
-  #     dockerfile: ./experiments/Dockerfile
-  #   volumes:
-  #     - ../data:/opt/data/
-  #   tty: true         # to have nice outputs
-  #   stdin_open: true  # to be able to use CTRL+C to stop the container
-  #   ports:
-  #     - 7110:7110
-  #   command: sage /opt/data/sage-configs/bsbm1k.yaml -p 7110 -w 4
   sage-engine-wikidata2b:
     container_name: wikidata2b
     build:
@@ -37,15 +25,3 @@ services:
     ports:
       - 7120:7120
     command: sage /opt/data/sage-configs/wikidata2b150ms.yaml --gunicorn-config /opt/data/gunicorn-configs/sage-engine-7120.py
-  sage-engine-wikidata8b:
-    container_name: wikidata8b
-    build:
-      context: ./..
-      dockerfile: ./experiments/Dockerfile
-    volumes:
-      - ../data:/opt/data/
-    tty: true         # to have nice outputs
-    stdin_open: true  # to be able to use CTRL+C to stop the container
-    ports:
-      - 7180:7180
-    command: sage /opt/data/sage-configs/wikidata8b150ms.yaml --gunicorn-config /opt/data/gunicorn-configs/sage-engine-7180.py
