@@ -2,14 +2,14 @@ version: '3.4'
 
 services:
   sage-engine-agg:
-    container_name: bsbm1k_akk
+    container_name: bsbm1k_agg
     build:
       context: ./..
-      dockerfile: ./agg/sage-agg
+      dockerfile: ./experiments/Dockerfile-sage-agg
     volumes:
       - ../data:/opt/data/
     tty: true         # to have nice outputs
     stdin_open: true  # to be able to use CTRL+C to stop the container
     ports:
       - 7125:7125
-    command: sage /opt/data/sage-configs/bsbm1k.yaml --gunicorn-config /opt/data/gunicorn-configs/sage-engine-7125.py
+    command: sage /opt/data/sage-configs/bsbm1k.yaml --gunicorn-config /opt/data/gunicorn-configs/sage-engine-agg-7125.py
