@@ -11,6 +11,7 @@ class CountAggregator(PartialAggregator):
         self._groups = dict()
 
     def update(self, group_key, bindings):
+        print(self._variable, group_key, bindings)
         """Update the aggregator with a new value for a group of bindings"""
         if self._variable in bindings:
             if group_key not in self._groups:

@@ -34,10 +34,10 @@ gradle -Dhttp.proxyHost=cache.ha.univ-nantes.fr -Dhttp.proxyPort=3128 -Dhttps.pr
 Run sage server using a custom GUnicorn configuration
 ```bash
 #
-cd sage-engine
+cd ./servers/sage-engine
 git submodule init
 git submodule update
-cd ..
+cd ../..
 ```
 Then for loading the sage server (make sure to put your data in the right place before!)
 ```bash

@@ -136,14 +136,25 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         groupby_variables = list()
         proj_variables = list()
         # build GROUP BY variables
-        for variable in node.p.expr:
-            groupby_variables.append(variable.n3())
-            proj_variables.append(variable.n3())
+        last_groupby_var = None
+        # case 1: no explicit group BY, so we group by all variables in the query
+        if node.p.expr is None:
+            for variable in node.p._vars:
+                groupby_variables.append(variable.n3())
+                proj_variables.append(variable.n3())
+                last_groupby_var = variable
+        else:  # case 2: there is an explicit group by
+            for variable in node.p.expr:
+                groupby_variables.append(variable.n3())
+                proj_variables.append(variable.n3())
+                last_groupby_var = variable
         # build aggregators for evaluating SPARQL aggregations (if any)
         aggregators = list()
         # if no aggregate, keep SPARQL groups in the query results
         keep_groups = len(node.A) == 0
         for agg in node.A:
+            if agg.vars == '*':
+                agg.vars = last_groupby_var
             proj_variables.append(agg.vars.n3())
             aggregators.append(build_aggregator(agg, renaming_map))
         # build source iterator from child node

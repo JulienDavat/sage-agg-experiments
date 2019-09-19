@@ -14,6 +14,10 @@ public class ExecutionStats {
     private double executionTime;
     private int nbCallsRead;
     private int nbCallsWrite;
+    private boolean enableLogs = false;
+    private List<Double> decodingResponses;
+    private List<String> logs;
+    private List<Double> transferSizes;
     private List<Double> httpTimesRead;
     private List<Double> httpTimesWrite;
     private List<Double> resumeTimesRead;
@@ -25,12 +29,15 @@ public class ExecutionStats {
         executionTime = -1;
         nbCallsRead = 0;
         nbCallsWrite = 0;
+        logs = new ArrayList<>();
+        decodingResponses = new ArrayList<>();
         httpTimesRead = new ArrayList<>();
         httpTimesWrite = new ArrayList<>();
         resumeTimesRead = new ArrayList<>();
         suspendTimesRead = new ArrayList<>();
         resumeTimesWrite = new LinkedList<>();
         suspendTimesWrite = new LinkedList<>();
+        transferSizes = new ArrayList<>();
     }
 
     public double getExecutionTime() {
@@ -87,6 +94,20 @@ public class ExecutionStats {
         return Stats.meanOf(suspendTimesWrite);
     }
 
+    public Double getMeanTransferSize() {
+        if (transferSizes.isEmpty()) {
+            return 0.0;
+        }
+        return Stats.meanOf(transferSizes);
+    }
+
+    public Double getTotalTransferSize() {
+        if (transferSizes.isEmpty()) {
+            return 0.0;
+        }
+        return transferSizes.parallelStream().reduce(0.0, (a, b) -> a + b);
+    }
+
     public void startTimer() {
         executionTime = System.nanoTime();
     }
@@ -114,5 +135,29 @@ public class ExecutionStats {
     public void reportOverheadWrite(double resumeTime, double suspendTime) {
         resumeTimesWrite.add(resumeTime);
         suspendTimesWrite.add(suspendTime);
+    }
+
+    public void reportTransferSize(double size) {
+        transferSizes.add(size);
+    }
+
+    public void setLogs(boolean b) {
+        this.enableLogs = true;
+    }
+
+    public void reportLogs(String log) {
+        if(this.enableLogs) System.err.println(log);
+        this.logs.add(log);
+    }
+
+    public void reportDecodingResponseTime(double decodingTimeEnd) {
+        decodingResponses.add(decodingTimeEnd);
+    }
+
+    public double getMeanDecodingResponseTime() {
+        if (decodingResponses.isEmpty()) {
+            return 0.0;
+        }
+        return Stats.meanOf(decodingResponses);
     }
 }

@@ -56,27 +56,21 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
                 while (hasNext) {
                     results = graph.getClient().queryGroupBy(graph.getGraphURI(), bgp, variables, aggregations, extensions, nextLink);
                     // regroup all bindings by key
-                    if (results.hasNext()) {
-                        System.err.println("There is results");
-                        for(Binding b: results.getBindings()) {
-                            Binding key = genKey(variables, b);
-                            if (key != null) {
-                                if (!solutions.containsKey(key)) {
-                                    solutions.put(key, new LinkedList<>());
-                                }
-                                solutions.get(key).add(b);
+                    for(Binding b: results.getBindings()) {
+                        Binding key = genKey(variables, b);
+                        if (key != null) {
+                            if (!solutions.containsKey(key)) {
+                                solutions.put(key, new LinkedList<>());
                             }
+                            solutions.get(key).add(b);
                         }
+                    }
                     /*results.getSolutionGroups().forEach(solutionGroup -> {
                         reducer.accumulate(solutionGroup);
                         cpt[0] += solutionGroup.groupSize();
                     });*/
-                        nextLink = results.getNext();
-                        hasNext = results.hasNext();
-                    } else {
-                        hasNext = false;
-                    }
-
+                    nextLink = results.getNext();
+                    hasNext = results.hasNext();
                 }
 
                 // produce final results from each group

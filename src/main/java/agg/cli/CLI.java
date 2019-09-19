@@ -81,6 +81,9 @@ public class CLI implements Callable<Void> {
         Dataset federation;
         SageConfigurationFactory factory;
         ExecutionStats spy = new ExecutionStats();
+        if(this.time) {
+            spy.setLogs(true);
+        }
         System.err.println("Executing: " + queryString);
 
         // check if we are dealing with a classic query or an UPDATE query
@@ -131,7 +134,10 @@ public class CLI implements Callable<Void> {
         if (this.time) {
             double duration = spy.getExecutionTime();
             int nbQueries = spy.getNbCallsRead();
-            System.err.println(MessageFormat.format("SPARQL query executed in {0}s with {1} HTTP requests", duration, nbQueries));
+            double trafficTotal = spy.getTotalTransferSize();
+            double trafficMean = spy.getMeanTransferSize();
+            double decodingMean = spy.getMeanDecodingResponseTime();
+            System.err.println(MessageFormat.format("SPARQL query executed in {0}s with {1} HTTP requests with {2} bytes received (mean = {3};  decoded in around {4} ms each)", duration, nbQueries, trafficTotal, trafficMean, decodingMean));
         }
 
         // display stats in CSV format (if needed)
@@ -151,7 +157,8 @@ public class CLI implements Callable<Void> {
                     duration, spy.getNbCallsRead(), spy.getNbCallsWrite(),
                     spy.getMeanHTTPTimesRead(), spy.getMeanHTTPTimesWrite(),
                     spy.getMeanResumeTimeRead(), spy.getMeanResumeTimeWrite(),
-                    spy.getMeanSuspendTimeRead(), spy.getMeanSuspendTimeWrite());
+                    spy.getMeanSuspendTimeRead(), spy.getMeanSuspendTimeWrite(),
+                    spy.getMeanTransferSize());
             try {
                 Files.write(Paths.get(this.measure), csvLine.getBytes(), StandardOpenOption.APPEND);
             } catch (IOException e) {
@@ -166,6 +173,6 @@ public class CLI implements Callable<Void> {
     }
 
     public static void main(String[] args) {
-        CommandLine.call(new CLI(), args);
+        new CommandLine(new CLI()).execute(args);
     }
 }

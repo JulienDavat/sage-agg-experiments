@@ -1,0 +1,11 @@
+name: SaGe Experiment server
+maintainer: Grall Arnaud
+public_url: http://localhost:8000
+quota: 75
+max_results: 2000
+datasets:
+  -
+    name: bsbm1k
+    description: BSBM scale 1000 using HDT backend
+    backend: hdt-file
+    file: ./bsbm1k.hdt

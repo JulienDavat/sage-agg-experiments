@@ -1,6 +1,6 @@
 FROM python:3.6.5-alpine3.7
 
-RUN apk add --no-cache git make g++
+RUN apk add --no-cache git make g++ bash
 
 # env proxy
 ENV http_proxy="http://cache.ha.univ-nantes.fr:3128/"
@@ -12,7 +12,8 @@ RUN git config --global -l
 
 WORKDIR /opt/sage-engine/
 
-COPY ./sage-engine/ .
+COPY ./servers/sage-engine/ .
+
 RUN pip install pybind11==2.2.4
 RUN pip install -r requirements.txt
 RUN pip install -e .[hdt]

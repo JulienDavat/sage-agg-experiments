@@ -44,10 +44,10 @@ class GroupByAggregator(PreemptableIterator):
             elt = dict()
             # recopy keys
             for variable in self._grouping_variables:
-                elt[variable] = values[0][variable]
+               elt[variable] = values[0][variable]
             # export the groups of bindings if needed
             if self._keep_groups:
-                elt['?__group_values'] = values
+               elt['?__group_values'] = values
             # apply aggregators
             for agg in self._aggregators:
                 try:

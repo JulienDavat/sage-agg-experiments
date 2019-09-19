@@ -25,6 +25,8 @@ import agg.http.results.UpdateResults;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -100,7 +102,7 @@ public class SageDefaultClient implements SageRemoteClient {
         requestFactory = HTTP_TRANSPORT.createRequestFactory(request -> {
             request.getHeaders().setAccept(HTTP_JSON_CONTENT_TYPE);
             request.getHeaders().setContentType(HTTP_JSON_CONTENT_TYPE);
-            request.getHeaders().setUserAgent("Sage-Jena client/Java 1.8");
+            request.getHeaders().setUserAgent("Sage-Jena-Agg client/Java 1.8");
             request.setParser(new JsonObjectParser(JSON_FACTORY));
             request.setUnsuccessfulResponseHandler(new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
         });
@@ -118,7 +120,7 @@ public class SageDefaultClient implements SageRemoteClient {
         requestFactory = HTTP_TRANSPORT.createRequestFactory(request -> {
             request.getHeaders().setAccept(HTTP_JSON_CONTENT_TYPE);
             request.getHeaders().setContentType(HTTP_JSON_CONTENT_TYPE);
-            request.getHeaders().setUserAgent("Sage-Jena client/Java 1.8");
+            request.getHeaders().setUserAgent("Sage-Jena-Agg client/Java 1.8");
             request.setParser(new JsonObjectParser(JSON_FACTORY));
             request.setUnsuccessfulResponseHandler(new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
             request.setConnectTimeout(0);
@@ -332,6 +334,7 @@ public class SageDefaultClient implements SageRemoteClient {
      * @throws IOException
      */
     private QueryResults decodeResponse(HttpResponse response, boolean isRead) throws IOException {
+        double decodingTimeStart = System.currentTimeMillis();
         String responseContent = IOUtils.toString(response.getContent(), Charset.forName("UTF-8"));
 
         int statusCode = response.getStatusCode();
@@ -344,6 +347,18 @@ public class SageDefaultClient implements SageRemoteClient {
         } else {
             spy.reportOverheadWrite(sageResponse.stats.getResumeTime(), sageResponse.stats.getSuspendTime());
         }
+
+        double decodingTimeEnd = (System.currentTimeMillis()) - decodingTimeStart;
+        spy.reportDecodingResponseTime(decodingTimeEnd);
+        spy.reportTransferSize(responseContent.getBytes().length);
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss:SS");
+        spy.reportLogs("[" + dateFormat.format(date) +  "]" +
+                " | size(bytes): " + responseContent.getBytes().length +
+                " | resume(ms): " + sageResponse.stats.getResumeTime() +
+                " | suspend(ms): " + sageResponse.stats.getSuspendTime() +
+                " | decoding(ms): " + decodingTimeEnd);
+
         return new QueryResults(sageResponse.bindings, sageResponse.next, sageResponse.stats);
     }
 }

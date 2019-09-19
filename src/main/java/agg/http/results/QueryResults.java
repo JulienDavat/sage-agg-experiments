@@ -32,8 +32,10 @@ public class QueryResults implements SageQueryResults {
     }
 
     private QueryResults(String error) {
+        System.err.println("Error: " + error);
         this.error = error;
         this.hasError = true;
+        System.exit(1);
     }
 
     public static QueryResults withError(String error) {
