@@ -4,7 +4,7 @@ import org.apache.jena.query.*;
 
 import java.io.PrintStream;
 
-public class SelectQueryExecutor extends org.gdd.sage.cli.SelectQueryExecutor implements QueryExecutor {
+public class SelectQueryExecutor extends agg.cli.SelectQueryExecutor implements QueryExecutor {
     public SelectQueryExecutor(String format) {
         super(format);
     }
@@ -15,6 +15,7 @@ public class SelectQueryExecutor extends org.gdd.sage.cli.SelectQueryExecutor im
     }
 
     public void execute(String format, Dataset dataset, Query query, PrintStream out) {
+
         if (query.isSelectType()) {
             try (QueryExecution qexec = QueryExecutionFactory.create(query, dataset)) {
                 ResultSet results = qexec.execSelect();

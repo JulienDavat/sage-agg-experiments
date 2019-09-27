@@ -4,7 +4,7 @@ import picocli.CommandLine;
         footer = "Copyright(c) 2019 GRALL Arnaud",
         synopsisSubcommandLabel = "COMMAND",
         description = "Generation of VoID description for Sage Endpoint(s)/Dataset(s)",
-        subcommands = {SportalSparqlEndpoint.class, SparqlEndpoint.class, SageJena.class, SageJenaAgg.class, SageDataset.class, SageEndpoint.class},
+        subcommands = {SportalSparqlEndpoint.class, SparqlEndpoint.class, SageJena.class, SageDataset.class, SageEndpoint.class},
         mixinStandardHelpOptions = true)
 public class Cli implements Runnable {
     @CommandLine.Spec

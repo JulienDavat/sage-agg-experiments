@@ -13,7 +13,6 @@ import org.apache.jena.sparql.expr.ExprAggregator;
 import agg.engine.reducers.AggregationReducer;
 import agg.http.results.QueryResults;
 import agg.model.SageGraph;
-import org.apache.log4j.xml.SAXErrorHandler;
 
 import java.util.*;
 

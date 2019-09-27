@@ -32,16 +32,37 @@ public class SageQueryBuilder {
      * @return Generated SPARQL query
      */
     public static String buildBGPQuery(BasicPattern bgp) {
-        return SageQueryBuilder.buildBGPQuery(bgp, new LinkedList<>());
+        return SageQueryBuilder.buildBGPQuery(bgp, new LinkedList<>(), new LinkedList<>());
+    }
+
+    /**
+     * Build a SPARQL query from a Basic graph pattern
+     * @param bgp - Basic Graph pattern
+     * @param variables - list of projection variables
+     * @return Generated SPARQL query
+     */
+    public static String buildBGPQueryWithProjection(BasicPattern bgp, List<Var> variables) {
+        return SageQueryBuilder.buildBGPQuery(bgp, new LinkedList<>(), new LinkedList<>());
+    }
+
+    /**
+     * Build a SPARQL query from a Basic graph pattern
+     * @param bgp - Basic Graph pattern
+     * @param filters - List of SPARQL filters
+     * @return Generated SPARQL query
+     */
+    public static String buildBGPQuery(BasicPattern bgp, List<Expr> filters) {
+        return SageQueryBuilder.buildBGPQuery(bgp, filters, new LinkedList<>());
     }
 
     /**
      * Build a SPARQL query from a Basic graph pattern and a list of SPARQL filters
      * @param bgp - Basic Graph pattern
      * @param filters - List of SPARQL filters
+     * @param variables - list of projection variables
      * @return Generated SPARQL query
      */
-    public static String buildBGPQuery(BasicPattern bgp, List<Expr> filters) {
+    public static String buildBGPQuery(BasicPattern bgp, List<Expr> filters, List<Var> variables) {
         // extract SPARQL variables from the BGP
         //Set<Var> variables = SageQueryBuilder.getVariables(bgp);
         // query root: the basic graph pattern itself
@@ -51,7 +72,7 @@ public class SageQueryBuilder {
             op = OpFilter.filter(filter, op);
         }
         // apply projection
-        //op = new OpProject(op, Lists.newLinkedList(variables));
+        if (variables.size() > 0) op = new OpProject(op, variables);
         return SageQueryBuilder.serializeQuery(op);
     }
 

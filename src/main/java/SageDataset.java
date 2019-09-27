@@ -1,3 +1,4 @@
+import agg.engine.SageOpExecutor;
 import jena.ConstructQueryExecutor;
 import jena.QueryExecutor;
 import jena.SelectQueryExecutor;
@@ -6,9 +7,9 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.gdd.sage.core.factory.SageAutoConfiguration;
-import org.gdd.sage.core.factory.SageConfigurationFactory;
-import org.gdd.sage.http.ExecutionStats;
+import agg.core.factory.SageAutoConfiguration;
+import agg.core.factory.SageConfigurationFactory;
+import agg.http.ExecutionStats;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import picocli.CommandLine;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 @CommandLine.Command(name = "dataset", footer = "Copyright(c) 2019 GRALL Arnaud",
-        description = "Generate a VoID summary over a Sage dataset")
+        description = "Generate a VoID summary over a Sage dataset using the sage-agg server")
 public class SageDataset implements Runnable {
     @CommandLine.Parameters(index = "0", arity = "1", description = "Dataset URI <...>/sparql/<...>")
     public String datasetUri = null;
@@ -46,6 +47,9 @@ public class SageDataset implements Runnable {
 
     @CommandLine.Option(names = {"--sportal-file"}, description = "Specify the location of the sportal file wich will be executed")
     public String sportalFile = "data/original-sportal.json";
+
+    @CommandLine.Option(names = {"--optimized"}, description = "Enable the aggregation optimization")
+    public Boolean optimized = false;
     
     private String format = "xml";
     private URL voidUrl = null;
@@ -224,6 +228,11 @@ public class SageDataset implements Runnable {
             Dataset federation;
             SageConfigurationFactory factory;
             ExecutionStats spy = new ExecutionStats();
+            if (this.time) {
+                spy.setLogs(true);
+            }
+
+            if (this.optimized) SageOpExecutor.aggregations = this.optimized;
 
             Query parseQuery = QueryFactory.create(queryString);
             factory = new SageAutoConfiguration(datasetUri, parseQuery, spy);
@@ -249,18 +258,15 @@ public class SageDataset implements Runnable {
             spy.stopTimer();
 
             double duration = spy.getExecutionTime();
-            int nbQueries = spy.getNbCalls();
-            double meanHttpTimes = spy.getMeanHttpTimes();
-            double meanResumeTime = spy.getMeanResumeTime();
-            double meanSuspendTime = spy.getMeanSuspendTime();
-            double transferSize = spy.getTransferSize();
+            int nbQueries = spy.getNbCallsRead();
+            double transferSize = spy.getTotalTransferSize();
             if (time) System.err.println(MessageFormat.format("[" + label + "] SPARQL query executed in {0}s with {1} HTTP requests with {2} Bytes received", duration, nbQueries, transferSize));
-            spyOut.println(duration + " " +
-                    nbQueries + " " +
-                    meanHttpTimes + " " +
-                    meanResumeTime + " " +
-                    meanSuspendTime + " " +
-                    transferSize);
+            spyOut.println(String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s",
+                    duration, spy.getNbCallsRead(), spy.getNbCallsWrite(),
+                    spy.getMeanHTTPTimesRead(), spy.getMeanHTTPTimesWrite(),
+                    spy.getMeanResumeTimeRead(), spy.getMeanResumeTimeWrite(),
+                    spy.getMeanSuspendTimeRead(), spy.getMeanSuspendTimeWrite(),
+                    spy.getMeanTransferSize()));
 
             // cleanup connections
             federation.close();

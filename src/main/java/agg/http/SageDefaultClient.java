@@ -358,7 +358,6 @@ public class SageDefaultClient implements SageRemoteClient {
                 " | resume(ms): " + sageResponse.stats.getResumeTime() +
                 " | suspend(ms): " + sageResponse.stats.getSuspendTime() +
                 " | decoding(ms): " + decodingTimeEnd);
-
         return new QueryResults(sageResponse.bindings, sageResponse.next, sageResponse.stats);
     }
 }

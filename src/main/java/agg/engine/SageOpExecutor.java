@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class SageOpExecutor extends OpExecutor {
     private final ExecutorService threadPool;
-
+    public static boolean aggregations = false;
     SageOpExecutor(ExecutorService threadPool, ExecutionContext execCxt) {
         super(execCxt);
         this.threadPool = threadPool;
@@ -52,33 +52,45 @@ public class SageOpExecutor extends OpExecutor {
 
     @Override
     protected QueryIterator execute(OpExtend opExtend, QueryIterator input) {
-        // gather all extend operations
-        VarExprList expressions = new VarExprList();
-        Op current = opExtend;
-        while (current instanceof OpExtend) {
-            OpExtend c = (OpExtend) current;
-            expressions.addAll(c.getVarExprList());
-            current = c.getSubOp();
-        }
-        // build execution plan for the aggregation if possible
-        if (current instanceof OpGroup) {
-            Graph activeGraph = execCxt.getActiveGraph();
-            OpGroup opGroup = (OpGroup) current;
-            if (opGroup.getSubOp() instanceof OpBGP && activeGraph instanceof SageGraph) {
-                return executeAggregation((SageGraph) activeGraph, opGroup, expressions);
+        if (aggregations) {
+            System.err.println("Execute op optimized");
+            // gather all extend operations
+            VarExprList expressions = new VarExprList();
+            Op current = opExtend;
+            while (current instanceof OpExtend) {
+                OpExtend c = (OpExtend) current;
+                expressions.addAll(c.getVarExprList());
+                current = c.getSubOp();
             }
+            // build execution plan for the aggregation if possible
+            if (current instanceof OpGroup) {
+                Graph activeGraph = execCxt.getActiveGraph();
+                OpGroup opGroup = (OpGroup) current;
+                if (opGroup.getSubOp() instanceof OpBGP && activeGraph instanceof SageGraph) {
+                    return executeAggregation((SageGraph) activeGraph, opGroup, expressions);
+                }
+            }
+            return super.execute(opExtend, input);
+        } else {
+            System.err.println("dont execute op optimized");
+            return super.execute(opExtend, input);
         }
-        return super.execute(opExtend, input);
     }
 
     @Override
     protected QueryIterator execute(OpGroup opGroup, QueryIterator input) {
-        // reducer-based aggregations only works on a single BGP
-        Graph activeGraph = execCxt.getActiveGraph();
-        if (opGroup.getSubOp() instanceof OpBGP && activeGraph instanceof SageGraph) {
-            return executeAggregation((SageGraph) activeGraph, opGroup, new VarExprList());
+        if (aggregations) {
+            System.err.println("Execute op optimized");
+            // reducer-based aggregations only works on a single BGP
+            Graph activeGraph = execCxt.getActiveGraph();
+            if (opGroup.getSubOp() instanceof OpBGP && activeGraph instanceof SageGraph) {
+                return executeAggregation((SageGraph) activeGraph, opGroup, new VarExprList());
+            }
+            return super.execute(opGroup, input);
+        } else {
+            System.err.println("dont execute op optimized");
+            return super.execute(opGroup, input);
         }
-        return super.execute(opGroup, input);
     }
 
     /**

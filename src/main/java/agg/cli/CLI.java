@@ -1,5 +1,6 @@
 package agg.cli;
 
+import agg.engine.SageOpExecutor;
 import com.google.common.collect.Lists;
 import org.apache.jena.query.*;
 import agg.core.factory.SageAutoConfiguration;
@@ -52,6 +53,9 @@ public class CLI implements Callable<Void> {
     @CommandLine.Option(names = { "--time" }, description = "Display the the query execution time at the end")
     public boolean time = false;
 
+    @CommandLine.Option(names = { "--optimized" }, description = "Enable the aggregation optimization")
+    public boolean optimized = false;
+
     @Override
     public Void call() throws Exception {
         Logger logger = ARQ.getExecLogger();
@@ -84,6 +88,9 @@ public class CLI implements Callable<Void> {
         if(this.time) {
             spy.setLogs(true);
         }
+
+        if (this.optimized) SageOpExecutor.aggregations = this.optimized;
+
         System.err.println("Executing: " + queryString);
 
         // check if we are dealing with a classic query or an UPDATE query
@@ -140,17 +147,6 @@ public class CLI implements Callable<Void> {
             System.err.println(MessageFormat.format("SPARQL query executed in {0}s with {1} HTTP requests with {2} bytes received (mean = {3};  decoded in around {4} ms each)", duration, nbQueries, trafficTotal, trafficMean, decodingMean));
         }
 
-        // display stats in CSV format (if needed)
-        // FORMAT:
-        // duration
-        // nb HTTP requests read
-        // nb HTTP requests write
-        // Avg. HTTP response time read
-        // Avg. HTTP response time write
-        // Avg. Resume time read
-        // Avg. Resume time write
-        // Avg. Suspend time read
-        // Avg. Suspend time write
         if (this.measure != null) {
             double duration = spy.getExecutionTime();
             String csvLine = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s",

@@ -8,7 +8,7 @@ import org.apache.jena.riot.RDFFormat;
 
 import java.io.PrintStream;
 
-public class ConstructQueryExecutor extends org.gdd.sage.cli.ConstructQueryExecutor implements QueryExecutor {
+public class ConstructQueryExecutor extends agg.cli.ConstructQueryExecutor implements QueryExecutor {
     public ConstructQueryExecutor(String format) {
         super(format);
     }
