@@ -7,6 +7,7 @@ from sage.query_engine.iterators.filter import FilterIterator
 from sage.query_engine.iterators.union import BagUnionIterator
 from sage.query_engine.agg.groupby import GroupByAggregator
 from sage.query_engine.agg.count import CountAggregator
+from sage.query_engine.agg.count_distinct import CountDistinctAggregator
 from sage.query_engine.agg.sum import SumAggregator
 from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.protobuf.utils import protoTriple_to_dict
@@ -92,13 +93,15 @@ def load_groupby(saved_plan, dataset):
     keep_groups = len(saved_plan.aggregators) == 0
     for agg in saved_plan.aggregators:
         if agg.name == 'count':
-            aggregators.append(CountAggregator(agg.variable, binds_to=agg.binds_to))
+            aggregators.append(CountAggregator(agg.variable, binds_to=agg.binds_to), ID=agg.id)
+        elif agg.name == 'count-distinct':
+            aggregators.append(CountDistinctAggregator(agg.variable, binds_to=agg.binds_to), ID=agg.id)
         elif agg.name == 'sum':
-            aggregators.append(SumAggregator(agg.variable, binds_to=agg.binds_to))
+            aggregators.append(SumAggregator(agg.variable, binds_to=agg.binds_to), ID=agg.id)
         elif agg.name == 'min':
-            aggregators.append(MinAggregator(agg.variable, binds_to=agg.binds_to))
+            aggregators.append(MinAggregator(agg.variable, binds_to=agg.binds_to), ID=agg.id)
         elif agg.name == 'max':
-            aggregators.append(MaxAggregator(agg.variable, binds_to=agg.binds_to))
+            aggregators.append(MaxAggregator(agg.variable, binds_to=agg.binds_to), ID=agg.id)
         else:
             raise Exception("Unknown SPARQL aggregators of type '{}' found when resuming query.".format(agg.name))
     return GroupByAggregator(source, saved_plan.variables, aggregators=aggregators, keep_groups=keep_groups)

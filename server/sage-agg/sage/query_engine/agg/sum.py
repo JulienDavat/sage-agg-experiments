@@ -7,8 +7,8 @@ from sage.query_engine.agg.utils import to_numeric
 class SumAggregator(PartialAggregator):
     """A SumAggregator evaluates a SUM aggregation"""
 
-    def __init__(self, variable, binds_to='?sum'):
-        super(SumAggregator, self).__init__(variable, binds_to)
+    def __init__(self, variable, binds_to='?sum', ID=None):
+        super(SumAggregator, self).__init__(variable, binds_to, ID)
         self._groups = dict()
 
     def update(self, group_key, bindings):

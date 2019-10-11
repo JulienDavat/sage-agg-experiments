@@ -6,6 +6,7 @@ from rdflib.plugins.sparql.algebra import translateQuery
 from sage.query_engine.iterators.projection import ProjectionIterator
 from sage.query_engine.iterators.union import BagUnionIterator
 from sage.query_engine.iterators.filter import FilterIterator
+from sage.query_engine.agg.count_distinct import CountDistinctAggregator
 from sage.query_engine.agg.groupby import GroupByAggregator
 from sage.query_engine.agg.count import CountAggregator
 from sage.query_engine.agg.sum import SumAggregator
@@ -57,7 +58,10 @@ def build_aggregator(aggregate, renaming_map):
     """Build an aggregator from its logical representation and a renaming Map"""
     binds_to = renaming_map[aggregate.res.n3()]
     if aggregate.name == 'Aggregate_Count':
-        return CountAggregator(aggregate.vars.n3(), binds_to=binds_to)
+        if aggregate.distinct == 'DISTINCT':
+            return CountDistinctAggregator(aggregate.vars.n3(), binds_to=binds_to)
+        else:
+            return CountAggregator(aggregate.vars.n3(), binds_to=binds_to)
     elif aggregate.name == 'Aggregate_Sum':
         return SumAggregator(aggregate.vars.n3(), binds_to=binds_to)
     elif aggregate.name == 'Aggregate_Min':
@@ -87,7 +91,6 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
             * server_url - URL of the SaGe server
             * cardinalities - Map<triple,integer> used to track triple patterns cardinalities
     """
-    print(node)
     if node.name == 'SelectQuery':
         # in case of a FROM clause, set the new default graphs used
         graphs = current_graphs

@@ -49,6 +49,12 @@ class GroupByAggregator(PreemptableIterator):
 
     def current_agg(self):
         res = list()
+
+        if not self.has_next():
+            for agg in self._aggregators:
+                if agg.is_distinct():
+                    agg.end()
+
         # build groups & apply aggregations on the fly
         for key, values in self._groups.items():
             elt = dict()
@@ -64,12 +70,20 @@ class GroupByAggregator(PreemptableIterator):
             # apply aggregators
             for agg in self._aggregators:
                 try:
-                    elt[agg.get_binds_to()] = agg.done(key)
+                    if (not agg.is_distinct()) or (agg.is_distinct() and agg._ended):
+                        elt[agg.get_binds_to()] = agg.done(key)
+
                 except Exception:
                     # ignore errors
                     pass
             # add results
             res.append(elt)
+
+        if not self.has_next():
+            for agg in self._aggregators:
+                if agg.is_distinct():
+                    agg.close()
+
         return res
 
     def has_next(self):
@@ -100,6 +114,7 @@ class GroupByAggregator(PreemptableIterator):
             agg.name = aggregator.get_type()
             agg.variable = aggregator.get_variable()
             agg.binds_to = aggregator.get_binds_to()
+            agg.id = aggregator.get_id()
         return saved
 
     def __repr__(self):

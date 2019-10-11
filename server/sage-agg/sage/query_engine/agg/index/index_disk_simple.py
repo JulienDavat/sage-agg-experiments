@@ -1,12 +1,9 @@
-import os
-import json
-import xxhash
-import shutil
+from sage.query_engine.agg.index.index_disk_abstract import IndexAbstract
+import os, xxhash, json, shutil
 
-class IndexSimple:
+class IndexSimple(IndexAbstract):
     def __init__(self, aggregator):
-        self._aggregator = aggregator
-        self._id = self._aggregator.get_id()
+        super(IndexSimple, self).__init__(aggregator)
         self._location = "/tmp/sage-distinct/{}/".format(self._id)
         self._seed = 0
 
@@ -42,3 +39,4 @@ class IndexSimple:
     def close(self):
         # rm everything in self._location
         shutil.rmtree(self._location, ignore_errors=True)
+

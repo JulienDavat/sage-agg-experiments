@@ -90,6 +90,4 @@ class SageEngine(object):
         root = RootTree()
         source_field = plan.serialized_name() + '_source'
         getattr(root, source_field).CopyFrom(plan.save())
-        if len(results) > 0:
-            print(results[0], plan)
         return (results, root, query_done)

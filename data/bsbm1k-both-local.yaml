@@ -16,3 +16,9 @@ datasets:
     dbname: grall-a
     user: grall-a
     password: ''
+  - name: test
+    description: BSBM 1K products
+    backend: postgres
+    dbname: grall-a
+    user: grall-a
+    password: ''

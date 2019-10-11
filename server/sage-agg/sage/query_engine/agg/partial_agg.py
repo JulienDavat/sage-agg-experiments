@@ -1,15 +1,19 @@
 # partial_agg.py
 # Author: Thomas MINIER - MIT License 2017-2019
 from abc import ABC, abstractmethod
-
+import uuid
 
 class PartialAggregator(ABC):
     """An abstract class for implementing Partial Aggregators"""
 
-    def __init__(self, variable, binds_to='?agg'):
+    def __init__(self, variable, binds_to='?agg', ID=None):
         super(PartialAggregator, self).__init__()
         self._variable = variable
         self._binds_to = binds_to
+        if ID:
+            self._id = ID
+        else:
+            self._id = str(uuid.uuid4())
 
     @abstractmethod
     def get_type(self):
@@ -33,3 +37,7 @@ class PartialAggregator(ABC):
     def get_binds_to(self):
         """Return the variable on which aggregation's reults are bind to (used for serialization)"""
         return self._binds_to
+
+    def get_id(self):
+        """Return the id of the aggregator, should be unique"""
+        return self._id

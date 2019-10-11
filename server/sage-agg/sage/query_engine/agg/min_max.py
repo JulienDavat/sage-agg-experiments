@@ -7,8 +7,8 @@ from sage.query_engine.agg.partial_agg import PartialAggregator
 class MinMaxAggregator(PartialAggregator):
     """A generic class for implementing Min/Max aggregations"""
 
-    def __init__(self, variable, binds_to='?m'):
-        super(MinMaxAggregator, self).__init__(variable, binds_to)
+    def __init__(self, variable, binds_to='?m', ID=None):
+        super(MinMaxAggregator, self).__init__(variable, binds_to, ID)
         self._groups = dict()
 
     def update(self, group_key, bindings):

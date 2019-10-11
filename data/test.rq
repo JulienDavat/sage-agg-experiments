@@ -1,1 +1,1 @@
-select ?o (count(?s) as ?cs) where { {?s a ?o} UNION { ?s a  "untruc" }  UNION { ?s a  "untruc" } } group by ?o
+select (count(distinct ?s) as ?count) where { ?s ?p ?o }

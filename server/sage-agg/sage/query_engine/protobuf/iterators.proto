@@ -83,6 +83,7 @@ message SavedAggregator {
   string name = 1;
   string variable = 2;
   string binds_to = 3;
+  string id = 4;
 }
 
 message RootTree {
