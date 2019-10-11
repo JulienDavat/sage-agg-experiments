@@ -10,3 +10,4 @@ protobuf==3.10.0
 coloredlogs==10.0
 click==7.0
 xxhash==1.4.1
+python-rocksdb==0.7.0
