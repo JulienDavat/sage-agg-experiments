@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<rdf:RDF
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-	xmlns:ns2="http://ldf.fi/void-ext#" >
-  <rdf:Description rdf:about="http://172.16.8.50:7200/sparql/">
-    <ns2:distinctIRIReferenceSubjects rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">259170869</ns2:distinctIRIReferenceSubjects>
-  </rdf:Description>
-</rdf:RDF>
