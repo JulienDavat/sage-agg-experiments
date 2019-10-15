@@ -38,7 +38,7 @@ class IndexRocksdb(metaclass=SingletonMeta):
             The ID is the id of the aggregator
         """
         hashb = xxhash.xxh64_hexdigest(bindings)
-        key = bytes("{}_{}_{}".format(
+        key = bytes("{}_{}_{}_{}".format(
             xxhash.xxh64_hexdigest(group_key),
             query_id,
             aggregator_id,
@@ -65,7 +65,7 @@ class IndexRocksdb(metaclass=SingletonMeta):
             The ID is the id of the aggregator
         """
         hashb = xxhash.xxh64_hexdigest(bindings)
-        key = bytes("{}_{}_{}".format(
+        key = bytes("{}_{}_{}_{}".format(
             xxhash.xxh64_hexdigest(group_key),
             query_id,
             aggregator_id,
