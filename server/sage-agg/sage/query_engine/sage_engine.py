@@ -60,7 +60,6 @@ class SageEngine(object):
 
 
     def execute(self, plan, quota, limit=inf, optimized=False):
-        print(plan)
         """
             Execute a preemptable physical query execution plan under a time quota.
 
