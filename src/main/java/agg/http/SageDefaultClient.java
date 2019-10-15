@@ -49,22 +49,30 @@ public class SageDefaultClient implements SageRemoteClient {
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
     private static final String HTTP_JSON_CONTENT_TYPE = "application/json";
+    // enable this when you want to use the optimized aggregator, as well as the SageOpExecutor.aggregation boolean
+    public static boolean optimized = false;
 
     private class JSONPayload {
         private String query;
         private String defaultGraph;
         private String next = null;
+        private Boolean optimized = false;
 
-        public JSONPayload(String defaultGraph, String query) {
+        public JSONPayload(String defaultGraph, String query, Boolean optimized) {
             this.query = query;
             this.defaultGraph = defaultGraph;
+            this.optimized = optimized;
         }
 
-        public JSONPayload(String defaultGraph, String query, String next) {
+        public JSONPayload(String defaultGraph, String query, String next, Boolean optimized) {
             this.query = query;
             this.defaultGraph = defaultGraph;
             this.next = next;
+            this.optimized = optimized;
         }
+
+        public Boolean getOptimized() { return this.optimized; }
+        public void setOptimized(boolean opt) { this.optimized = opt; }
 
         public String getQuery() {
             return query;
@@ -137,12 +145,12 @@ public class SageDefaultClient implements SageRemoteClient {
         return serverURL;
     }
 
-    private String buildJSONPayload(String graphURI, String query, Optional<String> next) {
+    private String buildJSONPayload(String graphURI, String query, Optional<String> next, Boolean optimized) {
         JSONPayload payload;
         if (next.isPresent()) {
-            payload = new JSONPayload(graphURI, query, next.get());
+            payload = new JSONPayload(graphURI, query, next.get(), optimized);
         } else {
-            payload = new JSONPayload(graphURI, query);
+            payload = new JSONPayload(graphURI, query, optimized);
         }
         try {
             return mapper.writeValueAsString(payload);
@@ -165,7 +173,7 @@ public class SageDefaultClient implements SageRemoteClient {
         }
         // build POST query
         GenericUrl url = new GenericUrl(serverURL);
-        String payload = buildJSONPayload(graphURI, query, next);
+        String payload = buildJSONPayload(graphURI, query, next, this.optimized);
         HttpContent postContent = new ByteArrayContent(HTTP_JSON_CONTENT_TYPE, payload.getBytes());
         double startTime = System.nanoTime();
         try {

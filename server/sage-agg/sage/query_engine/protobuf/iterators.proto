@@ -84,6 +84,7 @@ message SavedAggregator {
   string variable = 2;
   string binds_to = 3;
   string id = 4;
+  string query_id = 5;
 }
 
 message RootTree {

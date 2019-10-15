@@ -13,7 +13,7 @@ from sage.query_engine.agg.sum import SumAggregator
 from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.optimizer.plan_builder import build_left_plan
 from sage.http_server.utils import format_graph_uri
-
+import uuid
 
 class UnsupportedSPARQL(Exception):
     """Thrown when a SPARQL feature is not supported by the Sage query engine"""
@@ -54,20 +54,20 @@ def fetch_graph_triples(node, current_graphs, server_url):
         raise UnsupportedSPARQL('Unsupported SPARQL Feature: a Sage engine can only perform joins between Graphs and BGPs')
 
 
-def build_aggregator(aggregate, renaming_map):
+def build_aggregator(aggregate, renaming_map, query_id=None, ID=None):
     """Build an aggregator from its logical representation and a renaming Map"""
     binds_to = renaming_map[aggregate.res.n3()]
     if aggregate.name == 'Aggregate_Count':
         if aggregate.distinct == 'DISTINCT':
-            return CountDistinctAggregator(aggregate.vars.n3(), binds_to=binds_to)
+            return CountDistinctAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
         else:
-            return CountAggregator(aggregate.vars.n3(), binds_to=binds_to)
+            return CountAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
     elif aggregate.name == 'Aggregate_Sum':
-        return SumAggregator(aggregate.vars.n3(), binds_to=binds_to)
+        return SumAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
     elif aggregate.name == 'Aggregate_Min':
-        return MinAggregator(aggregate.vars.n3(), binds_to=binds_to)
+        return MinAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
     elif aggregate.name == 'Aggregate_Max':
-        return MaxAggregator(aggregate.vars.n3(), binds_to=binds_to)
+        return MaxAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
     else:
         raise UnsupportedSPARQL("Unsupported SPARQL Aggregate: {}".format(aggregate.name))
 
@@ -158,11 +158,14 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         # if no aggregate, keep SPARQL groups in the query results
         keep_groups = len(node.A) == 0
 
+        # generate a unique id for this query for all aggregator
+        query_id = str(uuid.uuid4())
+
         for agg in node.A:
             if agg.vars == '*':
                 agg.vars = last_groupby_var
             proj_variables.append(agg.vars.n3())
-            aggregators.append(build_aggregator(agg, renaming_map))
+            aggregators.append(build_aggregator(agg, renaming_map, query_id=query_id))
         # build source iterator from child node
         source = parse_query_node(node.p.p, dataset, current_graphs, server_url, cardinalities)
         # add projection to the pipeline, depending of the context

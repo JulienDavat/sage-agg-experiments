@@ -29,3 +29,6 @@ class PreemptableIterator(ABC):
     def save(self):
         """Save and serialize the iterator as a machine-readable format"""
         pass
+
+    def is_aggregator(self):
+        return False

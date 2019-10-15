@@ -13,7 +13,7 @@ from json import dumps
 from time import time
 
 
-def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url):
+def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized):
     """
         Execute a query using the SageEngine and returns the appropriate HTTP response.
         Any failure will results in a rollback/abort on the current query execution.
@@ -36,7 +36,7 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url):
         engine = SageEngine()
         quota = graph.quota / 1000
         max_results = graph.max_results
-        bindings, saved_plan, is_done = engine.execute(plan, quota, max_results)
+        bindings, saved_plan, is_done = engine.execute(plan, quota, max_results, optimized)
 
         # commit (if necessary)
         graph.commit()
@@ -84,6 +84,7 @@ def sparql_blueprint(dataset, logger):
             query = request.args.get("query") or None
             default_graph_uri = request.args.get("default-graph-uri") or None
             next_link = request.args.get("next") or None
+            optimized = request.args.get("optimized") or None
             # ensure that both the query and default-graph-uri params are set
             if (query is None or default_graph_uri is None) and (next_link is None or default_graph_uri is None):
                 return sage_http_error("Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
@@ -96,10 +97,11 @@ def sparql_blueprint(dataset, logger):
             query = post_query["query"]
             default_graph_uri = post_query["defaultGraph"]
             next_link = post_query["next"] if 'next' in post_query else None
+            optimized = post_query['optimized'] if 'optimized' in post_query else None
         else:
             return sage_http_error("Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
         # execute query
-        return execute_query(query, default_graph_uri, next_link, dataset, mimetype, url)
+        return execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized)
         # except Exception as e:
         #     logger.error(e)
         #     abort(500)
@@ -107,6 +109,7 @@ def sparql_blueprint(dataset, logger):
     @s_blueprint.route("/sparql/<graph_name>", methods=["GET", "POST"])
     def sparql_query(graph_name):
         """WARNING: old API, deprecated"""
+        print("WARNING: old API, deprecated on /sparql/{}".format(graph_name))
         graph = dataset.get_graph(graph_name)
         if graph is None:
             abort(404)

@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class SageOpExecutor extends OpExecutor {
     private final ExecutorService threadPool;
-    public static boolean aggregations = false;
+    public static boolean optimized = false;
     SageOpExecutor(ExecutorService threadPool, ExecutionContext execCxt) {
         super(execCxt);
         this.threadPool = threadPool;
@@ -52,8 +52,8 @@ public class SageOpExecutor extends OpExecutor {
 
     @Override
     protected QueryIterator execute(OpExtend opExtend, QueryIterator input) {
-        if (aggregations) {
-            System.err.println("Execute op optimized");
+        if (optimized) {
+            // System.err.println("Execute op optimized");
             // gather all extend operations
             VarExprList expressions = new VarExprList();
             Op current = opExtend;
@@ -72,15 +72,15 @@ public class SageOpExecutor extends OpExecutor {
             }
             return super.execute(opExtend, input);
         } else {
-            System.err.println("dont execute op optimized");
+            // System.err.println("dont execute op optimized");
             return super.execute(opExtend, input);
         }
     }
 
     @Override
     protected QueryIterator execute(OpGroup opGroup, QueryIterator input) {
-        if (aggregations) {
-            System.err.println("Execute op optimized");
+        if (optimized) {
+            // System.err.println("Execute op optimized");
             // reducer-based aggregations only works on a single BGP
             Graph activeGraph = execCxt.getActiveGraph();
             if (opGroup.getSubOp() instanceof OpBGP && activeGraph instanceof SageGraph) {
@@ -88,7 +88,7 @@ public class SageOpExecutor extends OpExecutor {
             }
             return super.execute(opGroup, input);
         } else {
-            System.err.println("dont execute op optimized");
+            // System.err.println("dont execute op optimized");
             return super.execute(opGroup, input);
         }
     }

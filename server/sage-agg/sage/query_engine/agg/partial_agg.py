@@ -6,10 +6,11 @@ import uuid
 class PartialAggregator(ABC):
     """An abstract class for implementing Partial Aggregators"""
 
-    def __init__(self, variable, binds_to='?agg', ID=None):
+    def __init__(self, variable, binds_to='?agg', query_id=None, ID=None):
         super(PartialAggregator, self).__init__()
         self._variable = variable
         self._binds_to = binds_to
+        self._query_id = query_id
         if ID:
             self._id = ID
         else:
@@ -41,3 +42,6 @@ class PartialAggregator(ABC):
     def get_id(self):
         """Return the id of the aggregator, should be unique"""
         return self._id
+
+    def get_query_id(self):
+        """Return the identifier of the query"""

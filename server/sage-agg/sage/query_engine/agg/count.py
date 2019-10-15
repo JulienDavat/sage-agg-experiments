@@ -6,8 +6,8 @@ from sage.query_engine.agg.partial_agg import PartialAggregator
 class CountAggregator(PartialAggregator):
     """A CountAggregator evaluates a COUNT aggregation"""
 
-    def __init__(self, variable, binds_to='?c', ID=None):
-        super(CountAggregator, self).__init__(variable, binds_to, ID)
+    def __init__(self, variable, binds_to='?c', query_id=None, ID=None):
+        super(CountAggregator, self).__init__(variable, binds_to, query_id=query_id, ID=ID)
         self._groups = dict()
 
     def update(self, group_key, bindings):

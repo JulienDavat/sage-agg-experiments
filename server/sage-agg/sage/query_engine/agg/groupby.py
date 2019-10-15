@@ -23,6 +23,9 @@ class GroupByAggregator(PreemptableIterator):
         self._aggregators = aggregators
         self._keep_groups = keep_groups
         self._default_key = 'https://sage-org.github.io/sage-engine#DefaultGroupKey'
+        self._optimized = False
+        self._finished = False
+        self._has_next = True
 
     def serialized_name(self):
         return 'groupby'
@@ -47,15 +50,14 @@ class GroupByAggregator(PreemptableIterator):
         # remove the trailing "_" in the group key value
         return key[0:-1]
 
-    def current_agg(self):
+    def generate_results(self):
+        """
+            Default behavior when the optimization is not applied
+            Results are generated after each quantum
+            see sage.sage_engine.py
+        """
         res = list()
-
-        if not self.has_next():
-            for agg in self._aggregators:
-                if agg.is_distinct():
-                    agg.end()
-
-        # build groups & apply aggregations on the fly
+        # build groups & apply aggregations on the fly for non distinct aggregation
         for key, values in self._groups.items():
             elt = dict()
             # recopy keys
@@ -70,38 +72,53 @@ class GroupByAggregator(PreemptableIterator):
             # apply aggregators
             for agg in self._aggregators:
                 try:
-                    if (not agg.is_distinct()) or (agg.is_distinct() and agg._ended):
+                    if not agg.is_distinct():
                         elt[agg.get_binds_to()] = agg.done(key)
-
                 except Exception:
                     # ignore errors
                     pass
             # add results
             res.append(elt)
-
-        if not self.has_next():
-            for agg in self._aggregators:
-                if agg.is_distinct():
-                    agg.close()
-
         return res
 
     def has_next(self):
-        return self._source.has_next()
+        print('hasnext:', self._has_next)
+        return self._has_next
 
     async def next(self):
-        if not self._source.has_next():
-            raise StopIteration()
-        bindings = await self._source.next()
-        group_key = self.__get_group_key(bindings)
-        if group_key is not None:
-            if group_key not in self._groups:
-                self._groups[group_key] = list()
-            self._groups[group_key].append(bindings)
-            # update aggregators with the new value
-            for agg in self._aggregators:
-                agg.update(group_key, bindings)
-        return None
+        # Phase 1: aggregate solutions mappings
+        if self._source.has_next():
+            print('phase 1')
+            bindings = await self._source.next()
+            group_key = self.__get_group_key(bindings)
+            if group_key is not None:
+                if group_key not in self._groups:
+                    self._groups[group_key] = list()
+                self._groups[group_key].append(bindings)
+                # update aggregators with the new value
+                for agg in self._aggregators:
+                    try:
+                        agg.update(group_key, bindings)
+                    except Exception as e:
+                        print(e)
+                        exit(1)
+            return None
+        else:
+            print('phase 2')
+            if self._optimized:
+                # Phase 2: produce aggregations results
+                if not self._has_next:
+                   return None
+                else:
+                    # all aggregators have the same group keys so just take the first
+                    agg = self._aggregators[0]
+                    res = agg.done()
+
+                    # quit because we are testing
+                    self._has_next = False
+                    return None
+
+
 
     def save(self):
         saved = SavedGroupByAgg()
@@ -115,7 +132,13 @@ class GroupByAggregator(PreemptableIterator):
             agg.variable = aggregator.get_variable()
             agg.binds_to = aggregator.get_binds_to()
             agg.id = aggregator.get_id()
+            agg.query.id = aggregator.get_query_id()
         return saved
+
+    def set_optimization(self, opt = False):
+        self._optimized = opt
+    def is_aggregator(self):
+        return True
 
     def __repr__(self):
         return "<GroupByAggregator({}) on {}>".format(self._grouping_variables, self._source)

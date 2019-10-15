@@ -1,8 +1,8 @@
 # sage_engine.py
 # Author: Thomas MINIER - MIT License 2017-2018
-import uvloop
-from asyncio import Queue, get_event_loop, wait_for, sleep, set_event_loop_policy
+from asyncio import Queue, get_event_loop, wait_for, sleep, set_event_loop_policy, new_event_loop, set_event_loop, get_running_loop
 from asyncio import TimeoutError as asyncTimeoutError
+import uvloop
 from sage.query_engine.iterators.utils import IteratorExhausted
 from sage.query_engine.protobuf.iterators_pb2 import RootTree
 from math import inf
@@ -18,13 +18,14 @@ class TooManyResults(Exception):
     pass
 
 
-async def executor(plan, queue, limit):
+async def executor(plan, queue, limit, optimized):
     """Executor used to evaluated a plan under a time quota"""
     try:
         cpt = 0
         agg = False
-        if hasattr(plan, 'current_agg'):
+        if plan.is_aggregator():
             agg = True
+            plan.set_optimization(optimized)
         while plan.has_next():
             value = await plan.next()
             # discard None values
@@ -51,8 +52,14 @@ class SageEngine(object):
 
     def __init__(self):
         super(SageEngine, self).__init__()
+        try:
+            self._loop = get_running_loop()
+        except RuntimeError as e:
+            self._loop = new_event_loop()
+            set_event_loop(self._loop)
 
-    def execute(self, plan, quota, limit=inf):
+
+    def execute(self, plan, quota, limit=inf, optimized=False):
         """
             Execute a preemptable physical query execution plan under a time quota.
 
@@ -66,26 +73,33 @@ class SageEngine(object):
                 - ``saved_plan`` is the state of the plan saved using protocol-buffers
                 - ``is_done`` is True when the plan has completed query evalution, False otherwise
         """
+
         results = list()
         queue = Queue()
-        loop = get_event_loop()
+
         query_done = False
         try:
-            task = wait_for(executor(plan, queue, limit), timeout=quota)
-            loop.run_until_complete(task)
+            task = wait_for(executor(plan, queue, limit, optimized), timeout=quota)
+            self._loop.run_until_complete(task)
             query_done = True
         except asyncTimeoutError:
             pass
         except TooManyResults:
             pass
         finally:
-            # fetch partial aggregate if the query is an aggreation query
-            if hasattr(plan, 'current_agg'):
-                results += plan.current_agg()
-            else:
-                # collect results from classic query
-                while not queue.empty():
-                    results.append(queue.get_nowait())
+            # dont forget to close the event loop or we get a Too Many open files OSError
+            self._loop.close()
+            # backward compatibility
+            if not optimized:
+                # fetch partial aggregate if the query is an aggreation query
+                if plan.is_aggregator():
+                    results += plan.generate_results()
+                else:
+                    # collect results from classic query
+                    while not queue.empty():
+                        results.append(queue.get_nowait())
+
+
         # save plan
         root = RootTree()
         source_field = plan.serialized_name() + '_source'

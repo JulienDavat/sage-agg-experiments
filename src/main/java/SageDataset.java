@@ -1,4 +1,5 @@
 import agg.engine.SageOpExecutor;
+import agg.http.SageDefaultClient;
 import jena.ConstructQueryExecutor;
 import jena.QueryExecutor;
 import jena.SelectQueryExecutor;
@@ -232,7 +233,7 @@ public class SageDataset implements Runnable {
                 spy.setLogs(true);
             }
 
-            if (this.optimized) SageOpExecutor.aggregations = this.optimized;
+            setAggregationOptimization(this.optimized);
 
             Query parseQuery = QueryFactory.create(queryString);
             factory = new SageAutoConfiguration(datasetUri, parseQuery, spy);
@@ -276,5 +277,10 @@ public class SageDataset implements Runnable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void setAggregationOptimization(boolean opt) {
+        SageOpExecutor.optimized = opt;
+        SageDefaultClient.optimized = opt;
     }
 }

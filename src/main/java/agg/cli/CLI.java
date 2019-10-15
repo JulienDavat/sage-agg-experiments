@@ -1,6 +1,7 @@
 package agg.cli;
 
 import agg.engine.SageOpExecutor;
+import agg.http.SageDefaultClient;
 import com.google.common.collect.Lists;
 import org.apache.jena.query.*;
 import agg.core.factory.SageAutoConfiguration;
@@ -89,7 +90,8 @@ public class CLI implements Callable<Void> {
             spy.setLogs(true);
         }
 
-        if (this.optimized) SageOpExecutor.aggregations = this.optimized;
+        // enable the optimized aggregation
+        setAggregationOptimization(this.optimized);
 
         System.err.println("Executing: " + queryString);
 
@@ -166,6 +168,12 @@ public class CLI implements Callable<Void> {
         federation.close();
         factory.close();
         return null;
+    }
+
+    public static void setAggregationOptimization(boolean opt) {
+        System.err.println("Aggregate optimization enabled: " + opt);
+        SageOpExecutor.optimized = opt;
+        SageDefaultClient.optimized = opt;
     }
 
     public static void main(String[] args) {

@@ -6,7 +6,6 @@ from sage.http_server.server import sage_app
 from gunicorn.app.base import BaseApplication
 from gunicorn.six import iteritems
 
-
 class StandaloneApplication(BaseApplication):
     def __init__(self, app, options=None):
         self.options = options or {}
@@ -38,6 +37,7 @@ def start_sage_server(config, port, workers, log_level):
         options = {
             'bind': '%s:%s' % ('0.0.0.0', port),
             'workers': workers,
+            'worker_class': 'sync',
             'log-level': log_level
         }
         StandaloneApplication(sage_app(config), options).run()

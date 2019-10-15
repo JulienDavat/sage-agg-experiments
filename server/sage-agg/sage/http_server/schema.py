@@ -46,7 +46,6 @@ class QueryRequest(Schema):
     """Marshmallow schema for a raw query to SaGe SPARQL API"""
     query = fields.Nested(SparqlQuerySchema, required=True)
     next = fields.Str(required=False, allow_none=True)
-
     @validates("query")
     def validate_query(self, query):
         if 'bgp' not in query and 'union' not in query:
@@ -62,3 +61,4 @@ class SageSparqlQuery(Schema):
     query = fields.Str(required=True)
     defaultGraph = fields.Str(required=True)
     next = fields.Str(required=False, allow_none=True)
+    optimized = fields.Bool(required=False, allow_none=True)
