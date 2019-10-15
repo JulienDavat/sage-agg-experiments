@@ -18,6 +18,11 @@ class SingletonMeta(type):
 
 
 class IndexRocksdb(metaclass=SingletonMeta):
+    """
+    Problem:  https://github.com/facebook/rocksdb/issues/4112
+    => The cache grows without limit even with nothing inside.
+    => A solution could be to erase the db each time a query is finished.
+    """
     def __init__(self):
         super(IndexRocksdb, self).__init__()
         self._seed = 0
@@ -172,6 +177,9 @@ class IndexRocksdb(metaclass=SingletonMeta):
         it = self.db.iteritems()
         it.seek(bytes(ID, encoding='utf-8'))
         return it
+
+    def list(self):
+        return self.db.iteritems()
 
     def format_entry(self, elt, jsonLoad=True):
         if jsonLoad:
