@@ -47,15 +47,12 @@ class IndexRocksdb(metaclass=SingletonMeta):
         exist = self.db.key_may_exist(key=key, fetch=True)
         if exist[0] and exist[1] is not None:
             if exist[1].decode('utf-8') == hashb:
-                print('has_binding true, ', group_key, aggregator_id, query_id, exist, hashb)
                 return True
             else:
                 # we need to call a get to verify
                 val = self.db.get(key).decode('utf-8')
-                print('need to check:', hashb, val, val == hashb)
                 return val == hashb
         else:
-            print('has_binding false, ', group_key, aggregator_id, query_id, exist, hashb)
             return False
 
     def set_bindings(self, group_key=None, aggregator_id=None, query_id=None, bindings=None):
