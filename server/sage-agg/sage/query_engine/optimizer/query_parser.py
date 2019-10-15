@@ -9,6 +9,7 @@ from sage.query_engine.iterators.filter import FilterIterator
 from sage.query_engine.agg.count_distinct import CountDistinctAggregator
 from sage.query_engine.agg.groupby import GroupByAggregator
 from sage.query_engine.agg.count import CountAggregator
+from sage.query_engine.agg.count_disk import CountAggregatorDisk
 from sage.query_engine.agg.sum import SumAggregator
 from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.optimizer.plan_builder import build_left_plan
@@ -61,7 +62,7 @@ def build_aggregator(aggregate, renaming_map, query_id=None, ID=None):
         if aggregate.distinct == 'DISTINCT':
             return CountDistinctAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
         else:
-            return CountAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
+            return CountAggregatorDisk(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
     elif aggregate.name == 'Aggregate_Sum':
         return SumAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
     elif aggregate.name == 'Aggregate_Min':

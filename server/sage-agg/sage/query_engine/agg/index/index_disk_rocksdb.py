@@ -1,7 +1,7 @@
 from __future__ import annotations
 from threading import Lock
 from typing import Optional
-import rocksdb, json, xxhash
+import rocksdb, json, xxhash, shutil
 
 class SingletonMeta(type):
     """
@@ -26,15 +26,21 @@ class IndexRocksdb(metaclass=SingletonMeta):
     def __init__(self):
         super(IndexRocksdb, self).__init__()
         self._seed = 0
-        self._db = rocksdb.DB("/tmp/sage-distinct/database.db", rocksdb.Options(
-            create_if_missing=True
-        ))
+        self._db = None
+        self._location = "/tmp/sage-distinct/database.db"
         print('[rocksdb] initialized with seed = %d' % self._seed)
 
     @property
     def db(self):
+        if self._db is None:
+            self._db = rocksdb.DB(self._location, rocksdb.Options(
+                create_if_missing=True
+            ))
         return self._db
 
+    def close(self):
+        self._db = None
+        shutil.rmtree(self._location)
 
     def has_bindings(self, group_key=None, aggregator_id=None, query_id=None, bindings=None):
         """

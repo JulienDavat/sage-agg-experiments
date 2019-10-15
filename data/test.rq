@@ -1,1 +1,1 @@
-SELECT (COUNT(DISTINCT ?c) AS ?count_c) (COUNT(DISTINCT ?c2) AS ?count_c2) ?s WHERE { ?s <http://a> ?c ; <http://a> ?c2 . } GROUP BY ?s
+SELECT (COUNT(*) AS ?count) WHERE { ?s ?p ?o }

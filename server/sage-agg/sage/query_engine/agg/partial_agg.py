@@ -46,3 +46,9 @@ class PartialAggregator(ABC):
     def get_query_id(self):
         """Return the identifier of the query"""
         return self._query_id
+
+    def close(self):
+        """should only be called by aggregator using disk"""
+        if hasattr(self, '_index'):
+            self._index.close()
+

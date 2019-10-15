@@ -12,7 +12,7 @@ from sage.query_engine.agg.sum import SumAggregator
 from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.protobuf.utils import protoTriple_to_dict
 from sage.query_engine.protobuf.iterators_pb2 import RootTree, SavedProjectionIterator, SavedScanIterator, SavedIndexJoinIterator, SavedBagUnionIterator, SavedFilterIterator, SavedGroupByAgg
-
+from sage.query_engine.agg.count_disk import CountAggregatorDisk
 
 def load(protoMsg, dataset):
     """Load a preemptable physical query execution plan from a saved state"""
@@ -93,9 +93,8 @@ def load_groupby(saved_plan, dataset):
     keep_groups = len(saved_plan.aggregators) == 0
 
     for agg in saved_plan.aggregators:
-        print(agg)
         if agg.name == 'count':
-            aggregators.append(CountAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+            aggregators.append(CountAggregatorDisk(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
         elif agg.name == 'count-distinct':
             aggregators.append(CountDistinctAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
         elif agg.name == 'sum':

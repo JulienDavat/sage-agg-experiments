@@ -118,6 +118,7 @@ class GroupByAggregator(PreemptableIterator):
                     if elem is None:
                         self._finished = True
                         self._has_next = False
+                        agg.close()
                         return None
                     else:
                         # now for all aggregator get the result
