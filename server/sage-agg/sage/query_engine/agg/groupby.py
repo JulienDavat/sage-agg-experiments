@@ -79,16 +79,16 @@ class GroupByAggregator(PreemptableIterator):
                     pass
             # add results
             res.append(elt)
+            print(elt)
         return res
 
     def has_next(self):
-        print('hasnext:', self._has_next)
         return self._has_next
 
     async def next(self):
         # Phase 1: aggregate solutions mappings
         if self._source.has_next():
-            print('phase 1')
+            # print('phase 1')
             bindings = await self._source.next()
             group_key = self.__get_group_key(bindings)
             if group_key is not None:
@@ -99,26 +99,44 @@ class GroupByAggregator(PreemptableIterator):
                 for agg in self._aggregators:
                     try:
                         agg.update(group_key, bindings)
-                    except Exception as e:
-                        print(e)
-                        exit(1)
+                    except Exception:
+                        # ignore errors
+                        pass
             return None
         else:
-            print('phase 2')
+            # print('phase 2')
             if self._optimized:
                 # Phase 2: produce aggregations results
-                if not self._has_next:
+                if not self.has_next():
                    return None
                 else:
-                    # all aggregators have the same group keys so just take the first
+                    # all aggregator will have the same behavior
+                    # just get the first group_key available
+                    # if None return None and put the flag finished to True and hasNext to false
                     agg = self._aggregators[0]
-                    res = agg.done()
+                    elem = agg.get_first_group_key()
+                    if elem is None:
+                        self._finished = True
+                        self._has_next = False
+                        return None
+                    else:
+                        # now for all aggregator get the result
+                        elt = dict()
+                        # recopy keys
+                        if len(self._grouping_variables) == 0:
+                            elt["?__default_group"] = self._default_key
+                        else:
+                            for variable in self._grouping_variables:
+                                elt[variable] = elem[1]['bindings'][variable]
+                        for agg in self._aggregators:
+                            elt[agg.get_binds_to()] = agg.done(elem[1])
 
-                    # quit because we are testing
-                    self._has_next = False
-                    return None
+                        return await self._remove_and_return(group_key=elem[1]['group_key'], value=elt)
 
-
+    async def _remove_and_return(self, group_key=None, value=None):
+        agg = self._aggregators[0]
+        agg.remove_group_key(group_key)
+        return value
 
     def save(self):
         saved = SavedGroupByAgg()
@@ -132,11 +150,12 @@ class GroupByAggregator(PreemptableIterator):
             agg.variable = aggregator.get_variable()
             agg.binds_to = aggregator.get_binds_to()
             agg.id = aggregator.get_id()
-            agg.query.id = aggregator.get_query_id()
+            agg.query_id = aggregator.get_query_id()
         return saved
 
     def set_optimization(self, opt = False):
         self._optimized = opt
+
     def is_aggregator(self):
         return True
 

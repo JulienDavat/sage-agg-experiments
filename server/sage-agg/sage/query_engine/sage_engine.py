@@ -34,7 +34,7 @@ async def executor(plan, queue, limit, optimized):
                 await queue.put(value)
                 if queue.qsize() >= limit:
                     raise TooManyResults()
-            elif agg and len(plan._groups) >= limit:
+            elif not optimized and agg and len(plan._groups) >= limit:
                 raise TooManyResults()
             # WARNING: await sleep(0) cost a lot, so we only trigger it every 50 cycle.
             # additionnaly, there may be other call to await sleep(0) in index join in the pipeline.
@@ -60,6 +60,7 @@ class SageEngine(object):
 
 
     def execute(self, plan, quota, limit=inf, optimized=False):
+        print(plan)
         """
             Execute a preemptable physical query execution plan under a time quota.
 
@@ -94,11 +95,9 @@ class SageEngine(object):
                 # fetch partial aggregate if the query is an aggreation query
                 if plan.is_aggregator():
                     results += plan.generate_results()
-                else:
-                    # collect results from classic query
-                    while not queue.empty():
-                        results.append(queue.get_nowait())
-
+            # collect results from classic query
+            while not queue.empty():
+                results.append(queue.get_nowait())
 
         # save plan
         root = RootTree()

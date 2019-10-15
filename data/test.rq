@@ -1,7 +1,2 @@
-PREFIX void: <http://rdfs.org/ns/void#>
-CONSTRUCT { <datasetUri> void:classPartition [ void:class ?c ; void:classes ?count ] }
-WHERE {
-    SELECT (COUNT(DISTINCT ?s) AS ?count_s) (COUNT(DISTINCT ?c2) AS ?count_c2) ?c
-    WHERE { ?s <http://a> ?c ; <http://a> ?c2 . }
-    GROUP BY ?c
-}
+select (count(distinct ?s) as ?cs) (count(distinct ?p) as ?cp) (count(distinct ?o) as ?co) where { ?s ?p ?o }
+

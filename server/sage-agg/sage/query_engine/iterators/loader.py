@@ -91,7 +91,9 @@ def load_groupby(saved_plan, dataset):
     # load aggregators
     aggregators = list()
     keep_groups = len(saved_plan.aggregators) == 0
+
     for agg in saved_plan.aggregators:
+        print(agg)
         if agg.name == 'count':
             aggregators.append(CountAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
         elif agg.name == 'count-distinct':

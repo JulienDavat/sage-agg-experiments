@@ -20,51 +20,50 @@ class CountDistinctAggregator(PartialAggregator):
 
     def update(self, group_key, bindings):
         """Update the aggregator with a new value for a group of bindings"""
-        print("count-distinct update: ", group_key, bindings)
         if self._variable in bindings:
             # check if the binding exists or not
             # the binding is stored like this: self._id + '_' + group_key + '_BINDINGS_' + hash(bindings)
             # self._id is the unique id of the aggregator
-            b_ex = self._index.hasBingings(self._id, group_key, bindings)
-            # enable the count or not
+            e = bindings[self._variable]
             count = True
-            if b_ex[0] and b_ex[1] is not None and b_ex[1] == bindings:
+            if self._index.has_bindings(query_id=self.get_query_id(), aggregator_id=self.get_id(), group_key=group_key, bindings=e):
                 count = False
             else:
                 # store the binding
-                self._index.setBindings(self._id, group_key, bindings)
+                self._index.set_bindings(query_id=self.get_query_id(), aggregator_id=self.get_id(), group_key=group_key, bindings=e)
 
-            print("count-distinct update: binding written")
             exist = self._index.has(self._query_id, group_key)
-            if not exist[0] or (exist[0] and exist[1] is None):
-                print('not exist')
+            if not exist[0]:
                 elem = dict()
                 elem['bindings'] = bindings
+                elem['group_key'] = group_key
                 elem[self.get_binds_to()] = 1
-
-                self._index.set(self._query_id, group_key, elem)
+                self._index.set(query_id=self._query_id, group_key=group_key, value=elem)
             else:
-                print('exist')
-                elem = exist[1]
-                if count:
-                    elem[self.get_binds_to()] = elem[self.get_binds_to()] + 1
-                elem['bindings'] = bindings
-                self._index.set(self._query_id, group_key, elem)
-            print("count-distinct update: finished")
+                elem = exist[1].copy()
+                try:
+                    if count:
+                        if self.get_binds_to() in elem:
+                            elem[self.get_binds_to()] = elem[self.get_binds_to()] + 1
+                        else:
+                            elem[self.get_binds_to()] = 1
+                    elem['bindings'] = bindings
+                    self._index.set(query_id=self._query_id, group_key=group_key, value=elem)
+                except Exception as e:
+                    print(str(e))
 
-    def done(self):
-        try:
-            val = self._index.iterator(self._query_id)
-            for v in val:
-                k, v = self._index.format_entry(v)
-                if k.startswith(self._query_id):
-                    print(self._query_id, k, v, k[37:])
-                else:
-                    print(k, v)
-        except Exception as e:
-            print(e)
-            exit(1)
+    def done(self, bindings):
+        """
+            Return the result for this aggregation
+            You have to provide the the result of get_first_group_key
+        """
+        return '"{}"^^<http://www.w3.org/2001/XMLSchema#integer>'.format(bindings[self.get_binds_to()])
 
+    def get_first_group_key(self):
+        return self._index.get_first_group_key_for_query(self._query_id)
+
+    def remove_group_key(self, group_key):
+        self._index.remove_group_key_for_query(query_id=self.get_query_id(), group_key=group_key)
 
     def get_type(self):
         """Return the name of the aggregator (used for serialization)"""

@@ -45,3 +45,4 @@ class PartialAggregator(ABC):
 
     def get_query_id(self):
         """Return the identifier of the query"""
+        return self._query_id
