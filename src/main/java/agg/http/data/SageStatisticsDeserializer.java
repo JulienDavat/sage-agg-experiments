@@ -19,6 +19,10 @@ public class SageStatisticsDeserializer extends JsonDeserializer<SageStatistics>
         double suspendTime = node.get("export").asDouble();
         double resumeTime = node.get("import").asDouble();
         SageStatistics sageStatistics = new SageStatistics(suspendTime, resumeTime);
+        sageStatistics.setNext_number(node.get("next").asInt());
+        sageStatistics.setNext_optimized_number(node.get("next_optimized").asInt());
+        sageStatistics.setError(node.get("error").asText());
+        sageStatistics.setDone(node.get("done").asBoolean());
         // ensure that the "cardinalities" field is an array
         if (node.get("cardinalities").isArray()) {
             ArrayNode cardsNode = (ArrayNode) node.get("cardinalities");

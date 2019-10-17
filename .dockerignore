@@ -1,4 +1,6 @@
-data/
+data/virtuoso-data/
+data/queries/
+data/__pycache__/
 output/
 build/
 src/

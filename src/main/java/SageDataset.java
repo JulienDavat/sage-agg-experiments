@@ -47,7 +47,7 @@ public class SageDataset implements Runnable {
     public boolean parallel = false;
 
     @CommandLine.Option(names = {"--sportal-file"}, description = "Specify the location of the sportal file wich will be executed")
-    public String sportalFile = "data/original-sportal.json";
+    public String sportalFile = "data/queries/original-sportal.json";
 
     @CommandLine.Option(names = {"--optimized"}, description = "Enable the aggregation optimization")
     public Boolean optimized = false;
@@ -262,12 +262,12 @@ public class SageDataset implements Runnable {
             int nbQueries = spy.getNbCallsRead();
             double transferSize = spy.getTotalTransferSize();
             if (time) System.err.println(MessageFormat.format("[" + label + "] SPARQL query executed in {0}s with {1} HTTP requests with {2} Bytes received", duration, nbQueries, transferSize));
-            spyOut.println(String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s",
+            spyOut.println(String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
                     duration, spy.getNbCallsRead(), spy.getNbCallsWrite(),
                     spy.getMeanHTTPTimesRead(), spy.getMeanHTTPTimesWrite(),
                     spy.getMeanResumeTimeRead(), spy.getMeanResumeTimeWrite(),
                     spy.getMeanSuspendTimeRead(), spy.getMeanSuspendTimeWrite(),
-                    spy.getMeanTransferSize()));
+                    spy.getMeanTransferSize(), spy.getMeanNextNumber(), spy.getMeanNextNumberOptimized()));
 
             // cleanup connections
             federation.close();

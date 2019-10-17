@@ -1,15 +1,28 @@
 version: '3.4'
 
 services:
-  sage-engine-agg:
-    container_name: bsbm1k_agg
+  sage-postgres:
+    container_name: sage-postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: grall-a
+      POSTGRES_USER: grall-a
+      POSTGRES_PASSWORD: ''
+    ports:
+      - 7122:5432 # postgres port
+  sage-agg:
+    container_name: sage-agg
+    links:
+      - sage-postgres
     build:
       context: ./..
-      dockerfile: ./experiments/Dockerfile-sage
+      dockerfile: ./experiments/sage/Dockerfile
     volumes:
       - ../data:/opt/data/
     tty: true         # to have nice outputs
     stdin_open: true  # to be able to use CTRL+C to stop the container
     ports:
-      - 7125:7125
-    command: sage /opt/data/sage-configs/bsbm1k.yaml --gunicorn-config /opt/data/gunicorn-configs/sage-engine-agg-7125.py
+      - 7120:8000 # sage port
+      - 7121:5432 # postgres backend port
+    command: sage /opt/data/test.yaml --gunicorn-config /opt/data/sage-gunicorn.py

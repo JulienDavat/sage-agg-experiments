@@ -133,6 +133,7 @@ class GroupByAggregator(PreemptableIterator):
                             elt[agg.get_binds_to()] = agg.done(elem[1])
 
                         return await self._remove_and_return(group_key=elem[1]['group_key'], value=elt)
+        return None
 
     async def _remove_and_return(self, group_key=None, value=None):
         agg = self._aggregators[0]

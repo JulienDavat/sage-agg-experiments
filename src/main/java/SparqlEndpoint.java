@@ -57,7 +57,7 @@ public class SparqlEndpoint implements Runnable {
 
                 long endtime = System.nanoTime();
                 long elapsed = (endtime - startTime) / 1000000;
-                err.println("Execution time: " + elapsed);
+                err.println("Execution time (ms): " + elapsed);
                 err.println("Status Code: " + response.getStatusCode());
                 err.println("Content Type: " + response.getContentType());
                 err.println("Content Encoding: " + response.getContentEncoding());

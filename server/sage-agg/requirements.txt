@@ -1,3 +1,5 @@
+pybind11==2.2.4
+psycopg2-binary==2.8.3
 Flask==1.0.2
 uvloop==0.13.0
 marshmallow==2.15.1

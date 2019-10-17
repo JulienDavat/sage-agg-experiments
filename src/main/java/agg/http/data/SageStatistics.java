@@ -13,11 +13,47 @@ public class SageStatistics {
     private double suspendTime;
     private double resumeTime;
     private Map<String, Integer> cardinalities;
+    private String error = "";
+    private boolean done = true;
+    private int next_number = 0;
+    private int next_optimized_number = 0;
 
     public SageStatistics(double suspendTime, double resumeTime) {
         this.suspendTime = suspendTime;
         this.resumeTime = resumeTime;
         this.cardinalities = new HashMap<>();
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public boolean getDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
+    public int getNext_number() {
+        return next_number;
+    }
+
+    public void setNext_number(int next_number) {
+        this.next_number = next_number;
+    }
+
+    public int getNext_optimized_number() {
+        return next_optimized_number;
+    }
+
+    public void setNext_optimized_number(int next_optimized_number) {
+        this.next_optimized_number = next_optimized_number;
     }
 
     public double getSuspendTime() {

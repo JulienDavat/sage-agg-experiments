@@ -1,7 +1,7 @@
 from __future__ import annotations
 from threading import Lock
 from typing import Optional
-import rocksdb, json, xxhash, shutil
+import rocksdb, json, xxhash, shutil, time
 
 class SingletonMeta(type):
     """
@@ -18,6 +18,8 @@ class SingletonMeta(type):
 
 
 class IndexRocksdb(metaclass=SingletonMeta):
+    sum_write_time = 0
+
     """
     Problem:  https://github.com/facebook/rocksdb/issues/4112
     => The cache grows without limit even with nothing inside.
@@ -27,7 +29,7 @@ class IndexRocksdb(metaclass=SingletonMeta):
         super(IndexRocksdb, self).__init__()
         self._seed = 0
         self._db = None
-        self._location = "/tmp/sage-distinct/database.db"
+        self._location = "/tmp/sage-distinct-database.db"
         print('[rocksdb] initialized with seed = %d' % self._seed)
 
     @property
@@ -79,7 +81,10 @@ class IndexRocksdb(metaclass=SingletonMeta):
             aggregator_id,
             hashb
         ), encoding='utf-8')
+        timeStart = time.time_ns()
         self.db.put(key, bytes(str(hashb), encoding='utf-8'))
+        elapsed = time.time_ns() - timeStart
+        IndexRocksdb
 
     def get_first_group_key_for_query(self, query_id=None):
         """

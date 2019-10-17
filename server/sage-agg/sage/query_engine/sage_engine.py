@@ -18,7 +18,41 @@ class TooManyResults(Exception):
     pass
 
 
-async def executor(plan, queue, limit, optimized):
+class Statistics():
+    def __init__(self):
+        self._next = 0
+        self._next_optimized = 0
+        self._done = False
+        self._error = ''
+
+    def set_done(self):
+        self._done = True
+
+    def set_error(self, error):
+        self._error = error
+
+    def get_next(self):
+        return self._next
+
+    def get_next_optimized(self):
+        return self._next_optimized
+
+    def set_next(self, val):
+        self._next = val
+
+    def set_next_optimized(self, val):
+        self._next_optimized = val
+
+    def serialize(self):
+        return dict({
+            'next': self._next,
+            'next_optimized': self._next_optimized,
+            'done': self._done,
+            'error': self._error
+        })
+
+
+async def executor(plan, queue, limit, optimized, stats):
     """Executor used to evaluated a plan under a time quota"""
     try:
         cpt = 0
@@ -30,12 +64,15 @@ async def executor(plan, queue, limit, optimized):
             value = await plan.next()
             # discard None values
             cpt += 1
+            stats.set_next(stats.get_next() + 1)
             if value is not None:
                 await queue.put(value)
                 if queue.qsize() >= limit:
                     raise TooManyResults()
             elif not optimized and agg and len(plan._groups) >= limit:
                 raise TooManyResults()
+            else:
+                stats.set_next_optimized(stats.get_next_optimized() + 1)
             # WARNING: await sleep(0) cost a lot, so we only trigger it every 50 cycle.
             # additionnaly, there may be other call to await sleep(0) in index join in the pipeline.
             if cpt > 50:
@@ -45,7 +82,6 @@ async def executor(plan, queue, limit, optimized):
         pass
     except StopIteration:
         pass
-
 
 class SageEngine(object):
     """SaGe query engine, used to evaluated a preemptable physical query execution plan"""
@@ -76,16 +112,17 @@ class SageEngine(object):
 
         results = list()
         queue = Queue()
-
+        stats = Statistics()
         query_done = False
         try:
-            task = wait_for(executor(plan, queue, limit, optimized), timeout=quota)
+            task = wait_for(executor(plan, queue, limit, optimized, stats), timeout=quota)
             self._loop.run_until_complete(task)
             query_done = True
+            stats.set_done()
         except asyncTimeoutError:
-            pass
+            stats.set_error('asyncTimeoutError')
         except TooManyResults:
-            pass
+            stats.set_error('TooManyResults')
         finally:
             # dont forget to close the event loop or we get a Too Many open files OSError
             self._loop.close()
@@ -97,9 +134,8 @@ class SageEngine(object):
             # collect results from classic query
             while not queue.empty():
                 results.append(queue.get_nowait())
-
         # save plan
         root = RootTree()
         source_field = plan.serialized_name() + '_source'
         getattr(root, source_field).CopyFrom(plan.save())
-        return (results, root, query_done)
+        return results, root, query_done, stats.serialize()

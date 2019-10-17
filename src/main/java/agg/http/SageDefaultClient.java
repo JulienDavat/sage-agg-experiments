@@ -355,17 +355,20 @@ public class SageDefaultClient implements SageRemoteClient {
         } else {
             spy.reportOverheadWrite(sageResponse.stats.getResumeTime(), sageResponse.stats.getSuspendTime());
         }
-
         double decodingTimeEnd = (System.currentTimeMillis()) - decodingTimeStart;
         spy.reportDecodingResponseTime(decodingTimeEnd);
         spy.reportTransferSize(responseContent.getBytes().length);
+        spy.reportNextNumbers(sageResponse.stats.getNext_number(), sageResponse.stats.getNext_optimized_number());
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss:SS");
         spy.reportLogs("[" + dateFormat.format(date) +  "]" +
                 " | size(bytes): " + responseContent.getBytes().length +
                 " | resume(ms): " + sageResponse.stats.getResumeTime() +
                 " | suspend(ms): " + sageResponse.stats.getSuspendTime() +
-                " | decoding(ms): " + decodingTimeEnd);
+                " | decoding(ms): " + decodingTimeEnd +
+                " | next(normal/optimized): (" + sageResponse.stats.getNext_number() +
+                    "," + sageResponse.stats.getNext_optimized_number() + ")"
+        );
         return new QueryResults(sageResponse.bindings, sageResponse.next, sageResponse.stats);
     }
 }

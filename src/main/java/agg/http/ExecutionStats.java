@@ -24,6 +24,8 @@ public class ExecutionStats {
     private List<Double> suspendTimesRead;
     private List<Double> resumeTimesWrite;
     private List<Double> suspendTimesWrite;
+    private List<Double> nextNumber;
+    private List<Double> nextOptimizedNumber;
 
     public ExecutionStats() {
         executionTime = -1;
@@ -38,6 +40,22 @@ public class ExecutionStats {
         resumeTimesWrite = new LinkedList<>();
         suspendTimesWrite = new LinkedList<>();
         transferSizes = new ArrayList<>();
+        nextNumber = new ArrayList<>();
+        nextOptimizedNumber = new ArrayList<>();
+    }
+
+    public double getMeanNextNumber() {
+        if (nextNumber.isEmpty()) {
+            return 0.0;
+        }
+        return Stats.meanOf(nextNumber);
+    }
+
+    public double getMeanNextNumberOptimized() {
+        if (nextOptimizedNumber.isEmpty()) {
+            return 0.0;
+        }
+        return Stats.meanOf(nextOptimizedNumber);
     }
 
     public double getExecutionTime() {
@@ -135,6 +153,11 @@ public class ExecutionStats {
     public void reportOverheadWrite(double resumeTime, double suspendTime) {
         resumeTimesWrite.add(resumeTime);
         suspendTimesWrite.add(suspendTime);
+    }
+
+    public void reportNextNumbers(double next, double nextOpt) {
+        nextNumber.add(next);
+        nextOptimizedNumber.add(nextOpt);
     }
 
     public void reportTransferSize(double size) {

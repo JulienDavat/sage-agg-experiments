@@ -18,7 +18,7 @@
 #       range.
 #
 
-bind = '0.0.0.0:7120'
+bind = '0.0.0.0:8000'
 backlog = 2048
 
 #
@@ -65,7 +65,7 @@ backlog = 2048
 #       A positive integer. Generally set in the 1-5 seconds range.
 #
 
-workers = 4
+workers = 1
 worker_class = 'sync'
 worker_connections = 1000
 timeout = 600
@@ -204,10 +204,10 @@ def worker_int(worker):
     code = []
     for threadId, stack in sys._current_frames().items():
         code.append("\n# Thread: %s(%d)" % (id2name.get(threadId,""),
-            threadId))
+                                            threadId))
         for filename, lineno, name, line in traceback.extract_stack(stack):
             code.append('File: "%s", line %d, in %s' % (filename,
-                lineno, name))
+                                                        lineno, name))
             if line:
                 code.append("  %s" % (line.strip()))
     worker.log.debug("\n".join(code))

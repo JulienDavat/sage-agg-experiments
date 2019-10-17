@@ -1,0 +1,57 @@
+FROM python:3.7.4-alpine3.10
+
+# env proxy
+#ENV http_proxy="http://cache.ha.univ-nantes.fr:3128/"
+
+RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >>/etc/apk/repositories
+#RUN echo http://mirrors.ircam.fr/pub/alpine/v3.7/main > /etc/apk/repositories; \
+#    echo http://mirrors.ircam.fr/pub/alpine/v3.7/community >> /etc/apk/repositories
+RUN apk add --update --no-cache git g++ bash make
+
+# config git because we are behind a proxy
+RUN git config --global url."https://github.com/".insteadOf git@github.com:
+RUN git config --global -l
+
+# for rocksdb
+RUN apk add --update --no-cache build-base linux-headers cmake bash #wget mercurial  autoconf libgflags-dev cmake bash
+RUN apk add --update --no-cache zlib zlib-dev bzip2 bzip2-dev snappy snappy-dev lz4 lz4-dev zstd@testing zstd-dev@testing libtbb-dev@testing libtbb@testing
+
+# installing latest gflags
+RUN cd /tmp && \
+    git clone https://github.com/gflags/gflags.git && \
+    cd gflags && \
+    mkdir build && \
+    cd build && \
+    cmake -DBUILD_SHARED_LIBS=1 -DGFLAGS_INSTALL_SHARED_LIBS=1 .. && \
+    make install && \
+    cd /tmp && \
+    rm -R /tmp/gflags/
+
+# Install Rocksdb
+RUN cd /tmp && \
+    git clone https://github.com/facebook/rocksdb.git && \
+    cd rocksdb && \
+    git checkout v6.1.2 && \
+    make shared_lib && \
+    mkdir -p /usr/local/rocksdb/lib && \
+    mkdir /usr/local/rocksdb/include && \
+    cp librocksdb.so* /usr/local/rocksdb/lib && \
+    cp /usr/local/rocksdb/lib/librocksdb.so* /usr/lib/ && \
+    cp -r include /usr/local/rocksdb/ && \
+    cp -r include/* /usr/include/ && \
+    rm -R /tmp/rocksdb/
+
+# for postgres driver
+RUN apk add --virtual build-deps gcc python-dev musl-dev && \
+    apk add --no-cache --update postgresql-dev
+
+WORKDIR /opt/sage-engine/
+
+COPY ./server/sage-agg/ .
+
+RUN pip install -r requirements.txt
+RUN pip install -e .[hdt,postgres]
+
+EXPOSE 8000
+
+CMD [ "sage" ]
