@@ -25,4 +25,4 @@ services:
     ports:
       - 7120:8000 # sage port
       - 7121:5432 # postgres backend port
-    command: sage /opt/data/experiments.yaml --gunicorn-config /opt/data/sage-gunicorn.py
+    command: sage /opt/data/test.yaml --gunicorn-config /opt/data/sage-gunicorn.py

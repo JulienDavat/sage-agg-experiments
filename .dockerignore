@@ -3,6 +3,7 @@ data/virtuoso-data/
 data/virtuoso-*/
 data/queries/
 data/__pycache__/
+out/
 output/
 build/
 src/

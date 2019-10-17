@@ -8,7 +8,7 @@ datasets:
     name: bsbm1khdt
     description: BSBM scale 1000 using HDT backend
     backend: hdt-file
-    file: ./data/bsbm1k.hdt
+    file: /opt/data/bsbm1k.hdt
   - name: bsbm1kpostgres
     description: BSBM 1K products using Postgres backend
     backend: postgres

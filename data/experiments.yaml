@@ -4,23 +4,19 @@ public_url: http://localhost:8000
 quota: 150
 max_results: 200000000
 datasets:
-  -
-    name: bsbm1khdt
+  - name: bsbm1khdt
     description: BSBM scale 1000 using HDT backend
     backend: hdt-file
     file: /opt/data/bsbm1k.hdt
-  -
-    name: wikidata2017hdt
+  - name: wikidata2017hdt
     description: Wikidata using HDT backend (wikidata-20170313-all-BETA.nt)
     backend: hdt-file
     file: /opt/data/wikidata-20170313-all-BETA.hdt
-  -
-    name: dbpedia351hdt
+  - name: dbpedia351hdt
     description: Dbpedia 3.5.1 using HDT backend
     backend: hdt-file
     file: /opt/data/dbpedia.3.5.1_merged.hdt
-  -
-    name: bsbm1kpostgres
+  - name: bsbm1kpostgres
     description: BSBM 1K products using Postgres backend
     backend: postgres
     dbname: grall-a
@@ -28,8 +24,7 @@ datasets:
     password: ''
     host: sage-postgres
     port: 5432
-  -
-    name: wikidata2017postgres
+  - name: wikidata2017postgres
     description: Wikidata using Postgres backend (wikidata-20170313-all-BETA.nt)
     backend: postgres
     dbname: grall-a
@@ -42,6 +37,6 @@ datasets:
     backend: postgres
     dbname: grall-a
     user: grall-a
-    password: '
+    password: ''
     host: sage-postgres
     port: 5432
