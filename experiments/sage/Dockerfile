@@ -6,7 +6,7 @@ FROM python:3.7.4-alpine3.10
 RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >>/etc/apk/repositories
 #RUN echo http://mirrors.ircam.fr/pub/alpine/v3.7/main > /etc/apk/repositories; \
 #    echo http://mirrors.ircam.fr/pub/alpine/v3.7/community >> /etc/apk/repositories
-RUN apk add --update --no-cache git g++ bash make
+RUN apk add --update --no-cache git g++ bash make curl nano
 
 # config git because we are behind a proxy
 RUN git config --global url."https://github.com/".insteadOf git@github.com:
@@ -45,11 +45,36 @@ RUN cd /tmp && \
 RUN apk add --virtual build-deps gcc python-dev musl-dev && \
     apk add --no-cache --update postgresql-dev
 
+# this enable the cache of requirments.txt
+ADD ./server/sage-agg/requirements.txt /opt/sage-engine/
+
 WORKDIR /opt/sage-engine/
 
-COPY ./server/sage-agg/ .
+# upgrade pip
+RUN pip install --upgrade pip
 
+# install deps
 RUN pip install -r requirements.txt
+
+
+COPY ./server/sage-agg/ /opt/sage-engine/
+
+# cause we are behind a proxy, uninstall hdt
+# download manually hdt-cpp with curl -LO
+# unzip
+# run ./install.sh
+# pip install -e pyHDT
+RUN apk add unzip
+RUN git clone https://github.com/Callidon/pyHDT.git && \
+    cd pyHDT && \
+    git checkout ff27d109e2f6322f21e1b88cf4dc2aa800f33cde && \
+    curl -sLO https://github.com/rdfhdt/hdt-cpp/archive/v1.3.3.zip && \
+    unzip -qq v1.3.3.zip && \
+    pip install -r requirements.txt && \
+    python setup.py install && \
+    pip install -e .
+
+# then, install the sage-engine
 RUN pip install -e .[hdt,postgres]
 
 EXPOSE 8000

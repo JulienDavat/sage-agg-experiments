@@ -11,11 +11,11 @@ from time import time
 import datetime
 
 
-def bucketify(iterable, bucket_size):
+def bucketify(iterable, bucket_size, encoding='utf-8'):
     """Group items from an iterable by buckets"""
     bucket = list()
     for s, p, o in iterable:
-        bucket.append((s, p, o))
+        bucket.append((s.decode(encoding), p.decode(encoding), o.decode(encoding)))
         if len(bucket) >= bucket_size:
             yield bucket
             bucket = list()
@@ -139,7 +139,9 @@ def index_postgres(config, dataset_name):
               help="Block size used for the bulk loading")
 @click.option("-c", "--commit_threshold", type=int, default=500000, show_default=True,
               help="Commit after sending this number of RDF triples")
-def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_threshold):
+@click.option("-e", "--encoding", type=str, default="utf-8", show_default=True,
+              help="Define the encoding of the dataset")
+def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_threshold, encoding):
     """
         Insert RDF triples from file RDF_FILE into the RDF dataset DATASET_NAME, described in the configuration file CONFIG. The dataset must use the PostgreSQL or PostgreSQL-MVCC backend.
     """
@@ -177,7 +179,7 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
     # insert by bucket (and show a progress bar)
     with click.progressbar(length=nb_triples,
                            label="Inserting RDF triples".format(nb_triples)) as bar:
-        for bucket in bucketify(iterator, block_size):
+        for bucket in bucketify(iterator, block_size, encoding=encoding):
             to_commit += len(bucket)
             # bulk load the bucket of RDF triples, then update progress bar
             execute_values(cursor, insert_into_query, bucket, page_size=block_size)
