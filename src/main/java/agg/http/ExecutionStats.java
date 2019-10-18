@@ -3,6 +3,7 @@ package agg.http;
 import org.apache.jena.ext.com.google.common.math.Stats;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class ExecutionStats {
     private List<Double> suspendTimesWrite;
     private List<Double> nextNumber;
     private List<Double> nextOptimizedNumber;
+    private List<Double> _db_size;
 
     public ExecutionStats() {
         executionTime = -1;
@@ -42,6 +44,14 @@ public class ExecutionStats {
         transferSizes = new ArrayList<>();
         nextNumber = new ArrayList<>();
         nextOptimizedNumber = new ArrayList<>();
+        _db_size = new ArrayList<>();
+    }
+
+    public double getMaxDb_size() {
+        if (_db_size.isEmpty()) {
+            return 0.0;
+        }
+        return Collections.max(_db_size).doubleValue();
     }
 
     public double getMeanNextNumber() {
@@ -182,5 +192,9 @@ public class ExecutionStats {
             return 0.0;
         }
         return Stats.meanOf(decodingResponses);
+    }
+
+    public void reportDbSize(double db_size) {
+        this._db_size.add(db_size);
     }
 }

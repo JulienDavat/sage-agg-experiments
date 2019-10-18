@@ -2,7 +2,8 @@
 # Author: Thomas MINIER - MIT License 2017-2019
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
 from sage.query_engine.protobuf.iterators_pb2 import SavedGroupByAgg
-
+from sage.query_engine.agg.index.index_disk_rocksdb import IndexRocksdb
+import subprocess, os
 
 class GroupByAggregator(PreemptableIterator):
     """
@@ -163,3 +164,8 @@ class GroupByAggregator(PreemptableIterator):
 
     def __repr__(self):
         return "<GroupByAggregator({}) on {}>".format(self._grouping_variables, self._source)
+
+    def get_db_size(self):
+        if os.path.exists(IndexRocksdb._location):
+            return int(subprocess.check_output(['du', '-s', IndexRocksdb._location]).split()[0].decode('utf-8')) * 512
+        return 0

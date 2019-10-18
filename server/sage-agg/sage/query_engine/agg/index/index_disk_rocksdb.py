@@ -19,7 +19,7 @@ class SingletonMeta(type):
 
 class IndexRocksdb(metaclass=SingletonMeta):
     sum_write_time = 0
-
+    _location = "/tmp/sage-distinct-database.db"
     """
     Problem:  https://github.com/facebook/rocksdb/issues/4112
     => The cache grows without limit even with nothing inside.
@@ -29,7 +29,7 @@ class IndexRocksdb(metaclass=SingletonMeta):
         super(IndexRocksdb, self).__init__()
         self._seed = 0
         self._db = None
-        self._location = "/tmp/sage-distinct-database.db"
+        self._location = IndexRocksdb._location
         print('[rocksdb] initialized with seed = %d' % self._seed)
 
     @property

@@ -359,6 +359,7 @@ public class SageDefaultClient implements SageRemoteClient {
         spy.reportDecodingResponseTime(decodingTimeEnd);
         spy.reportTransferSize(responseContent.getBytes().length);
         spy.reportNextNumbers(sageResponse.stats.getNext_number(), sageResponse.stats.getNext_optimized_number());
+        spy.reportDbSize(sageResponse.stats.getDb_size());
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss:SS");
         spy.reportLogs("[" + dateFormat.format(date) +  "]" +
@@ -367,7 +368,8 @@ public class SageDefaultClient implements SageRemoteClient {
                 " | suspend(ms): " + sageResponse.stats.getSuspendTime() +
                 " | decoding(ms): " + decodingTimeEnd +
                 " | next(normal/optimized): (" + sageResponse.stats.getNext_number() +
-                    "," + sageResponse.stats.getNext_optimized_number() + ")"
+                    "," + sageResponse.stats.getNext_optimized_number() + ")" +
+                " | db_size: " + sageResponse.stats.getDb_size()
         );
         return new QueryResults(sageResponse.bindings, sageResponse.next, sageResponse.stats);
     }

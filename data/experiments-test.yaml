@@ -4,8 +4,7 @@ public_url: http://localhost:8000
 quota: 150
 max_results: 200000000
 datasets:
-  -
-    name: bsbm1k
+  - name: bsbm1k
     description: BSBM scale 1000 using HDT backend
     backend: hdt-file
     file: ./bsbm1k.hdt

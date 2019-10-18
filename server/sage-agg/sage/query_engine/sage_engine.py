@@ -18,12 +18,16 @@ class TooManyResults(Exception):
     pass
 
 
-class Statistics():
+class Statistics:
     def __init__(self):
         self._next = 0
         self._next_optimized = 0
         self._done = False
         self._error = ''
+        self._db_size = 0
+
+    def set_db_size(self, size):
+        self._db_size = size
 
     def set_done(self):
         self._done = True
@@ -48,7 +52,8 @@ class Statistics():
             'next': self._next,
             'next_optimized': self._next_optimized,
             'done': self._done,
-            'error': self._error
+            'error': self._error,
+            'db_size': self._db_size,
         })
 
 
@@ -83,6 +88,7 @@ async def executor(plan, queue, limit, optimized, stats):
     except StopIteration:
         pass
 
+
 class SageEngine(object):
     """SaGe query engine, used to evaluated a preemptable physical query execution plan"""
 
@@ -93,7 +99,6 @@ class SageEngine(object):
         except RuntimeError as e:
             self._loop = new_event_loop()
             set_event_loop(self._loop)
-
 
     def execute(self, plan, quota, limit=inf, optimized=False):
         """
@@ -109,7 +114,6 @@ class SageEngine(object):
                 - ``saved_plan`` is the state of the plan saved using protocol-buffers
                 - ``is_done`` is True when the plan has completed query evalution, False otherwise
         """
-
         results = list()
         queue = Queue()
         stats = Statistics()
@@ -124,6 +128,8 @@ class SageEngine(object):
         except TooManyResults:
             stats.set_error('TooManyResults')
         finally:
+            if plan.is_aggregator() and optimized:
+                stats.set_db_size(plan.get_db_size())
             # dont forget to close the event loop or we get a Too Many open files OSError
             self._loop.close()
             # backward compatibility

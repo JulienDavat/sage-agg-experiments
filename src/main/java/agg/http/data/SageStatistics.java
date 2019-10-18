@@ -17,11 +17,20 @@ public class SageStatistics {
     private boolean done = true;
     private int next_number = 0;
     private int next_optimized_number = 0;
+    private double db_size = 0;
 
     public SageStatistics(double suspendTime, double resumeTime) {
         this.suspendTime = suspendTime;
         this.resumeTime = resumeTime;
         this.cardinalities = new HashMap<>();
+    }
+
+    public double getDb_size() {
+        return db_size;
+    }
+
+    public void setDb_size(double db_size) {
+        this.db_size = db_size;
     }
 
     public String getError() {

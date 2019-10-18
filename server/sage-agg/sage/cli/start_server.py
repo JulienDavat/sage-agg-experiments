@@ -36,7 +36,7 @@ def start_sage_server(config, port, workers, log_level, gunicorn_config):
         print("Error: Configuration file not found: '{}'".format(config))
         print("Error: Sage server could not start, aborting...")
     else:
-        if not isfile(gunicorn_config):
+        if gunicorn_config is None:
             options = {
                 'bind': '%s:%s' % ('0.0.0.0', port),
                 'workers': workers,

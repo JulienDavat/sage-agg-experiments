@@ -6,7 +6,6 @@ from yaml import load
 from rdflib import Graph
 from hdt import HDTDocument
 
-
 def load_dataset(config_path, dataset_name, logger, backends=[]):
     """Load a dataset from a Sage config file"""
     if isfile(config_path):
@@ -57,6 +56,6 @@ def get_rdf_reader(file_path, format='nt'):
         iterator = map(__n3_to_str, g.triples((None, None, None)))
     elif format == 'hdt':
         # load HDTDocument without additional indexes (not needed since we do a ?s ?p ?o)
-        doc = HDTDocument(file_path, False)
+        doc = HDTDocument(file_path, False, False)
         iterator, nb_triples = doc.search_triples("", "", "")
     return iterator, nb_triples
