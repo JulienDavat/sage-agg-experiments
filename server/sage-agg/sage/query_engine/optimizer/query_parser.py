@@ -6,10 +6,11 @@ from rdflib.plugins.sparql.algebra import translateQuery
 from sage.query_engine.iterators.projection import ProjectionIterator
 from sage.query_engine.iterators.union import BagUnionIterator
 from sage.query_engine.iterators.filter import FilterIterator
-from sage.query_engine.agg.count_distinct import CountDistinctAggregator
 from sage.query_engine.agg.groupby import GroupByAggregator
 from sage.query_engine.agg.count import CountAggregator
-from sage.query_engine.agg.count_disk import CountAggregatorDisk
+from sage.query_engine.agg.count_disk import CountDiskAggregator
+from sage.query_engine.agg.count_distinct import CountDistinctAggregator
+from sage.query_engine.agg.count_distinct_disk import CountDistinctDiskAggregator
 from sage.query_engine.agg.sum import SumAggregator
 from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.optimizer.plan_builder import build_left_plan
@@ -55,14 +56,26 @@ def fetch_graph_triples(node, current_graphs, server_url):
         raise UnsupportedSPARQL('Unsupported SPARQL Feature: a Sage engine can only perform joins between Graphs and BGPs')
 
 
-def build_aggregator(aggregate, renaming_map, query_id=None, ID=None):
+def build_aggregator(aggregate, renaming_map, query_id=None, ID=None, optimized=False, optimized_disk=True):
     """Build an aggregator from its logical representation and a renaming Map"""
     binds_to = renaming_map[aggregate.res.n3()]
     if aggregate.name == 'Aggregate_Count':
         if aggregate.distinct == 'DISTINCT':
-            return CountDistinctAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
+            if optimized and not optimized_disk:
+                return CountDistinctAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
+            elif optimized and optimized_disk:
+                return CountDistinctDiskAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
+            else:
+                raise UnsupportedSPARQL("Impossible, optimized and optimized_disk cannot be both false. " +
+                                        "Because the client should not send aggregate to servers :)")
         else:
-            return CountAggregatorDisk(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
+            if optimized and not optimized_disk:
+                return CountAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
+            elif optimized and optimized_disk:
+                return CountDiskAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
+            else:
+                raise UnsupportedSPARQL("Impossible, optimized and optimized_disk cannot be both false. " +
+                                        "Because the client should not send aggregate to servers :)")
     elif aggregate.name == 'Aggregate_Sum':
         return SumAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
     elif aggregate.name == 'Aggregate_Min':
@@ -73,15 +86,15 @@ def build_aggregator(aggregate, renaming_map, query_id=None, ID=None):
         raise UnsupportedSPARQL("Unsupported SPARQL Aggregate: {}".format(aggregate.name))
 
 
-def parse_query(query, dataset, default_graph, server_url):
+def parse_query(query, dataset, default_graph, server_url, optimized=False, optimized_disk=False):
     """Parse a regular SPARQL query into a query execution plan"""
     logical_plan = translateQuery(parseQuery(query)).algebra
     cardinalities = list()
-    iterator = parse_query_node(logical_plan, dataset, [default_graph], server_url, cardinalities)
+    iterator = parse_query_node(logical_plan, dataset, [default_graph], server_url, cardinalities, optimized=optimized, optimized_disk=optimized_disk)
     return iterator, cardinalities
 
 
-def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, renaming_map=None):
+def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, renaming_map=None, optimized=False, optimized_disk=False):
     """
         Recursively parse node in the query logical plan to build a preemptable physical query execution plan.
 
@@ -97,15 +110,15 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         graphs = current_graphs
         if node.datasetClause is not None:
             graphs = [format_graph_uri(format_term(graph_iri.default), server_url) for graph_iri in node.datasetClause]
-        return parse_query_node(node.p, dataset, graphs, server_url, cardinalities)
+        return parse_query_node(node.p, dataset, graphs, server_url, cardinalities, optimized=optimized, optimized_disk=optimized_disk)
     elif node.name == 'Project':
         query_vars = list(map(lambda t: t.n3(), node.PV))
         if node.p.name == 'AggregateJoin' or node.p.name == 'Extend':
             # forward projection variables, as we need them for parsing an AggregateJoin
             node.p['PV'] = query_vars
-            child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities)
+            child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized, optimized_disk=optimized_disk)
             return child
-        child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities)
+        child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized, optimized_disk=optimized_disk)
         return ProjectionIterator(child, query_vars)
     elif node.name == 'BGP':
         # bgp_vars = node._vars
@@ -115,12 +128,12 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         cardinalities += c
         return iterator
     elif node.name == 'Union':
-        left = parse_query_node(node.p1, dataset, current_graphs, server_url, cardinalities)
-        right = parse_query_node(node.p2, dataset, current_graphs, server_url, cardinalities)
+        left = parse_query_node(node.p1, dataset, current_graphs, server_url, cardinalities, optimized=optimized, optimized_disk=optimized_disk)
+        right = parse_query_node(node.p2, dataset, current_graphs, server_url, cardinalities, optimized=optimized, optimized_disk=optimized_disk)
         return BagUnionIterator(left, right)
     elif node.name == 'Filter':
         expression = parse_filter_expr(node.expr)
-        iterator = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities)
+        iterator = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized, optimized_disk=optimized_disk)
         return FilterIterator(iterator, expression)
     elif node.name == 'Join':
         # only allow for joining BGPs from different GRAPH clauses
@@ -136,7 +149,7 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         while current.name == 'Extend':
             renaming[current.expr.n3()] = current.var.n3()
             current = current.p
-        return parse_query_node(current, dataset, current_graphs, server_url, cardinalities, renaming_map=renaming)
+        return parse_query_node(current, dataset, current_graphs, server_url, cardinalities, renaming_map=renaming, optimized=optimized, optimized_disk=optimized_disk)
     elif node.name == 'AggregateJoin':
         groupby_variables = list()
         proj_variables = list()
@@ -166,9 +179,9 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
             if agg.vars == '*':
                 agg.vars = last_groupby_var
             proj_variables.append(agg.vars.n3())
-            aggregators.append(build_aggregator(agg, renaming_map, query_id=query_id))
+            aggregators.append(build_aggregator(agg, renaming_map, query_id=query_id, optimized=optimized, optimized_disk=optimized_disk))
         # build source iterator from child node
-        source = parse_query_node(node.p.p, dataset, current_graphs, server_url, cardinalities)
+        source = parse_query_node(node.p.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized, optimized_disk=optimized_disk)
         # add projection to the pipeline, depending of the context
         if 'PV' in node:
             source = ProjectionIterator(source, node.PV)

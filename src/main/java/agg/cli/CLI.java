@@ -57,6 +57,9 @@ public class CLI implements Callable<Void> {
     @CommandLine.Option(names = { "--optimized" }, description = "Enable the aggregation optimization")
     public boolean optimized = false;
 
+    @CommandLine.Option(names = { "--disk" }, description = "Enable the aggregation optimization on disk")
+    public boolean optimized_disk = false;
+
     @Override
     public Void call() throws Exception {
         Logger logger = ARQ.getExecLogger();
@@ -91,7 +94,7 @@ public class CLI implements Callable<Void> {
         }
 
         // enable the optimized aggregation
-        setAggregationOptimization(this.optimized);
+        setAggregationOptimization(this.optimized, this.optimized_disk);
 
         System.err.println("Executing: " + queryString);
 
@@ -151,11 +154,10 @@ public class CLI implements Callable<Void> {
 
         if (this.measure != null) {
             double duration = spy.getExecutionTime();
-            String csvLine = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
-                    duration, spy.getNbCallsRead(), spy.getNbCallsWrite(),
-                    spy.getMeanHTTPTimesRead(), spy.getMeanHTTPTimesWrite(),
-                    spy.getMeanResumeTimeRead(), spy.getMeanResumeTimeWrite(),
-                    spy.getMeanSuspendTimeRead(), spy.getMeanSuspendTimeWrite(),
+            String csvLine = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+                    duration, spy.getNbCallsRead(), spy.getTotalTransferSize(), spy.getNbCallsWrite(),
+                    spy.getMeanHTTPTimesRead(), spy.getMeanHTTPTimesWrite(), spy.getMeanResumeTimeRead(),
+                    spy.getMeanResumeTimeWrite(), spy.getMeanSuspendTimeRead(), spy.getMeanSuspendTimeWrite(),
                     spy.getMeanTransferSize(), spy.getMeanNextNumber(), spy.getMeanNextNumberOptimized(),
                     spy.getMaxDb_size()
             );
@@ -173,10 +175,11 @@ public class CLI implements Callable<Void> {
         return null;
     }
 
-    public static void setAggregationOptimization(boolean opt) {
+    public static void setAggregationOptimization(boolean opt, boolean opt_disk) {
         System.err.println("Aggregate optimization enabled: " + opt);
         SageOpExecutor.optimized = opt;
         SageDefaultClient.optimized = opt;
+        SageDefaultClient.optimized_disk = opt_disk;
     }
 
     public static void main(String[] args) {

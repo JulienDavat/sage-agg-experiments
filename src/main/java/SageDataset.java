@@ -61,31 +61,24 @@ public class SageDataset implements Runnable {
 
     @Override
     public void run() {
-        if (folder != null) {
-            mergeResultFile(folder, null);
-        } else {
-            if (datasetUri == null) {
-                CommandLine.usage(this, System.out);
-            } else {
-                System.err.println("Executing the void on: " + datasetUri);
-
-                if (voidUri == null)
-                    this.voidUri = datasetUri;
-
-                try {
-                    this.voidUrl = new URL(voidUri);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                    System.exit(1);
-                }
-
-                // load the void queries
-                JSONArray queries = Utils.loadVoidQueries(datasetUri, sportalFile, voidUrl.toString());
-                // Now execute queries by group
-                executeVoidQueries(queries);
-            }
+        System.err.println("Executing the void on: " + datasetUri);
+        if (voidUri == null)
+            this.voidUri = datasetUri;
+        try {
+            this.voidUrl = new URL(voidUri);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            System.exit(1);
         }
 
+        if (folder != null) {
+            mergeResultFile(folder, null, this.voidUrl);
+        } else {
+            // load the void queries
+            JSONArray queries = Utils.loadVoidQueries(datasetUri, sportalFile, voidUrl.toString());
+            // Now execute queries by group
+            executeVoidQueries(queries);
+        }
     }
 
     /**
@@ -179,9 +172,9 @@ public class SageDataset implements Runnable {
      * Read all result files then output the summury into a void.ttl file in the generated output folder
      * The generated folder will contain all results as well as the json file used to generate results.
      */
-    public void mergeResultFile(String folder, Model m) {
+    public void mergeResultFile(String folder, Model m, URL url) {
         File dir = new File(folder);
-        Model model = mergeResultFileModel(folder, m);
+        Model model = mergeResultFileModel(folder, m, url);
         File output = new File(dir.getAbsolutePath(), "void.ttl");
         try {
             model.write(new FileOutputStream(output), "TURTLE");
@@ -194,19 +187,19 @@ public class SageDataset implements Runnable {
      * Read all result files then output the summury into a void.ttl file in the generated output folder
      * The generated folder will contain all results as well as the json file used to generate results.
      */
-    public Model mergeResultFileModel(String folder, Model m) {
+    public Model mergeResultFileModel(String folder, Model m, URL url) {
         File dir = new File(folder);
         File[] listOfFiles = dir.listFiles();
 
         if (m == null) {
-            ModelFactory.createDefaultModel();
+            m = ModelFactory.createDefaultModel();
         }
         for (File file : listOfFiles) {
             if (file.getAbsolutePath().contains(".xml") && !file.getAbsolutePath().contains("QA")) {
                 System.err.println("Processing: " + file.getAbsolutePath());
                 Model tmp = ModelFactory.createDefaultModel();
                 try {
-                    tmp.read(new FileInputStream(file.getAbsoluteFile()), this.voidUrl.toString(), "RDFXML");
+                    tmp.read(new FileInputStream(file.getAbsoluteFile()), url.toString(), "RDF/XML");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

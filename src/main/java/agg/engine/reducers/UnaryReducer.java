@@ -13,10 +13,10 @@ import org.apache.jena.sparql.expr.NodeValue;
  * @author Thomas Minier
  */
 public abstract class UnaryReducer implements AggregationReducer {
-    private Var variable;
-    private Expr expr;
-    private NodeValue currentValue;
-    private ExecutionContext context;
+    protected Var variable;
+    protected Expr expr;
+    protected NodeValue currentValue;
+    protected ExecutionContext context;
 
     public UnaryReducer(Var variable, ExecutionContext context) {
         this.variable = variable;

@@ -80,7 +80,7 @@ public class SportalSparqlEndpoint implements Runnable {
                             end.endpoint = endpoint;
                             end.query = query;
                             end.default_graph = default_graph;
-                            end.executeQuery(endpoint, query, default_graph, new PrintStream(outputErr), new PrintStream(out), new PrintStream(outSpy));
+                            end.executeQuery(endpoint, query, default_graph, new PrintStream(outputErr), new PrintStream(out), new PrintStream(outSpy), "application/sparql-results+xml");
                             result.put("response", true);
                         } catch (Exception e) {
                             result.put("response", false);

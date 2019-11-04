@@ -7,12 +7,13 @@ from sage.query_engine.iterators.filter import FilterIterator
 from sage.query_engine.iterators.union import BagUnionIterator
 from sage.query_engine.agg.groupby import GroupByAggregator
 from sage.query_engine.agg.count import CountAggregator
+from sage.query_engine.agg.count_disk import CountDiskAggregator
 from sage.query_engine.agg.count_distinct import CountDistinctAggregator
+from sage.query_engine.agg.count_distinct_disk import CountDistinctDiskAggregator
 from sage.query_engine.agg.sum import SumAggregator
 from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.protobuf.utils import protoTriple_to_dict
 from sage.query_engine.protobuf.iterators_pb2 import RootTree, SavedProjectionIterator, SavedScanIterator, SavedIndexJoinIterator, SavedBagUnionIterator, SavedFilterIterator, SavedGroupByAgg
-from sage.query_engine.agg.count_disk import CountAggregatorDisk
 
 def load(protoMsg, dataset):
     """Load a preemptable physical query execution plan from a saved state"""
@@ -94,9 +95,13 @@ def load_groupby(saved_plan, dataset):
 
     for agg in saved_plan.aggregators:
         if agg.name == 'count':
-            aggregators.append(CountAggregatorDisk(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+            aggregators.append(CountAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+        elif agg.name == 'count-disk':
+            aggregators.append(CountDiskAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
         elif agg.name == 'count-distinct':
             aggregators.append(CountDistinctAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+        elif agg.name == 'count-distinct-disk':
+            aggregators.append(CountDistinctDiskAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
         elif agg.name == 'sum':
             aggregators.append(SumAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
         elif agg.name == 'min':

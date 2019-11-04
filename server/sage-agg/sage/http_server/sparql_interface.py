@@ -13,7 +13,7 @@ from json import dumps
 from time import time
 
 
-def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized):
+def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=False, optimized_disk=False):
     """
         Execute a query using the SageEngine and returns the appropriate HTTP response.
         Any failure will results in a rollback/abort on the current query execution.
@@ -30,13 +30,13 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         if next_link is not None:
             plan = load(decode_saved_plan(next_link), dataset)
         else:
-            plan, cardinalities = parse_query(query, dataset, graph_name, url)
+            plan, cardinalities = parse_query(query, dataset, graph_name, url, optimized=optimized, optimized_disk=optimized_disk)
         loading_time = (time() - start) * 1000
         # execute query
         engine = SageEngine()
         quota = graph.quota / 1000
         max_results = graph.max_results
-        bindings, saved_plan, is_done, statistics = engine.execute(plan, quota, max_results, optimized)
+        bindings, saved_plan, is_done, statistics = engine.execute(plan, quota, max_results, optimized=optimized, optimized_disk=optimized_disk)
 
         # commit (if necessary)
         graph.commit()
@@ -85,6 +85,7 @@ def sparql_blueprint(dataset, logger):
             default_graph_uri = request.args.get("default-graph-uri") or None
             next_link = request.args.get("next") or None
             optimized = request.args.get("optimized") or None
+            optimized_disk = request.args.get("optimized_disk") or None
             # ensure that both the query and default-graph-uri params are set
             if (query is None or default_graph_uri is None) and (next_link is None or default_graph_uri is None):
                 return sage_http_error("Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
@@ -97,11 +98,12 @@ def sparql_blueprint(dataset, logger):
             query = post_query["query"]
             default_graph_uri = post_query["defaultGraph"]
             next_link = post_query["next"] if 'next' in post_query else None
-            optimized = post_query['optimized'] if 'optimized' in post_query else None
+            optimized = post_query['optimized'] if 'optimized' in post_query else False
+            optimized_disk = post_query['optimized_disk'] if 'optimized_disk' in post_query else False
         else:
             return sage_http_error("Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
         # execute query
-        return execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized)
+        return execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=optimized, optimized_disk=optimized_disk)
         # except Exception as e:
         #     logger.error(e)
         #     abort(500)

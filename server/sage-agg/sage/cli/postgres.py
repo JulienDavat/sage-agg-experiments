@@ -1,3 +1,4 @@
+# coding: utf8
 # postgres.py
 # Author: Thomas MINIER - MIT License 2017-2019
 import sage.cli.postgres_utils as p_utils
@@ -11,14 +12,46 @@ from time import time
 import datetime
 
 
-def bucketify(iterable, bucket_size, encoding='utf-8'):
+def bucketify(iterable, bucket_size):
     """Group items from an iterable by buckets"""
     bucket = list()
     for s, p, o in iterable:
-        bucket.append((s.decode(encoding), p.decode(encoding), o.decode(encoding)))
+        bucket.append((s, p, o))
         if len(bucket) >= bucket_size:
             yield bucket
             bucket = list()
+
+    if len(bucket) > 0:
+        yield bucket
+
+def bucketify_bytes(iterable, bucket_size, encoding='utf-8'):
+    """Group items from an iterable by buckets"""
+    bucket = list()
+    for s, p, o in iterable:
+        s_encoded = s
+        p_encoded = p
+        o_encoded = o
+        try:
+            s_encoded = s_encoded.decode(encoding)
+        except Exception as e:
+            print("Cant decode the subject in bytes ({}): {} <?s={}, ?p={}, ?o={}>".format(s, e, s, p, o))
+            exit(1)
+        try:
+            p_encoded = p_encoded.decode(encoding)
+        except Exception as e:
+            print("Cant decode the predicate in bytes ({}): {} <?s={}, ?p={}, ?o={}>".format(p, e, s_encoded, p, o))
+            exit(1)
+        try:
+            o_encoded = o_encoded.decode(encoding)
+        except Exception as e:
+            print("Cant decode the object in bytes ({}): {} <?s={}, ?p={}, ?o={}>".format(o, e, s_encoded, p_encoded, o))
+            exit(1)
+
+        bucket.append((s_encoded, p_encoded, o_encoded))
+        if len(bucket) >= bucket_size:
+            yield bucket
+            bucket = list()
+
     if len(bucket) > 0:
         yield bucket
 
@@ -178,8 +211,14 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
     to_commit = 0
     # insert by bucket (and show a progress bar)
     with click.progressbar(length=nb_triples,
-                           label="Inserting RDF triples".format(nb_triples)) as bar:
-        for bucket in bucketify(iterator, block_size, encoding=encoding):
+                           label="Inserting RDF triples {}, encoding={}".format(nb_triples, encoding)) as bar:
+
+        if format == 'hdt':
+            buckets = bucketify_bytes(iterator, block_size, encoding=encoding)
+        else:
+            buckets = bucketify(iterator, block_size)
+
+        for bucket in buckets:
             to_commit += len(bucket)
             # bulk load the bucket of RDF triples, then update progress bar
             execute_values(cursor, insert_into_query, bucket, page_size=block_size)

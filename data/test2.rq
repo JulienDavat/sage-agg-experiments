@@ -1,0 +1,2 @@
+SELECT (count(distinct ?o) as ?co) ?s WHERE { ?s a ?c ; ?p ?o } group by ?s
+SELECT (count(distinct ?p) as ?cp) where {?s ?p ?o}

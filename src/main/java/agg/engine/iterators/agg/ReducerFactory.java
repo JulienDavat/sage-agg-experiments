@@ -1,13 +1,10 @@
 package agg.engine.iterators.agg;
 
+import agg.engine.reducers.*;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.core.VarExprList;
 import org.apache.jena.sparql.engine.ExecutionContext;
 import org.apache.jena.sparql.expr.ExprAggregator;
-import agg.engine.reducers.AggregationReducer;
-import agg.engine.reducers.CountSumReducer;
-import agg.engine.reducers.MaxReducer;
-import agg.engine.reducers.MinReducer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,9 +32,15 @@ public class ReducerFactory {
     }
 
     private Supplier<AggregationReducer> buildSupplier(Var variable, ExprAggregator exprAggregator) {
+//        System.err.println("Reducer name: " + exprAggregator.getAggregator().getName());
+//        System.err.println("Reducer expr: " + exprAggregator.getAggregator());
+//        System.err.println("DISTINCT:" + exprAggregator.getAggregator().key().contains("distinct"));
         switch (exprAggregator.getAggregator().getName()) {
             case "COUNT": {
-                return () -> new CountSumReducer(variable, context);
+                if (exprAggregator.getAggregator().key().contains("distinct"))
+                    return () -> new DistinctCountSumReducer(variable, context);
+                else
+                    return () -> new CountSumReducer(variable, context);
             }
             case "SUM": {
                 return () -> new CountSumReducer(variable, context);

@@ -3,9 +3,9 @@ FROM ubuntu:18.04
 # Set Virtuoso commit SHA to Virtuoso 7.2.5.2 release (16/08/2018)
 ENV VIRTUOSO_COMMIT 17c4ba1d5825822d8380ef8d9f978e2d57f4768f
 
-# env proxy
-ENV http_proxy="http://cache.ha.univ-nantes.fr:3128/"
-ENV https_proxy="http://cache.ha.univ-nantes.fr:3128"
+## env proxy
+#ENV http_proxy="http://cache.ha.univ-nantes.fr:3128/"
+#ENV https_proxy="http://cache.ha.univ-nantes.fr:3128"
 
 # Build virtuoso from source and clean up afterwards
 RUN apt-get update \

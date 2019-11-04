@@ -56,6 +56,6 @@ def get_rdf_reader(file_path, format='nt'):
         iterator = map(__n3_to_str, g.triples((None, None, None)))
     elif format == 'hdt':
         # load HDTDocument without additional indexes (not needed since we do a ?s ?p ?o)
-        doc = HDTDocument(file_path, False, False)
-        iterator, nb_triples = doc.search_triples("", "", "")
+        doc = HDTDocument(file_path, True, True)
+        iterator, nb_triples = doc.search_triples_bytes("", "", "")
     return iterator, nb_triples

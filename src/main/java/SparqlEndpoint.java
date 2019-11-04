@@ -5,6 +5,7 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Map;
 
 @CommandLine.Command(name = "sparql-endpoint", footer = "Copyright(c) 2019 GRALL Arnaud",
@@ -17,70 +18,76 @@ public class SparqlEndpoint implements Runnable {
     String query = "";
     @CommandLine.Parameters(index = "2", arity = "1", description = "The default graph tu use, null by default")
     String default_graph = null;
+    @CommandLine.Option(names = "--format", arity = "1", description = "The format in which the results will be returned [default = application/sparql-results+xml]")
+    String format = "application/sparql-results+xml";
     HttpRequestFactory requestFactory
             = HTTP_TRANSPORT.createRequestFactory(request -> request.setReadTimeout(0));
 
     @Override
     public void run() {
-        executeQuery(endpoint, query, default_graph, System.err, System.out, System.out);
+        executeQuery(endpoint, query, default_graph, System.err, System.out, System.err, format);
     }
 
-    public void executeQuery(String endpoint, String query, String graph, PrintStream err, PrintStream out, PrintStream stats) {
+    public void executeQuery(String endpoint, String query, String graph, PrintStream err, PrintStream out, PrintStream stats, String format) {
         class EndpointUrl extends GenericUrl {
             @Key("default-graph-uri")
             public String default_graph_uri = null;
             @Key
             public String query;
+            @Key
+            public String format = "application/sparql-results+xml";
 
             public EndpointUrl(String encodedUrl) {
                 super(encodedUrl);
             }
         }
         String queryString = query;
-        System.err.println("SPARQL endpoint: " + endpoint);
-        System.err.println("SPARQL graph: " + graph);
-        System.err.println("SPARQL query: " + queryString);
-
         EndpointUrl end = new EndpointUrl(endpoint);
         end.query = queryString;
         end.default_graph_uri = graph;
+        end.format = format;
         long startTime = System.nanoTime();
         HttpRequest request;
         try {
             request = requestFactory.buildGetRequest(end);
             HttpResponse response = null;
             try {
-                HttpHeaders header = request.getHeaders();
-                header.set("Accept", "application/sparql-results+xml, application/rdf+xml");
-                request.setHeaders(header);
                 response = request.execute();
-
                 long endtime = System.nanoTime();
                 long elapsed = (endtime - startTime) / 1000000;
-                err.println("Execution time (ms): " + elapsed);
-                err.println("Status Code: " + response.getStatusCode());
-                err.println("Content Type: " + response.getContentType());
-                err.println("Content Encoding: " + response.getContentEncoding());
-                err.println("Content Type: " + response.getContentType());
                 String resp = response.parseAsString();
-                err.println("Size: " + resp.getBytes("UTF-8").length + " bytes");
                 String complete = "complete";
                 String timeout = "notimeout";
                 for (Map.Entry<String, Object> entry : response.getHeaders().entrySet()) {
                     err.println("Key : " + entry.getKey()
                             + " ,Value : " + entry.getValue());
                     if (entry.getKey().equals("x-sparql-maxrows")) {
-                        complete = "incomplete timeout";
+                        complete = "incomplete";
+                        timeout = "timeout";
                     }
                 }
                 out.println(resp);
-                stats.println(response.getStatusCode() + " 1 " + elapsed + " " + resp.getBytes("UTF-8").length + " " + complete + " " + timeout);
+                stats.println(String.join(", ", Arrays.asList(
+                        "" + response.getStatusCode(),
+                        "1",
+                        "" + elapsed,
+                        "" + resp.getBytes("UTF-8").length,
+                        complete,
+                        timeout
+                )));
             } catch (IOException e) {
                 e.printStackTrace();
                 err.println(e);
                 long endtime = System.nanoTime();
                 long elapsed = (endtime - startTime) / 1000000;
-                stats.println("error 1 " + elapsed + "  0 noresult timeout");
+                stats.println(String.join(", ", Arrays.asList(
+                        "error",
+                        "1",
+                        "" + elapsed,
+                        "0",
+                        "noresult",
+                        "timeout"
+                )));
             }
         } catch (IOException e) {
             e.printStackTrace();

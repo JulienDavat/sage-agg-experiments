@@ -25,6 +25,7 @@ class GroupByAggregator(PreemptableIterator):
         self._keep_groups = keep_groups
         self._default_key = 'https://sage-org.github.io/sage-engine#DefaultGroupKey'
         self._optimized = False
+        self._optimized_disk = False
         self._finished = False
         self._has_next = True
 
@@ -75,12 +76,13 @@ class GroupByAggregator(PreemptableIterator):
                 try:
                     if not agg.is_distinct():
                         elt[agg.get_binds_to()] = agg.done(key)
+                    else:
+                        elt['?__group_values'] = agg.done(key)
                 except Exception:
                     # ignore errors
                     pass
             # add results
             res.append(elt)
-            print(elt)
         return res
 
     def has_next(self):
@@ -106,7 +108,7 @@ class GroupByAggregator(PreemptableIterator):
             return None
         else:
             # print('phase 2')
-            if self._optimized:
+            if self._optimized and self._optimized_disk:
                 # Phase 2: produce aggregations results
                 if not self.has_next():
                    return None
@@ -134,6 +136,8 @@ class GroupByAggregator(PreemptableIterator):
                             elt[agg.get_binds_to()] = agg.done(elem[1])
 
                         return await self._remove_and_return(group_key=elem[1]['group_key'], value=elt)
+        self._finished = True
+        self._has_next = False
         return None
 
     async def _remove_and_return(self, group_key=None, value=None):
@@ -156,8 +160,9 @@ class GroupByAggregator(PreemptableIterator):
             agg.query_id = aggregator.get_query_id()
         return saved
 
-    def set_optimization(self, opt = False):
+    def set_optimization(self, opt=False, opt_disk=False):
         self._optimized = opt
+        self._optimized_disk = opt_disk
 
     def is_aggregator(self):
         return True
@@ -168,4 +173,5 @@ class GroupByAggregator(PreemptableIterator):
     def get_db_size(self):
         if os.path.exists(IndexRocksdb._location):
             return int(subprocess.check_output(['du', '-s', IndexRocksdb._location]).split()[0].decode('utf-8')) * 512
-        return 0
+        else:
+            return 0

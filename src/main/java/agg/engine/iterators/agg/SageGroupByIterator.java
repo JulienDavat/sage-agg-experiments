@@ -1,5 +1,7 @@
 package agg.engine.iterators.agg;
 
+import agg.engine.reducers.GroupByReducer;
+import agg.http.data.SolutionGroup;
 import org.apache.jena.atlas.iterator.IteratorDelayedInitialization;
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.core.BasicPattern;
@@ -39,7 +41,7 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
 
             @Override
             protected Iterator<Binding> initializeIterator() {
-
+                System.err.println("SageGroupByIterator");
                 // create reducer to gather results
                 // TODO choose a GroupByReducer for unsupported query shapes
                 //Reducer reducer = new GroupByReducer();
@@ -52,6 +54,7 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
                 boolean hasNext = true;
                 Optional<String> nextLink = Optional.empty();
                 int i = 0;
+                GroupByReducer gpReducer = new GroupByReducer();
                 while (hasNext) {
                     results = graph.getClient().queryGroupBy(graph.getGraphURI(), bgp, variables, aggregations, extensions, nextLink);
                     // regroup all bindings by key
@@ -64,16 +67,35 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
                             solutions.get(key).add(b);
                         }
                     }
-                    /*results.getSolutionGroups().forEach(solutionGroup -> {
-                        reducer.accumulate(solutionGroup);
-                        cpt[0] += solutionGroup.groupSize();
-                    });*/
+                    for (SolutionGroup solutionGroup : results.getSolutionGroups()) {
+                        gpReducer.accumulate(solutionGroup);
+                    }
+
                     nextLink = results.getNext();
                     hasNext = results.hasNext();
                 }
 
+                // if iter1 has results. then return it, otherwise return iter2
+                Iterator<Binding> iter1 = gpReducer.getGroups().parallelStream().map(entry -> {
+                    Binding res = new BindingHashMap();
+                    ((BindingHashMap) res).addAll(entry.keyAsBindings());
+
+                    // build reducers for this group
+                    Map<Var, AggregationReducer> reducers = factory.build();
+                    entry.forEachBindings(b -> {
+                        reducers.forEach((v, red) -> red.accumulate(b));
+                    });
+
+                    // build final results
+                    for(Map.Entry<Var, AggregationReducer> reducer: reducers.entrySet()) {
+                        Node value = reducer.getValue().getFinalValue().asNode();
+                        ((BindingHashMap) res).add(reducer.getKey(), value);
+                    }
+
+                    return res;
+                }).iterator();
                 // produce final results from each group
-                return solutions.entrySet().parallelStream().map(entry -> {
+                Iterator<Binding> iter2 = solutions.entrySet().parallelStream().map(entry -> {
                     Binding res = new BindingHashMap();
                     Binding key = entry.getKey();
 
@@ -96,22 +118,12 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
                     return res;
                 }).iterator();
 
+                if (iter1.hasNext()) {
+                    return iter1;
+                } else {
+                    return iter2;
+                }
 
-                // TODO change that to support others operators (same as above)
-                // apply aggregations on each group
-                /*return reducer.getGroups().parallelStream().map(solutionGroup -> {
-                    Binding bindings = new BindingHashMap();
-                    // add aggregation keys in the bindings
-                    solutionGroup.forEachKey((var, node) -> ((BindingHashMap) bindings).add(var, node));
-                    // apply each accumulator
-                    for(ExprAggregator agg: aggregations) {
-                        Var bindsTo = agg.getVar();
-                        Accumulator accumulator = agg.getAggregator().createAccumulator();
-                        solutionGroup.forEachBindings(binding -> accumulator.accumulate(binding, exCxt));
-                        ((BindingHashMap) bindings).add(bindsTo, accumulator.getValue().asNode());
-                    }
-                    return bindings;
-                }).iterator();*/
             }
         };
     }

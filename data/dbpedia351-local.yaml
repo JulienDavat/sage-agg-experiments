@@ -10,3 +10,5 @@ datasets:
     dbname: grall-a
     user: grall-a
     password: ''
+    host: localhost
+    port: 7122

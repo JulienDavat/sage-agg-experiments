@@ -20,4 +20,4 @@ touch $OUTPUT_MEASURE
 echo "Output measures (std err) $OUTPUT_MEASURE"
 echo "Jar location: $JAR"
 
-java -jar $JAR sparql-endpoint $ENDPOINT "$QUERY" $DEFAULT_GRAPH  1> $OUTPUT_RESULT 2> $OUTPUT_ERR
+java -jar $JAR sparql-endpoint $ENDPOINT "$QUERY" $DEFAULT_GRAPH  1> $OUTPUT_RESULT 2>> $OUTPUT_MEASURE

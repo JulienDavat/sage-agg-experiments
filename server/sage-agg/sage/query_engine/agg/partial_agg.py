@@ -47,6 +47,10 @@ class PartialAggregator(ABC):
         """Return the identifier of the query"""
         return self._query_id
 
+    def is_distinct(self):
+        """Return true if it is a distinct aggregator"""
+        return False
+
     def close(self):
         """should only be called by aggregator using disk"""
         if hasattr(self, '_index'):

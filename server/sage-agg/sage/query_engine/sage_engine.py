@@ -57,14 +57,14 @@ class Statistics:
         })
 
 
-async def executor(plan, queue, limit, optimized, stats):
+async def executor(plan, queue, limit, optimized, optimized_disk, stats):
     """Executor used to evaluated a plan under a time quota"""
     try:
         cpt = 0
         agg = False
         if plan.is_aggregator():
             agg = True
-            plan.set_optimization(optimized)
+            plan.set_optimization(optimized, optimized_disk)
         while plan.has_next():
             value = await plan.next()
             # discard None values
@@ -100,7 +100,7 @@ class SageEngine(object):
             self._loop = new_event_loop()
             set_event_loop(self._loop)
 
-    def execute(self, plan, quota, limit=inf, optimized=False):
+    def execute(self, plan, quota, limit=inf, optimized=False, optimized_disk=False):
         """
             Execute a preemptable physical query execution plan under a time quota.
 
@@ -119,7 +119,7 @@ class SageEngine(object):
         stats = Statistics()
         query_done = False
         try:
-            task = wait_for(executor(plan, queue, limit, optimized, stats), timeout=quota)
+            task = wait_for(executor(plan, queue, limit, optimized, optimized_disk, stats), timeout=quota)
             self._loop.run_until_complete(task)
             query_done = True
             stats.set_done()
@@ -128,12 +128,12 @@ class SageEngine(object):
         except TooManyResults:
             stats.set_error('TooManyResults')
         finally:
-            if plan.is_aggregator() and optimized:
+            if plan.is_aggregator() and optimized and optimized_disk:
                 stats.set_db_size(plan.get_db_size())
             # dont forget to close the event loop or we get a Too Many open files OSError
             self._loop.close()
             # backward compatibility
-            if not optimized:
+            if optimized and not optimized_disk:
                 # fetch partial aggregate if the query is an aggreation query
                 if plan.is_aggregator():
                     results += plan.generate_results()

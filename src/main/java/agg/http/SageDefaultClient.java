@@ -51,28 +51,35 @@ public class SageDefaultClient implements SageRemoteClient {
     private static final String HTTP_JSON_CONTENT_TYPE = "application/json";
     // enable this when you want to use the optimized aggregator, as well as the SageOpExecutor.aggregation boolean
     public static boolean optimized = false;
+    // enable this when you want to use the optimized aggregator on disk enable both
+    public static boolean optimized_disk = false;
 
     private class JSONPayload {
         private String query;
         private String defaultGraph;
         private String next = null;
         private Boolean optimized = false;
+        private Boolean optimizeddisk = false;
 
-        public JSONPayload(String defaultGraph, String query, Boolean optimized) {
+        public JSONPayload(String defaultGraph, String query, Boolean optimized, Boolean optimized_disk) {
             this.query = query;
             this.defaultGraph = defaultGraph;
             this.optimized = optimized;
+            this.optimizeddisk = optimized_disk;
         }
 
-        public JSONPayload(String defaultGraph, String query, String next, Boolean optimized) {
+        public JSONPayload(String defaultGraph, String query, String next, Boolean optimized, Boolean optimized_disk) {
             this.query = query;
             this.defaultGraph = defaultGraph;
             this.next = next;
             this.optimized = optimized;
+            this.optimizeddisk = optimized_disk;
         }
 
         public Boolean getOptimized() { return this.optimized; }
         public void setOptimized(boolean opt) { this.optimized = opt; }
+        public Boolean getOptimized_disk() { return this.optimizeddisk; }
+        public void setOptimized_disk(boolean opt) { this.optimizeddisk = opt; }
 
         public String getQuery() {
             return query;
@@ -145,12 +152,12 @@ public class SageDefaultClient implements SageRemoteClient {
         return serverURL;
     }
 
-    private String buildJSONPayload(String graphURI, String query, Optional<String> next, Boolean optimized) {
+    private String buildJSONPayload(String graphURI, String query, Optional<String> next, Boolean optimized, Boolean optimized_disk) {
         JSONPayload payload;
         if (next.isPresent()) {
-            payload = new JSONPayload(graphURI, query, next.get(), optimized);
+            payload = new JSONPayload(graphURI, query, next.get(), optimized, optimized_disk);
         } else {
-            payload = new JSONPayload(graphURI, query, optimized);
+            payload = new JSONPayload(graphURI, query, optimized, optimized_disk);
         }
         try {
             return mapper.writeValueAsString(payload);
@@ -167,13 +174,14 @@ public class SageDefaultClient implements SageRemoteClient {
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
     private QueryResults sendQuery(String graphURI, String query, Optional<String> next, boolean isRead) {
+        // System.err.println("Sending query: " + query + " with options (optimized=" + optimized + ", disk=" + optimized_disk + ")");
         // check in cache first
         if (isRead && cache.has(graphURI, query, next)) {
             return cache.get(graphURI, query, next);
         }
         // build POST query
         GenericUrl url = new GenericUrl(serverURL);
-        String payload = buildJSONPayload(graphURI, query, next, this.optimized);
+        String payload = buildJSONPayload(graphURI, query, next, this.optimized, this.optimized_disk);
         HttpContent postContent = new ByteArrayContent(HTTP_JSON_CONTENT_TYPE, payload.getBytes());
         double startTime = System.nanoTime();
         try {

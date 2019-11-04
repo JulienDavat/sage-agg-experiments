@@ -151,7 +151,7 @@ public class SageEndpoint implements Runnable {
                     .parallel()
                     .filter(Files::isDirectory).forEach(dir -> {
                 System.err.println("Reading content of: " + dir);
-                dataset.mergeResultFileModel(dir.toString(), voidModel);
+                dataset.mergeResultFileModel(dir.toString(), voidModel, sageUrl);
             });
             RDFDataMgr.write(new FileOutputStream("./output/void.ttl"), voidModel, Lang.TURTLE);
         } catch (Exception e) {

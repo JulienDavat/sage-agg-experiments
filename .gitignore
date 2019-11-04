@@ -1,6 +1,7 @@
 output/*/*/*.xml
 output/*/*/*.log
 output/*/*.png
+data/virtuoso-data/
 .DS_Store
 sage-sparql-void.iml
 .idea
