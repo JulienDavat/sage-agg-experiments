@@ -12,8 +12,16 @@ datasets:
     password: ''
     host: sage-postgres
     port: 5432
-  - name: wikidata2017
-    description: Wikidata using Postgres backend (wikidata-20170313-all-BETA.nt)
+  - name: bsbm100
+    description: BSBM 100 products using Postgres backend
+    backend: postgres
+    dbname: grall-a
+    user: grall-a
+    password: ''
+    host: sage-postgres
+    port: 5432
+  - name: bsbm10
+    description: BSBM 10 products using Postgres backend
     backend: postgres
     dbname: grall-a
     user: grall-a

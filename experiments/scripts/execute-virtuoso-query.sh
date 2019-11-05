@@ -8,4 +8,4 @@ OUTPUT_RESULT=$4
 OUTPUT_MEASURE=$5
 JAR=$6
 
-java -jar $JAR sparql-endpoint $ENDPOINT "$QUERY" $DEFAULT_GRAPH  --format="text/csv" 1>> "$OUTPUT_RESULT" 2>> "$OUTPUT_MEASURE"
+java -Xms1g -Xmx50g -jar $JAR sparql-endpoint $ENDPOINT "$QUERY" $DEFAULT_GRAPH  --format="text/csv" 1>> "$OUTPUT_RESULT" 2>> "$OUTPUT_MEASURE"
