@@ -41,7 +41,6 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
 
             @Override
             protected Iterator<Binding> initializeIterator() {
-                System.err.println("SageGroupByIterator");
                 // create reducer to gather results
                 // TODO choose a GroupByReducer for unsupported query shapes
                 //Reducer reducer = new GroupByReducer();

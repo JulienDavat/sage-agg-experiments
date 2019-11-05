@@ -1,0 +1,32 @@
+SELECT * WHERE {?s ?p ?o} LIMIT 1  
+SELECT (COUNT(*) as ?sparql1_1) WHERE { SELECT * WHERE { ?s ?p ?o } LIMIT 1 }   
+SELECT (COUNT(*) AS ?count)  WHERE { ?s ?p ?o }
+SELECT (COUNT(DISTINCT ?o) AS ?count) WHERE { ?s a ?o }
+SELECT (COUNT(DISTINCT ?p) AS ?count)  WHERE { ?s ?p ?o }
+SELECT (COUNT(DISTINCT ?s ) AS ?count)  WHERE {  ?s ?p ?o   }
+SELECT (COUNT(DISTINCT ?o ) AS ?count)  WHERE {  ?s ?p ?o   }
+SELECT DISTINCT ?c WHERE { ?s a ?c }
+SELECT (COUNT(?p) AS ?count) ?c WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c
+SELECT (COUNT(DISTINCT ?c2) AS ?count) ?c  WHERE { ?s a ?c ; a ?c2 . } GROUP BY ?c
+SELECT (COUNT(DISTINCT ?p) AS ?count) ?c  WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c
+SELECT (COUNT(DISTINCT ?s) AS ?count) ?c   WHERE { ?s a ?c . } GROUP BY ?c
+SELECT (COUNT(DISTINCT ?o) AS ?count) ?c   WHERE { ?s a ?c ; ?p ?o } GROUP BY ?c
+SELECT DISTINCT ?p WHERE { ?s ?p ?o }
+SELECT (COUNT(?o) AS ?count) ?p  WHERE { ?s ?p ?o . } GROUP BY ?p
+SELECT (COUNT(DISTINCT ?s) AS ?count) ?p WHERE { ?s ?p ?o . } GROUP BY ?p
+SELECT (COUNT(DISTINCT ?o) AS ?count) ?p WHERE { ?s ?p ?o . } GROUP BY ?p
+SELECT DISTINCT ?p WHERE { ?s a ?c ; ?p ?o .}
+SELECT (COUNT(?o) AS ?count) ?p  WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c ?p
+SELECT (COUNT(DISTINCT ?s) AS ?count) ?c ?p   WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c ?p
+SELECT (COUNT(DISTINCT ?o) AS ?count) ?c ?p WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c ?p
+SELECT (COUNT(DISTINCT ?s ) AS ?count) WHERE {  ?s ?p ?o  . FILTER(isIri(?s))}
+SELECT (COUNT(DISTINCT ?s) AS ?count) WHERE {  ?s ?p ?o  . FILTER(isBlank(?s))}
+SELECT (COUNT(DISTINCT ?o ) AS ?count) WHERE {  ?s ?p ?o  . FILTER(isIri(?o))}
+SELECT (COUNT(DISTINCT ?o ) AS ?count)  WHERE {  ?s ?p ?o  . FILTER(isLiteral(?o))}
+SELECT (COUNT(DISTINCT ?o ) AS ?count)  WHERE {  ?s ?p ?o  . FILTER(isBlank(?o))}
+SELECT (COUNT(DISTINCT ?b ) AS ?count)  WHERE {  { ?s ?p ?b } UNION { ?b ?p ?o } FILTER(isBlank(?b))}
+SELECT (COUNT(DISTINCT ?u ) AS ?count)  WHERE {  { ?u ?p ?o } UNION { ?s ?u ?o } UNION { ?s ?p ?u } FILTER(isIri(?u))}
+SELECT (COUNT(DISTINCT ?n ) AS ?count)  WHERE {  { ?n ?p ?o } UNION { ?s ?n ?o } UNION { ?s ?p ?n } }
+SELECT (COUNT(?s) AS ?count) ?p ?sType WHERE { ?s ?p ?o ; a ?sType . } GROUP BY ?p ?sType
+SELECT (COUNT(?o) AS ?count) ?p ?oType WHERE { ?s ?p ?o . ?o a ?oType . } GROUP BY ?p ?oType
+          

@@ -41,7 +41,6 @@ WORKDIR /opt/sage-engine/
 RUN pip install --upgrade pip
 # install deps
 RUN pip install -r requirements.txt
-COPY ./server/sage-agg/ /opt/sage-engine/
 # cause we are behind a proxy, uninstall hdt
 # download manually hdt-cpp with curl -sLO
 # unzip -qq
@@ -56,6 +55,8 @@ RUN git clone https://github.com/Callidon/pyHDT.git && \
     pip install -r requirements.txt && \
     python setup.py install && \
     pip install -e .
+
+COPY ./server/sage-agg/ /opt/sage-engine/
 # then, install the sage-engine
 RUN pip install -e .[hdt,postgres]
 EXPOSE 8000

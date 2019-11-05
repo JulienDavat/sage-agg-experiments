@@ -9,7 +9,7 @@ datasets:
     description: BSBM scale 1000 using HDT backend
     backend: hdt-file
     file: /opt/data/bsbm1k.hdt
-  - name: bsbm1kpostgres
+  - name: bsbm1k
     description: BSBM 1K products using Postgres backend
     backend: postgres
     dbname: grall-a

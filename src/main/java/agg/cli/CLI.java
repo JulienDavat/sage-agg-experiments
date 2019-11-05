@@ -96,8 +96,6 @@ public class CLI implements Callable<Void> {
         // enable the optimized aggregation
         setAggregationOptimization(this.optimized, this.optimized_disk);
 
-        System.err.println("Executing: " + queryString);
-
         // check if we are dealing with a classic query or an UPDATE query
         if (this.update) {
             // init execution env.
@@ -161,7 +159,6 @@ public class CLI implements Callable<Void> {
                     spy.getMeanTransferSize(), spy.getMeanNextNumber(), spy.getMeanNextNumberOptimized(),
                     spy.getMaxDb_size()
             );
-            System.err.println(csvLine);
             try {
                 Files.write(Paths.get(this.measure), csvLine.getBytes(), StandardOpenOption.APPEND);
             } catch (IOException e) {
@@ -176,7 +173,6 @@ public class CLI implements Callable<Void> {
     }
 
     public static void setAggregationOptimization(boolean opt, boolean opt_disk) {
-        System.err.println("Aggregate optimization enabled: " + opt);
         SageOpExecutor.optimized = opt;
         SageDefaultClient.optimized = opt;
         SageDefaultClient.optimized_disk = opt_disk;

@@ -59,8 +59,8 @@ public class SparqlEndpoint implements Runnable {
                 String complete = "complete";
                 String timeout = "notimeout";
                 for (Map.Entry<String, Object> entry : response.getHeaders().entrySet()) {
-                    err.println("Key : " + entry.getKey()
-                            + " ,Value : " + entry.getValue());
+//                    err.println("Key : " + entry.getKey()
+//                            + " ,Value : " + entry.getValue());
                     if (entry.getKey().equals("x-sparql-maxrows")) {
                         complete = "incomplete";
                         timeout = "timeout";
@@ -76,8 +76,8 @@ public class SparqlEndpoint implements Runnable {
                         timeout
                 )));
             } catch (IOException e) {
-                e.printStackTrace();
-                err.println(e);
+                // e.printStackTrace();
+//                err.println(e);
                 long endtime = System.nanoTime();
                 long elapsed = (endtime - startTime) / 1000000;
                 stats.println(String.join(", ", Arrays.asList(
