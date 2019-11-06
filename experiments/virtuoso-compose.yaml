@@ -2,7 +2,6 @@ version: '3.4'
 services:
   virtuoso:
     container_name: virtuoso-noquota
-    image: tenforce/virtuoso:1.3.2-virtuoso7.2.5
     build:
       context: "./../"
       dockerfile: ./experiments/virtuoso/Dockerfile

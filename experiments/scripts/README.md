@@ -1,4 +1,4 @@
-
+How to init sage-postgres with data?
 
 ````bash
 # init
