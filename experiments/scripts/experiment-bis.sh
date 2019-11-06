@@ -62,7 +62,7 @@ function run_sage {
     do
       echo "# Executing sage query-$q and appending into: $RESULT_SAGE"
       FILE_RESULT="$S_PREFIX-query-$q-result.txt"
-      bash "$CUR/execute-sage-query.sh" "$query" $SAGE_ADDRESS $FILE_RESULT $RESULT_SAGE $BUILD_JAR --optimized
+      bash "$CUR/execute-sage-query.sh" "$query" $SAGE_ADDRESS $FILE_RESULT $RESULT_SAGE $BUILD_JAR "--optimized --time"
       let "q++"
     done < "$input"
 }
