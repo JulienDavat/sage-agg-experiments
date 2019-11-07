@@ -1,4 +1,4 @@
-version: '3.4'
+version: '2.4'
 services:
   virtuoso:
     container_name: virtuoso-noquota
@@ -13,3 +13,4 @@ services:
     ports:
       - "7130:8890"
       - "7131:1111"
+    mem_limit: 2000M

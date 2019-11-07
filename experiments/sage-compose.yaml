@@ -1,4 +1,4 @@
-version: '3.4'
+version: '2.4'
 
 services:
   sage-postgres:
@@ -11,6 +11,7 @@ services:
       POSTGRES_PASSWORD: ''
     ports:
       - 7122:5432 # postgres port
+    mem_limit: 2000M
   sage-agg:
     container_name: sage-agg
     links:
@@ -26,3 +27,4 @@ services:
       - 7120:8000 # sage port
       - 7121:5432 # postgres backend port
     command: sage /opt/data/experiments.yaml --gunicorn-config /opt/data/sage-gunicorn.py
+    mem_limit: 2000M
