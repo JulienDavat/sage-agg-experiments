@@ -48,5 +48,5 @@ SELECT (COUNT(?o) AS ?count) WHERE {  ?s ?p ?o  . FILTER(isIri(?o))}
 SELECT (COUNT(?o) AS ?count)  WHERE {  ?s ?p ?o  . FILTER(isLiteral(?o))}
 SELECT (COUNT(?o) AS ?count)  WHERE {  ?s ?p ?o  . FILTER(isBlank(?o))}
 SELECT (COUNT(?b) AS ?count)  WHERE {  { ?s ?p ?b } UNION { ?b ?p ?o } FILTER(isBlank(?b))}
-SELECT (COUNT(?u) AS ?count)  WHERE {  { ?u ?p ?o } UNION { ?s ?u ?o } UNION { ?s ?p ?u } Fqueries-wo-construct.txtILTER(isIri(?u))}
+SELECT (COUNT(?u) AS ?count)  WHERE {  { ?u ?p ?o } UNION { ?s ?u ?o } UNION { ?s ?p ?u } FILTER(isIri(?u))}
 SELECT (COUNT(?n) AS ?count)  WHERE {  { ?n ?p ?o } UNION { ?s ?n ?o } UNION { ?s ?p ?n } }
