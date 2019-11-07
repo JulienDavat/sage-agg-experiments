@@ -1,0 +1,12 @@
+count,c
+6,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/ProductType
+17,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType5
+10,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Offer
+17,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType4
+19,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType6
+7,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Vendor
+19,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Product
+7,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Producer
+6,http://xmlns.com/foaf/0.1/Person
+5,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/ProductFeature
+12,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Review

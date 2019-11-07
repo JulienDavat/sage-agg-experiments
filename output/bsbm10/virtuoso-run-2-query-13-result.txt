@@ -1,0 +1,13 @@
+"count","c"
+25,"http://xmlns.com/foaf/0.1/Person"
+122,"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType6"
+613,"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/ProductFeature"
+257,"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Product"
+99,"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType5"
+689,"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Offer"
+7,"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Vendor"
+46,"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType4"
+26,"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/ProductType"
+7,"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Producer"
+397,"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Review"
+
