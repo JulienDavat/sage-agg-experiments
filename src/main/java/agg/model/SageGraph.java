@@ -17,7 +17,9 @@ import agg.http.ExecutionStats;
 import agg.http.SageDefaultClient;
 import agg.http.SageRemoteClient;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents a remote RDF graph hosted by a Sage server
@@ -89,7 +91,7 @@ public class SageGraph extends GraphBase {
         Triple t = new Triple(s, p, o);
         BasicPattern bgp = new BasicPattern();
         bgp.add(t);
-        QueryIterator queryIterator = new SageBGPIterator(getGraphURI(), httpClient, bgp);
+        QueryIterator queryIterator = new SageBGPIterator(getGraphURI(), httpClient, bgp, new LinkedHashSet<>());
         return WrappedIterator.create(queryIterator)
                 .mapWith(binding -> Substitute.substitute(t, binding));
     }
@@ -105,8 +107,8 @@ public class SageGraph extends GraphBase {
      * @param bgp - BGP to evaluate
      * @return An iterator over solution bindings for the BGP
      */
-    public QueryIterator basicGraphPatternFind(BasicPattern bgp) {
-        return new SageBGPIterator(getGraphURI(), httpClient, bgp);
+    public QueryIterator basicGraphPatternFind(BasicPattern bgp, Set<Var> vars) {
+        return new SageBGPIterator(getGraphURI(), httpClient, bgp, vars);
     }
 
     /**
@@ -115,11 +117,11 @@ public class SageGraph extends GraphBase {
      * @param filters - List of filters
      * @return An iterator over solution bindings for the BGP + the filters
      */
-    public QueryIterator basicGraphPatternFind(BasicPattern bgp, List<Expr> filters) {
+    public QueryIterator basicGraphPatternFind(BasicPattern bgp, List<Expr> filters, Set<Var> vars) {
         if (filters.isEmpty()) {
-            return new SageBGPIterator(getGraphURI(), httpClient, bgp);
+            return new SageBGPIterator(getGraphURI(), httpClient, bgp, vars);
         }
-        return new SageFilterBGPIterator(getGraphURI(), httpClient, bgp, filters);
+        return new SageFilterBGPIterator(getGraphURI(), httpClient, bgp, filters, vars);
     }
 
     /**

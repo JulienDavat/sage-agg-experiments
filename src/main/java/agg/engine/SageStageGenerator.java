@@ -2,7 +2,12 @@ package agg.engine;
 
 import com.google.common.collect.Sets;
 import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.Node;
 import org.apache.jena.query.ARQ;
+import org.apache.jena.query.Query;
+import org.apache.jena.sparql.algebra.Algebra;
+import org.apache.jena.sparql.algebra.Op;
+import org.apache.jena.sparql.algebra.OpAsQuery;
 import org.apache.jena.sparql.core.BasicPattern;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.ExecutionContext;
@@ -13,10 +18,10 @@ import org.apache.jena.sparql.expr.ExprList;
 import agg.core.SageUtils;
 import agg.engine.iterators.boundjoin.ParallelBoundJoinIterator;
 import agg.model.SageGraph;
+import org.apache.jena.sparql.graph.NodeTransform;
+import org.apache.jena.sparql.util.Symbol;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -48,13 +53,15 @@ public class SageStageGenerator implements StageGenerator {
                                  ExecutionContext execCxt) {
         Graph g = execCxt.getActiveGraph();
 
+        Set<Var> varSet = this.getVarSetFromContext(execCxt);
+
         // This stage generator only support evaluation of a Sage Graph
         if (g instanceof SageGraph) {
             SageGraph sageGraph = (SageGraph) g;
 
             // no input bindings => simply evaluate the BGP
             if (input.isJoinIdentity()) {
-                return sageGraph.basicGraphPatternFind(pattern);
+                return sageGraph.basicGraphPatternFind(pattern, varSet);
             }
 
             // if we can download the right pattern in one call, use a hash join instead of a bound join
@@ -64,11 +71,38 @@ public class SageStageGenerator implements StageGenerator {
                 return QueryIterHashJoin.create(input, rightIter, execCxt);
             }*/
             // otherwise, use a bind join
-            return new ParallelBoundJoinIterator(input, sageGraph.getGraphURI(), sageGraph.getClient(), pattern, threadPool, BIND_JOIN_BUCKET_SIZE);
+            return new ParallelBoundJoinIterator(input, sageGraph.getGraphURI(), sageGraph.getClient(), pattern, threadPool, BIND_JOIN_BUCKET_SIZE, varSet);
         }
 
         // delegate execution of the unsupported Graph to the StageGenerator above
         return above.execute(pattern, input, execCxt);
+    }
+
+    private Set<Var> getVarSetFromContext(ExecutionContext execCxt) {
+        Op alg = execCxt.getContext().get(Symbol.create("http://jena.apache.org/ARQ/system#algebra"));
+        Query query = OpAsQuery.asQuery(alg);
+        Set<Var> varSet = new LinkedHashSet<>();
+        Set<Var> varAggSet = new LinkedHashSet<>();
+        Set<Var> varAggSetBis = new LinkedHashSet<>();
+        query.getAggregators().forEach((exprAggregator -> {
+            varAggSetBis.add(exprAggregator.getVar());
+            for (Expr expr : exprAggregator.getAggregator().getExprList()) {
+                varAggSet.add(expr.asVar());
+            }
+        }));
+        for (Var var : query.getProject().getVars()) {
+            Expr exp = query.getProject().getExpr(var);
+            if (exp == null) {
+                varSet.add(var);
+            } else {
+                // is the variable bind to an aggregator? yes if not any of them
+                if (exp.isConstant() || exp.isFunction() || exp.isVariable()) {
+                    varSet.add(var);
+                }
+            }
+        }
+        varSet.addAll(varAggSet);
+        return varSet;
     }
 
     public QueryIterator execute(BasicPattern pattern,
@@ -77,17 +111,19 @@ public class SageStageGenerator implements StageGenerator {
                                  ExprList filters) {
         Graph g = execCxt.getActiveGraph();
 
+        Set<Var> varSet = this.getVarSetFromContext(execCxt);
+
         if (g instanceof SageGraph) {
             SageGraph sageGraph = (SageGraph) g;
 
             // no input bindings => simply evaluate the BGP
             if (input.isJoinIdentity()) {
                 // compute which filters can be packed with the BGP
-                return sageGraph.basicGraphPatternFind(pattern, findRelevantFilters(filters, pattern));
+                return sageGraph.basicGraphPatternFind(pattern, findRelevantFilters(filters, pattern), varSet);
             }
 
             // otherwise, use a bind join
-            return new ParallelBoundJoinIterator(input, sageGraph.getGraphURI(), sageGraph.getClient(), pattern, threadPool, BIND_JOIN_BUCKET_SIZE);
+            return new ParallelBoundJoinIterator(input, sageGraph.getGraphURI(), sageGraph.getClient(), pattern, threadPool, BIND_JOIN_BUCKET_SIZE, varSet);
         }
         return above.execute(pattern, input, execCxt);
     }

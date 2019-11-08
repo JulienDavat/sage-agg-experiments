@@ -5,6 +5,7 @@ import agg.engine.iterators.base.SageQueryIterator;
 import agg.http.SageRemoteClient;
 import agg.http.results.QueryResults;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,6 @@ public class SageUnionIterator extends SageQueryIterator {
 
     @Override
     protected QueryResults query(Optional<String> nextLink) {
-        return getClient().query(getGraphURI(), patterns, nextLink);
+        return getClient().query(getGraphURI(), patterns, nextLink, new LinkedHashSet<>());
     }
 }

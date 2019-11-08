@@ -26,10 +26,7 @@ import agg.http.results.UpdateResults;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -211,8 +208,8 @@ public class SageDefaultClient implements SageRemoteClient {
      * @param bgp - BGP to evaluate
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
-    public QueryResults query(String graphURI, BasicPattern bgp) {
-        return query(graphURI, bgp, Optional.empty());
+    public QueryResults query(String graphURI, BasicPattern bgp, Set<Var> projection) {
+        return query(graphURI, bgp, Optional.empty(), projection);
     }
 
     /**
@@ -222,8 +219,8 @@ public class SageDefaultClient implements SageRemoteClient {
      * @param next - Optional link used to resume query evaluation
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
-    public QueryResults query(String graphURI, BasicPattern bgp, Optional<String> next) {
-        String query = SageQueryBuilder.buildBGPQuery(bgp);
+    public QueryResults query(String graphURI, BasicPattern bgp, Optional<String> next, Set<Var> projection) {
+        String query = SageQueryBuilder.buildBGPQuery(bgp, projection);
         return sendQuery(graphURI, query, next, true);
     }
 
@@ -260,8 +257,8 @@ public class SageDefaultClient implements SageRemoteClient {
      * @param filters - Filter expression
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
-    public QueryResults query(String graphURI, BasicPattern bgp, List<Expr> filters) {
-        return query(graphURI, bgp, filters, Optional.empty());
+    public QueryResults query(String graphURI, BasicPattern bgp, List<Expr> filters, Set<Var> projection) {
+        return query(graphURI, bgp, filters, Optional.empty(), projection);
     }
 
     /**
@@ -272,8 +269,8 @@ public class SageDefaultClient implements SageRemoteClient {
      * @param next - Optional link used to resume query evaluation
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
-    public QueryResults query(String graphURI, BasicPattern bgp, List<Expr> filters, Optional<String> next) {
-        String query = SageQueryBuilder.buildBGPQuery(bgp, filters);
+    public QueryResults query(String graphURI, BasicPattern bgp, List<Expr> filters, Optional<String> next, Set<Var> projection) {
+        String query = SageQueryBuilder.buildBGPQuery(bgp, filters, projection);
         return sendQuery(graphURI, query, next, true);
     }
 
@@ -283,8 +280,8 @@ public class SageDefaultClient implements SageRemoteClient {
      * @param patterns - List of BGPs to evaluate
      * @return Query results. If the next link is null, then the Union has been completely evaluated.
      */
-    public QueryResults query(String graphURI, List<BasicPattern> patterns) {
-        return query(graphURI, patterns, Optional.empty());
+    public QueryResults query(String graphURI, List<BasicPattern> patterns, Set<Var> projection) {
+        return query(graphURI, patterns, Optional.empty(), projection);
     }
 
     /**
@@ -294,8 +291,8 @@ public class SageDefaultClient implements SageRemoteClient {
      * @param next - Optional link used to resume query evaluation
      * @return Query results. If the next link is null, then the Union has been completely evaluated.
      */
-    public QueryResults query(String graphURI, List<BasicPattern> patterns, Optional<String> next) {
-        String query = SageQueryBuilder.buildUnionQuery(patterns);
+    public QueryResults query(String graphURI, List<BasicPattern> patterns, Optional<String> next, Set<Var> projection) {
+        String query = SageQueryBuilder.buildUnionQuery(patterns, projection);
         return sendQuery(graphURI, query, next, true);
     }
 
@@ -305,8 +302,8 @@ public class SageDefaultClient implements SageRemoteClient {
      * @param graphs - Graphs clauses to evaluates, i..e, tuples (graph uri, basic graph pattern)
      * @return Query results. If the next link is null, then the Union has been completely evaluated.
      */
-    public QueryResults query(String graphURI, Map<String, BasicPattern> graphs) {
-        return query(graphURI, graphs, Optional.empty());
+    public QueryResults query(String graphURI, Map<String, BasicPattern> graphs, Set<Var> projection) {
+        return query(graphURI, graphs, Optional.empty(), projection);
     }
 
     /**
@@ -316,8 +313,8 @@ public class SageDefaultClient implements SageRemoteClient {
      * @param next - Optional link used to resume query evaluation
      * @return Query results. If the next link is null, then the Union has been completely evaluated.
      */
-    public QueryResults query(String graphURI, Map<String, BasicPattern> graphs, Optional<String> next) {
-        String query = SageQueryBuilder.buildGraphQuery(graphs);
+    public QueryResults query(String graphURI, Map<String, BasicPattern> graphs, Optional<String> next, Set<Var> projection) {
+        String query = SageQueryBuilder.buildGraphQuery(graphs, projection);
         return sendQuery(graphURI, query, next, true);
     }
 

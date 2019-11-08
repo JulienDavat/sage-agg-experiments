@@ -1,5 +1,6 @@
 package agg.http.data;
 
+import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.sparql.algebra.Op;
 import org.apache.jena.sparql.algebra.OpAsQuery;
@@ -13,6 +14,8 @@ import org.apache.jena.sparql.expr.ExprAggregator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Builder used to create SPARQL queries that can be send to a SaGe server
@@ -31,18 +34,8 @@ public class SageQueryBuilder {
      * @param bgp - Basic Graph pattern
      * @return Generated SPARQL query
      */
-    public static String buildBGPQuery(BasicPattern bgp) {
-        return SageQueryBuilder.buildBGPQuery(bgp, new LinkedList<>(), new LinkedList<>());
-    }
-
-    /**
-     * Build a SPARQL query from a Basic graph pattern
-     * @param bgp - Basic Graph pattern
-     * @param variables - list of projection variables
-     * @return Generated SPARQL query
-     */
-    public static String buildBGPQueryWithProjection(BasicPattern bgp, List<Var> variables) {
-        return SageQueryBuilder.buildBGPQuery(bgp, new LinkedList<>(), new LinkedList<>());
+    public static String buildBGPQuery(BasicPattern bgp, Set<Var> projection) {
+        return SageQueryBuilder.buildBGPQuery(bgp, new LinkedList<>(), projection.parallelStream().collect(Collectors.toList()));
     }
 
     /**
@@ -51,8 +44,8 @@ public class SageQueryBuilder {
      * @param filters - List of SPARQL filters
      * @return Generated SPARQL query
      */
-    public static String buildBGPQuery(BasicPattern bgp, List<Expr> filters) {
-        return SageQueryBuilder.buildBGPQuery(bgp, filters, new LinkedList<>());
+    public static String buildBGPQuery(BasicPattern bgp, List<Expr> filters, Set<Var> projection) {
+        return SageQueryBuilder.buildBGPQuery(bgp, filters, projection.parallelStream().collect(Collectors.toList()));
     }
 
     /**
@@ -64,7 +57,7 @@ public class SageQueryBuilder {
      */
     public static String buildBGPQuery(BasicPattern bgp, List<Expr> filters, List<Var> variables) {
         // extract SPARQL variables from the BGP
-        //Set<Var> variables = SageQueryBuilder.getVariables(bgp);
+        // Set<Var> variables = SageQueryBuilder.getVariables(bgp);
         // query root: the basic graph pattern itself
         Op op = new OpBGP(bgp);
         // apply SPARQL filters
@@ -104,7 +97,7 @@ public class SageQueryBuilder {
      * @param union - set of Basic Graph patterns
      * @return Generated SPARQL query
      */
-    public static String buildUnionQuery(List<BasicPattern> union) {
+    public static String buildUnionQuery(List<BasicPattern> union, Set<Var> projection) {
         // extract SPARQL variables from all BGPs
         /*Set<Var> variables = new LinkedHashSet<>();
         for(BasicPattern bgp: union) {
@@ -116,7 +109,7 @@ public class SageQueryBuilder {
             op = new OpUnion(op, new OpBGP(union.get(index)));
         }
         // apply projection
-        //op = new OpProject(op, Lists.newLinkedList(variables));
+        op = new OpProject(op, Lists.newLinkedList(projection));
         return SageQueryBuilder.serializeQuery(op);
     }
 
@@ -125,7 +118,7 @@ public class SageQueryBuilder {
      * @param graphs - Set of GRAPH clauses, i.e., tuples of (graph uri, basic graph pattern)
      * @return Generated SPARQL query
      */
-    public static String buildGraphQuery(Map<String, BasicPattern> graphs) {
+    public static String buildGraphQuery(Map<String, BasicPattern> graphs, Set<Var> projection) {
         Op op = null;
         for(Map.Entry<String, BasicPattern> entry: graphs.entrySet()) {
             Op opBGP = new OpBGP(entry.getValue());
@@ -136,6 +129,8 @@ public class SageQueryBuilder {
                 op = OpJoin.create(op, opGraph);
             }
         }
+        // apply projection
+        op = new OpProject(op, Lists.newLinkedList(projection));
         return SageQueryBuilder.serializeQuery(op);
     }
 }

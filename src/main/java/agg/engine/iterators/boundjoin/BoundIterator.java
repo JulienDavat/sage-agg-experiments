@@ -11,10 +11,7 @@ import agg.http.SageRemoteClient;
 import agg.http.results.QueryResults;
 import org.slf4j.Logger;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Evaluates an Union of bounded BGP (as produced by a Bound join) using a SaGe server
@@ -30,10 +27,10 @@ public class BoundIterator extends BufferedIterator {
     private int bagSize;
     private Map<Integer, Binding> rewritingMap;
     private boolean isContainmentQuery;
-
+    protected Set<Var> projection;
     private Logger logger;
 
-    public BoundIterator(String graphURI, SageRemoteClient client, List<BasicPattern> bag, List<Binding> block, Map<Integer, Binding> rewritingMap, boolean isContainmentQuery) {
+    public BoundIterator(String graphURI, SageRemoteClient client, List<BasicPattern> bag, List<Binding> block, Map<Integer, Binding> rewritingMap, boolean isContainmentQuery, Set<Var> projection) {
         this.graphURI = graphURI;
         this.client = client;
         this.nextLink = Optional.empty();
@@ -44,6 +41,7 @@ public class BoundIterator extends BufferedIterator {
         hasNextPage = true;
         this.isContainmentQuery = isContainmentQuery;
         logger = ARQ.getExecLogger();
+        this.projection = projection;
     }
 
     public List<Binding> getBlock() {
@@ -136,7 +134,7 @@ public class BoundIterator extends BufferedIterator {
     @Override
     protected List<Binding> produceBindings() {
         List<Binding> solutions = new LinkedList<>();
-        QueryResults queryResults = client.query(graphURI, bag, nextLink);
+        QueryResults queryResults = client.query(graphURI, bag, nextLink, projection);
         if (queryResults.hasError()) {
             // an error has occurred, report it
             hasNextPage = false;

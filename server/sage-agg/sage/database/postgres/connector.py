@@ -30,7 +30,7 @@ def fetch_histograms(cursor, table_name, attribute_name):
 class PostgresIterator(DBIterator):
     """An PostgresIterator implements a DBIterator for a triple pattern evaluated using a Postgre database file"""
 
-    def __init__(self, cursor, connection, start_query, start_params, table_name, pattern):
+    def __init__(self, cursor, connection, start_query, start_params, table_name, pattern, fetch_size=500):
         super(PostgresIterator, self).__init__(pattern)
         self._cursor = cursor
         self._connection = connection
@@ -40,13 +40,14 @@ class PostgresIterator(DBIterator):
         self._cursor.execute(self._current_query, start_params)
         # always keep the current row buffered inside the iterator
         self._last_read = self._cursor.fetchone()
+        self._fetch_size=fetch_size
 
     def __del__(self):
         """Destructor"""
         self._cursor.close()
 
     def __advance_iteration(self, last_read):
-        query, params = get_resume_query(self._pattern["subject"], self._pattern["predicate"], self._pattern["object"], last_read, self._table_name, symbol=">")
+        query, params = get_resume_query(self._pattern["subject"], self._pattern["predicate"], self._pattern["object"], last_read, self._table_name, symbol=">", fetch_size=self._fetch_size)
         if query is not None and params is not None:
             self._current_query = query
             self._cursor.execute(self._current_query, params)
@@ -280,7 +281,7 @@ class PostgresConnector(DatabaseConnector):
             start_query, start_params = get_resume_query(subject, predicate, obj, t, self._table_name, fetch_size=self._fetch_size)
 
         # create the iterator to yield the matching RDF triples
-        iterator = PostgresIterator(cursor, self._connection, start_query, start_params, self._table_name, pattern)
+        iterator = PostgresIterator(cursor, self._connection, start_query, start_params, self._table_name, pattern, self._fetch_size)
         card = self.__estimate_cardinality(subject, predicate, obj) if iterator.has_next() else 0
         return iterator, card
 

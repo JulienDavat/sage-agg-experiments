@@ -6,6 +6,7 @@ import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.sparql.core.BasicPattern;
 import org.apache.jena.sparql.core.Substitute;
+import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.serializer.SerializationContext;
@@ -13,10 +14,7 @@ import agg.engine.iterators.parallel.ExhaustIteratorTask;
 import agg.engine.iterators.parallel.ParallelBlockBufferedIterator;
 import agg.http.SageRemoteClient;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,6 +27,7 @@ public class ParallelBoundJoinIterator extends ParallelBlockBufferedIterator {
     private String graphURI;
     protected SageRemoteClient client;
     private BasicPattern bgp;
+    protected Set<Var> projection;
 
     /**
      * Constructor
@@ -38,11 +37,12 @@ public class ParallelBoundJoinIterator extends ParallelBlockBufferedIterator {
      * @param threadPool - Thread pool used to execute tasks
      * @param bucketSize - Size of the bound join bucket (15 is the "default" admitted value)
      */
-    public ParallelBoundJoinIterator(QueryIterator source, String graphURI, SageRemoteClient client, BasicPattern bgp, ExecutorService threadPool, int bucketSize) {
+    public ParallelBoundJoinIterator(QueryIterator source, String graphURI, SageRemoteClient client, BasicPattern bgp, ExecutorService threadPool, int bucketSize, Set<Var> projection) {
         super(source, threadPool, bucketSize);
         this.graphURI = graphURI;
         this.client = client;
         this.bgp = bgp;
+        this.projection = projection;
     }
 
     /**
@@ -91,7 +91,7 @@ public class ParallelBoundJoinIterator extends ParallelBlockBufferedIterator {
             bgpBucket.add(boundedBGP);
             key++;
         }
-        QueryIterator iterator = new BoundIterator(graphURI, client, bgpBucket, block, rewritingMap, isContainmentQuery);
+        QueryIterator iterator = new BoundIterator(graphURI, client, bgpBucket, block, rewritingMap, isContainmentQuery, this.projection);
         return new ExhaustIteratorTask(iterator, output, counter);
     }
 

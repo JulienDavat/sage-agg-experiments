@@ -5,6 +5,7 @@ import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.sparql.core.BasicPattern;
 import org.apache.jena.sparql.core.Substitute;
+import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.ExecutionContext;
 import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.engine.binding.Binding;
@@ -21,7 +22,7 @@ public class BoundJoinIterator extends BlockBufferedIterator {
     private String graphURI;
     protected SageRemoteClient client;
     private BasicPattern bgp;
-
+    protected Set<Var> projection;
     /**
      * Constructor
      * @param source - Input for the join
@@ -29,11 +30,12 @@ public class BoundJoinIterator extends BlockBufferedIterator {
      * @param bgp    - Basic Graph pattern to join with
      * @param bucketSize - Size of the bound join bucket (15 is the "default" admitted value)
      */
-    public BoundJoinIterator(QueryIterator source, String graphURI, SageRemoteClient client, BasicPattern bgp, int bucketSize, ExecutionContext context) {
+    public BoundJoinIterator(QueryIterator source, String graphURI, SageRemoteClient client, BasicPattern bgp, int bucketSize, ExecutionContext context, Set<Var> projection) {
         super(source, bucketSize, context);
         this.graphURI = graphURI;
         this.client = client;
         this.bgp = bgp;
+        this.projection = projection;
     }
 
     /**
@@ -82,6 +84,6 @@ public class BoundJoinIterator extends BlockBufferedIterator {
             bgpBucket.add(boundedBGP);
             key++;
         }
-        return new BoundIterator(graphURI, client, bgpBucket, block, rewritingMap, isContainmentQuery);
+        return new BoundIterator(graphURI, client, bgpBucket, block, rewritingMap, isContainmentQuery, projection);
     }
 }
