@@ -116,7 +116,7 @@ public class SageDefaultClient implements SageRemoteClient {
             request.getHeaders().setContentType(HTTP_JSON_CONTENT_TYPE);
             request.getHeaders().setUserAgent("Sage-Jena-Agg client/Java 1.8");
             request.setParser(new JsonObjectParser(JSON_FACTORY));
-            // request.setUnsuccessfulResponseHandler(new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
+            request.setUnsuccessfulResponseHandler(new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
         });
         spy = new ExecutionStats();
     }
@@ -134,7 +134,7 @@ public class SageDefaultClient implements SageRemoteClient {
             request.getHeaders().setContentType(HTTP_JSON_CONTENT_TYPE);
             request.getHeaders().setUserAgent("Sage-Jena-Agg client/Java 1.8");
             request.setParser(new JsonObjectParser(JSON_FACTORY));
-            // request.setUnsuccessfulResponseHandler(new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
+            request.setUnsuccessfulResponseHandler(new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
             request.setConnectTimeout(0);
             request.setReadTimeout(0);
         });

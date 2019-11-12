@@ -86,9 +86,12 @@ public class SageStageGenerator implements StageGenerator {
         Set<Var> varAggSetBis = new LinkedHashSet<>();
         query.getAggregators().forEach((exprAggregator -> {
             varAggSetBis.add(exprAggregator.getVar());
-            for (Expr expr : exprAggregator.getAggregator().getExprList()) {
-                varAggSet.add(expr.asVar());
+            if (exprAggregator.getAggregator().getExprList() != null) {
+                for (Expr expr : exprAggregator.getAggregator().getExprList()) {
+                    varAggSet.add(expr.asVar());
+                }
             }
+
         }));
         for (Var var : query.getProject().getVars()) {
             Expr exp = query.getProject().getExpr(var);
