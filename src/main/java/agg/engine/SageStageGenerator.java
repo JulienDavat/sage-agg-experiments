@@ -104,7 +104,6 @@ public class SageStageGenerator implements StageGenerator {
             }
         }
         varSet.addAll(varAggSet);
-        System.err.println("all vars:" + varSet);
         return varSet;
     }
 
