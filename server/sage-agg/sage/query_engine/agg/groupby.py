@@ -28,6 +28,7 @@ class GroupByAggregator(PreemptableIterator):
         self._optimized_disk = False
         self._finished = False
         self._has_next = True
+        self._current = 0
 
     def serialized_name(self):
         return 'groupby'
@@ -102,6 +103,7 @@ class GroupByAggregator(PreemptableIterator):
                 for agg in self._aggregators:
                     try:
                         agg.update(group_key, bindings)
+                        self._current += 1
                     except Exception:
                         # ignore errors
                         pass

@@ -72,9 +72,9 @@ async def executor(plan, queue, limit, optimized, optimized_disk, stats):
             stats.set_next(stats.get_next() + 1)
             if value is not None:
                 await queue.put(value)
-                if queue.qsize() >= limit:
-                    raise TooManyResults()
-            elif not optimized and agg and len(plan._groups) >= limit:
+            if queue.qsize() >= limit:
+                raise TooManyResults()
+            elif (optimized or optimized_disk) and agg and plan._current >= limit:
                 raise TooManyResults()
             else:
                 stats.set_next_optimized(stats.get_next_optimized() + 1)

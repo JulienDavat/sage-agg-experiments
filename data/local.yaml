@@ -1,0 +1,14 @@
+name: SaGe Experiment server
+maintainer: Grall Arnaud
+public_url: http://localhost:8000
+quota: 150
+max_results: 2000
+datasets:
+  - name: bsbm1k
+    description: BSBM 1K products using Postgres backend
+    backend: postgres
+    dbname: grall-a
+    user: grall-a
+    password: ''
+    host: localhost
+    port: 7122
