@@ -2,6 +2,7 @@ output/*/*/*.xml
 output/*/*/*.log
 output/*/*.png
 data/virtuoso-data/
+data/datasets/dbpedia351.ttl
 .DS_Store
 sage-sparql-void.iml
 .idea

@@ -1,2 +1,0 @@
-s,p,o
-http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/dataFromProducer10/Producer10,http://purl.org/dc/elements/1.1/date,2005-05-21

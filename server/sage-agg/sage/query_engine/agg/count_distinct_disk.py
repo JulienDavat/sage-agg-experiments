@@ -1,7 +1,7 @@
 # count.py
 # Author: Arnaud GRALL - MIT License 2017-2019
 from sage.query_engine.agg.partial_agg import PartialAggregator
-from sage.query_engine.agg.index.index_disk_rocksdb import IndexRocksdb
+from sage.query_engine.agg.index_disk_rocksdb import IndexRocksdb
 
 
 class CDAError(Exception):

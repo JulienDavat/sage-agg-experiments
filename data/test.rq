@@ -1,1 +1,0 @@
-PREFIX void: <http://rdfs.org/ns/void#> CONSTRUCT {  <datasetUri> void:classPartition [ void:class ?c ; void:distinctObjects ?count ] } WHERE { SELECT (COUNT(?o) AS ?count) ?c   WHERE { ?s a ?c ; ?p ?o } GROUP BY ?c }

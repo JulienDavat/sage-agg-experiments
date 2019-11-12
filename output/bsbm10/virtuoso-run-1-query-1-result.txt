@@ -1,3 +1,0 @@
-"s","p","o"
-"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/dataFromRatingSite1/Review1","http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/Review"
-
