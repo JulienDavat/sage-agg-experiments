@@ -1,0 +1,2 @@
+s,p,o
+http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/dataFromVendor1/Offer707,http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/price,9897.13
