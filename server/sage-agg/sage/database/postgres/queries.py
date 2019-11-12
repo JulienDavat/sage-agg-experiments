@@ -12,7 +12,7 @@ def get_start_query(subj, pred, obj, table_name, fetch_size=500):
     query = "SELECT * FROM {} ".format(table_name)
     params = None
     if kind == 'spo':
-        query += "WHERE subject = %s AND predicate = %s AND object = %s ORDER BY md5(subject), md5(predicate), md5(object)"
+        query += "WHERE md5(subject) = md5(%s) AND md5(predicate) = md5(%s) AND md5(object) = md5(%s) ORDER BY md5(subject), md5(predicate), md5(object)"
         params = (subj, pred, obj)
     elif kind == '???':
         query += ' ORDER BY md5(subject), md5(predicate), md5(object)'
@@ -20,7 +20,7 @@ def get_start_query(subj, pred, obj, table_name, fetch_size=500):
         query += "WHERE md5(subject) = md5(%s) ORDER BY md5(subject), md5(predicate), md5(object)"
         params = [subj]
     elif kind == 'sp?':
-        query += "WHERE md5(subject) = md5(%s) AND md5(predicate) = %s ORDER BY md5(subject), md5(predicate), md5(object)"
+        query += "WHERE md5(subject) = md5(%s) AND md5(predicate) = md5(%s) ORDER BY md5(subject), md5(predicate), md5(object)"
         params = (subj, pred)
     elif kind == '?p?':
         query += "WHERE md5(predicate) = md5(%s) ORDER BY md5(predicate), md5(object), md5(subject)"

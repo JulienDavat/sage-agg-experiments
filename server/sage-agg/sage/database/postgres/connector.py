@@ -262,7 +262,6 @@ class PostgresConnector(DatabaseConnector):
         predicate = predicate if (predicate is not None) and (not predicate.startswith('?')) else None
         obj = obj if (obj is not None) and (not obj.startswith('?')) else None
         pattern = {'subject': subject, 'predicate': predicate, 'object': obj}
-
         # dedicated cursor used to scan this triple pattern
         # WARNING: we need to use a dedicated cursor per triple pattern iterator
         # otherwise, we might reset a cursor whose results were not fully consumed
@@ -279,7 +278,7 @@ class PostgresConnector(DatabaseConnector):
             last_read = json.loads(last_read)
             t = (last_read["s"], last_read["p"], last_read["o"])
             start_query, start_params = get_resume_query(subject, predicate, obj, t, self._table_name, fetch_size=self._fetch_size)
-
+            
         # create the iterator to yield the matching RDF triples
         iterator = PostgresIterator(cursor, self._connection, start_query, start_params, self._table_name, pattern, self._fetch_size)
         card = self.__estimate_cardinality(subject, predicate, obj) if iterator.has_next() else 0

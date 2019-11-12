@@ -91,7 +91,6 @@ public class SageStageGenerator implements StageGenerator {
                     varAggSet.add(expr.asVar());
                 }
             }
-
         }));
         for (Var var : query.getProject().getVars()) {
             Expr exp = query.getProject().getExpr(var);
@@ -105,6 +104,7 @@ public class SageStageGenerator implements StageGenerator {
             }
         }
         varSet.addAll(varAggSet);
+        System.err.println("all vars:" + varSet);
         return varSet;
     }
 
