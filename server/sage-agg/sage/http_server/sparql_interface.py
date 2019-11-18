@@ -2,6 +2,7 @@
 # Author: Thomas MINIER - MIT License 2017-2018
 from flask import Blueprint, request, Response, render_template, abort
 from sage.query_engine.sage_engine import SageEngine
+from sage.query_engine.agg.groupby import GroupByAggregator
 from sage.query_engine.optimizer.plan_builder import build_query_plan
 from sage.query_engine.optimizer.query_parser import parse_query
 from sage.query_engine.iterators.loader import load
@@ -13,7 +14,7 @@ from json import dumps
 from time import time
 
 
-def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=False, optimized_disk=False):
+def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=False, buffer=-1):
     """
         Execute a query using the SageEngine and returns the appropriate HTTP response.
         Any failure will results in a rollback/abort on the current query execution.
@@ -27,16 +28,17 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         # decode next_link or build query execution plan
         cardinalities = dict()
         start = time()
+
         if next_link is not None:
             plan = load(decode_saved_plan(next_link), dataset)
         else:
-            plan, cardinalities = parse_query(query, dataset, graph_name, url, optimized=optimized, optimized_disk=optimized_disk)
+            plan, cardinalities = parse_query(query, dataset, graph_name, url, optimized=optimized, buffer=buffer)
         loading_time = (time() - start) * 1000
         # execute query
         engine = SageEngine()
         quota = graph.quota / 1000
         max_results = graph.max_results
-        bindings, saved_plan, is_done, statistics = engine.execute(plan, quota, max_results, optimized=optimized, optimized_disk=optimized_disk)
+        bindings, saved_plan, is_done, statistics = engine.execute(plan, quota, max_results, optimized=optimized, buffer=buffer)
 
         # commit (if necessary)
         graph.commit()
@@ -85,7 +87,7 @@ def sparql_blueprint(dataset, logger):
             default_graph_uri = request.args.get("default-graph-uri") or None
             next_link = request.args.get("next") or None
             optimized = request.args.get("optimized") or None
-            optimized_disk = request.args.get("optimized_disk") or None
+            buffer_size = request.args.get("buffer") or -1
             # ensure that both the query and default-graph-uri params are set
             if (query is None or default_graph_uri is None) and (next_link is None or default_graph_uri is None):
                 return sage_http_error("Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
@@ -99,11 +101,11 @@ def sparql_blueprint(dataset, logger):
             default_graph_uri = post_query["defaultGraph"]
             next_link = post_query["next"] if 'next' in post_query else None
             optimized = post_query['optimized'] if 'optimized' in post_query else False
-            optimized_disk = post_query['optimized_disk'] if 'optimized_disk' in post_query else False
+            buffer_size = post_query['buffer'] if 'buffer' in post_query else -1
         else:
             return sage_http_error("Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
         # execute query
-        return execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=optimized, optimized_disk=optimized_disk)
+        return execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=optimized, buffer=buffer_size)
         # except Exception as e:
         #     logger.error(e)
         #     abort(500)

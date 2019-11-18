@@ -62,4 +62,4 @@ class SageSparqlQuery(Schema):
     defaultGraph = fields.Str(required=True)
     next = fields.Str(required=False, allow_none=True)
     optimized = fields.Bool(required=False, allow_none=True)
-    optimized_disk = fields.Bool(required=False, allow_none=True)
+    buffer = fields.Int(required=False, allow_none=False)

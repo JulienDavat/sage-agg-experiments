@@ -49,34 +49,34 @@ public class SageDefaultClient implements SageRemoteClient {
     // enable this when you want to use the optimized aggregator, as well as the SageOpExecutor.aggregation boolean
     public static boolean optimized = false;
     // enable this when you want to use the optimized aggregator on disk enable both
-    public static boolean optimized_disk = false;
+    public static int buffer = 0;
 
     private class JSONPayload {
         private String query;
         private String defaultGraph;
         private String next = null;
         private Boolean optimized = false;
-        private Boolean optimizeddisk = false;
+        private int buffer = 0;
 
-        public JSONPayload(String defaultGraph, String query, Boolean optimized, Boolean optimized_disk) {
+        public JSONPayload(String defaultGraph, String query, Boolean optimized, int _buffer) {
             this.query = query;
             this.defaultGraph = defaultGraph;
             this.optimized = optimized;
-            this.optimizeddisk = optimized_disk;
+            this.buffer = _buffer;
         }
 
-        public JSONPayload(String defaultGraph, String query, String next, Boolean optimized, Boolean optimized_disk) {
+        public JSONPayload(String defaultGraph, String query, String next, Boolean optimized, int _buffer) {
             this.query = query;
             this.defaultGraph = defaultGraph;
             this.next = next;
             this.optimized = optimized;
-            this.optimizeddisk = optimized_disk;
+            this.buffer = _buffer;
         }
 
         public Boolean getOptimized() { return this.optimized; }
         public void setOptimized(boolean opt) { this.optimized = opt; }
-        public Boolean getOptimized_disk() { return this.optimizeddisk; }
-        public void setOptimized_disk(boolean opt) { this.optimizeddisk = opt; }
+        public int getBuffer() { return this.buffer; }
+        public void setBuffer(int opt) { this.buffer = opt; }
 
         public String getQuery() {
             return query;
@@ -149,12 +149,12 @@ public class SageDefaultClient implements SageRemoteClient {
         return serverURL;
     }
 
-    private String buildJSONPayload(String graphURI, String query, Optional<String> next, Boolean optimized, Boolean optimized_disk) {
+    private String buildJSONPayload(String graphURI, String query, Optional<String> next, Boolean optimized, int buffer) {
         JSONPayload payload;
         if (next.isPresent()) {
-            payload = new JSONPayload(graphURI, query, next.get(), optimized, optimized_disk);
+            payload = new JSONPayload(graphURI, query, next.get(), optimized, buffer);
         } else {
-            payload = new JSONPayload(graphURI, query, optimized, optimized_disk);
+            payload = new JSONPayload(graphURI, query, optimized, buffer);
         }
         try {
             return mapper.writeValueAsString(payload);
@@ -178,7 +178,7 @@ public class SageDefaultClient implements SageRemoteClient {
         }
         // build POST query
         GenericUrl url = new GenericUrl(serverURL);
-        String payload = buildJSONPayload(graphURI, query, next, this.optimized, this.optimized_disk);
+        String payload = buildJSONPayload(graphURI, query, next, this.optimized, this.buffer);
         HttpContent postContent = new ByteArrayContent(HTTP_JSON_CONTENT_TYPE, payload.getBytes());
         double startTime = System.nanoTime();
         try {

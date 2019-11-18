@@ -13,4 +13,4 @@ services:
     ports:
       - "7130:8890"
       - "7131:1111"
-    mem_limit: 2000M
+    mem_limit: 6000M

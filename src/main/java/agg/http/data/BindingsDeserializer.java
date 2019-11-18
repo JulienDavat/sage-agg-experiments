@@ -51,7 +51,12 @@ public class BindingsDeserializer extends JsonDeserializer<QuerySolutions> {
                     });
                 } else {
                     // otherwise it's a regular binding
-                    bindings.add(Var.alloc(s.substring(1)), parseNode(jsonNode.get(s).asText()));
+                    if (jsonNode.get(s).isArray()){
+                        // trick is here, see DistinctCountSumReducer behavior
+                        bindings.add(Var.alloc(s.substring(1)), NodeFactory.createLiteral(jsonNode.get(s).toString()));
+                    } else {
+                        bindings.add(Var.alloc(s.substring(1)), parseNode(jsonNode.get(s).asText()));
+                    }
                 }
             });
             // no group found => all bindings found are solution bindings
@@ -77,7 +82,7 @@ public class BindingsDeserializer extends JsonDeserializer<QuerySolutions> {
      * @param node RDF node in string format
      * @return RDF node in a Jena compatible format
      */
-    private static Node parseNode(String node) {
+    public static Node parseNode(String node) {
         Node value = null;
         try {
             String literal;
@@ -114,7 +119,7 @@ public class BindingsDeserializer extends JsonDeserializer<QuerySolutions> {
             }
         } catch(Exception e) {
             // TODO: for now we skip parsing errors, maybe need to do something cleaner
-            System.err.println(node);
+            System.err.println("Error when parsing node: " + node);
         }
         return value;
     }

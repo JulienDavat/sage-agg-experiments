@@ -62,7 +62,7 @@ function run_sage {
     let "q=1"
     while IFS= read -r query
     do
-      echo "# Executing sage query-$q and appending into: $RESULT_SAGE"
+      echo "# Executing sage normal query-$q and appending into: $RESULT_SAGE"
       FILE_RESULT="$S_PREFIX-query-$q-result.txt"
       bash "$CUR/execute-sage-query.sh" "$query" $SAGE_ADDRESS $FILE_RESULT $RESULT_SAGE $BUILD_JAR "--time"
       let "q++"
@@ -79,7 +79,7 @@ function run_sage_opt {
     let "q=1"
     while IFS= read -r query
     do
-      echo "# Executing sage query-$q and appending into: $RESULT_SAGE"
+      echo "# Executing sage optimized query-$q and appending into: $RESULT_SAGE"
       FILE_RESULT="$S_PREFIX-query-$q-result.txt"
       bash "$CUR/execute-sage-query.sh" "$query" $SAGE_ADDRESS $FILE_RESULT $RESULT_SAGE $BUILD_JAR "--optimized --time"
       let "q++"

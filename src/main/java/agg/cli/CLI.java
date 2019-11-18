@@ -57,8 +57,8 @@ public class CLI implements Callable<Void> {
     @CommandLine.Option(names = { "--optimized" }, description = "Enable the aggregation optimization")
     public boolean optimized = false;
 
-    @CommandLine.Option(names = { "--disk" }, description = "Enable the aggregation optimization on disk")
-    public boolean optimized_disk = false;
+    @CommandLine.Option(names = { "--buffer" }, description = "Set the buffer size (in bytes) for the server")
+    public int disk = 0;
 
     @Override
     public Void call() throws Exception {
@@ -94,7 +94,7 @@ public class CLI implements Callable<Void> {
         }
 
         // enable the optimized aggregation
-        setAggregationOptimization(this.optimized, this.optimized_disk);
+        setAggregationOptimization(this.optimized, this.disk);
 
         // check if we are dealing with a classic query or an UPDATE query
         if (this.update) {
@@ -172,10 +172,10 @@ public class CLI implements Callable<Void> {
         return null;
     }
 
-    public static void setAggregationOptimization(boolean opt, boolean opt_disk) {
+    public static void setAggregationOptimization(boolean opt, int opt_disk) {
         SageOpExecutor.optimized = opt;
         SageDefaultClient.optimized = opt;
-        SageDefaultClient.optimized_disk = opt_disk;
+        SageDefaultClient.buffer = opt_disk;
     }
 
     public static void main(String[] args) {

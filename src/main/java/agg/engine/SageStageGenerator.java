@@ -82,6 +82,10 @@ public class SageStageGenerator implements StageGenerator {
         Op alg = execCxt.getContext().get(Symbol.create("http://jena.apache.org/ARQ/system#algebra"));
         Query query = OpAsQuery.asQuery(alg);
         Set<Var> varSet = new LinkedHashSet<>();
+        // add all group by variables into the projection
+        for (Var var : query.getGroupBy().getVars()) {
+            varSet.add(var);
+        }
         Set<Var> varAggSet = new LinkedHashSet<>();
         Set<Var> varAggSetBis = new LinkedHashSet<>();
         query.getAggregators().forEach((exprAggregator -> {

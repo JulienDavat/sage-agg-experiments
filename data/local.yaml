@@ -4,6 +4,22 @@ public_url: http://localhost:8000
 quota: 150
 max_results: 2000
 datasets:
+  - name: bsbm10
+    description: BSBM 10 products using Postgres backend
+    backend: postgres
+    dbname: grall-a
+    user: grall-a
+    password: ''
+    host: localhost
+    port: 7122
+  - name: bsbm100
+    description: BSBM 100 products using Postgres backend
+    backend: postgres
+    dbname: grall-a
+    user: grall-a
+    password: ''
+    host: localhost
+    port: 7122
   - name: bsbm1k
     description: BSBM 1K products using Postgres backend
     backend: postgres

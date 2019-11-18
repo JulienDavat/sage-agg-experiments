@@ -8,4 +8,4 @@ OUTPUT_MEASURE=$4
 JAR=$5
 OPTIMIZED=$6
 
-java -Xms1g -Xmx50g -jar $JAR query --query "$QUERY" $ADDRESS --measure=$OUTPUT_MEASURE $OPTIMIZED --format csv >> "$OUTPUT_RESULT"
+java -Xms1g -Xmx6g -jar $JAR query --query "$QUERY" $ADDRESS --measure=$OUTPUT_MEASURE $OPTIMIZED --format csv >> "$OUTPUT_RESULT"
