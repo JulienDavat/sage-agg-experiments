@@ -28,3 +28,11 @@ datasets:
     password: ''
     host: localhost
     port: 7122
+  - name: dbpedia351
+    description: Dbpedia 3.5.1 using Postgres backend
+    backend: postgres
+    dbname: grall-a
+    user: grall-a
+    password: ''
+    host: localhost
+    port: 7122

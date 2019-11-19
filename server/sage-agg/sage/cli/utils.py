@@ -41,7 +41,7 @@ def __n3_to_str(triple):
         p = p[1:len(p) - 1]
     if o.startswith('<') and o.endswith('>'):
         o = o[1:len(o) - 1]
-    return (s, p, o)
+    return (s, p, o, triple)
 
 
 def get_rdf_reader(file_path, format='nt'):

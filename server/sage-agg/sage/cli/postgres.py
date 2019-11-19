@@ -2,14 +2,13 @@
 # postgres.py
 # Author: Thomas MINIER - MIT License 2017-2019
 import sage.cli.postgres_utils as p_utils
-from sage.cli.utils import load_dataset, get_rdf_reader
+from sage.cli.utils import load_dataset, get_rdf_reader, __n3_to_str
 import click
 import psycopg2
 from psycopg2.extras import execute_values
 import coloredlogs
 import logging
 from time import time
-import datetime
 
 
 def bucketify(iterable, bucket_size):
@@ -20,11 +19,11 @@ def bucketify(iterable, bucket_size):
         if len(bucket) >= bucket_size:
             yield bucket
             bucket = list()
-
     if len(bucket) > 0:
         yield bucket
 
-def bucketify_bytes(iterable, bucket_size, encoding='utf-8'):
+
+def bucketify_bytes(iterable, bucket_size, encoding='utf-8', throw=True):
     """Group items from an iterable by buckets"""
     bucket = list()
     for s, p, o in iterable:
@@ -33,19 +32,15 @@ def bucketify_bytes(iterable, bucket_size, encoding='utf-8'):
         o_encoded = o
         try:
             s_encoded = s_encoded.decode(encoding)
-        except Exception as e:
-            print("Cant decode the subject in bytes ({}): {} <?s={}, ?p={}, ?o={}>".format(s, e, s, p, o))
-            exit(1)
-        try:
             p_encoded = p_encoded.decode(encoding)
-        except Exception as e:
-            print("Cant decode the predicate in bytes ({}): {} <?s={}, ?p={}, ?o={}>".format(p, e, s_encoded, p, o))
-            exit(1)
-        try:
             o_encoded = o_encoded.decode(encoding)
         except Exception as e:
-            print("Cant decode the object in bytes ({}): {} <?s={}, ?p={}, ?o={}>".format(o, e, s_encoded, p_encoded, o))
-            exit(1)
+            print("Cant decode: s={} p={} o={}".format(s_encoded, p_encoded, o_encoded))
+            if throw:
+                raise e
+                exit(1)
+            else:
+                pass
 
         bucket.append((s_encoded, p_encoded, o_encoded))
         if len(bucket) >= bucket_size:
@@ -174,7 +169,9 @@ def index_postgres(config, dataset_name):
               help="Commit after sending this number of RDF triples")
 @click.option("-e", "--encoding", type=str, default="utf-8", show_default=True,
               help="Define the encoding of the dataset")
-def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_threshold, encoding):
+@click.option("--throw/--no-throw", default=True, show_default=True,
+              help="if loaded with hdt, throw an error when we cannot convert to utf-8 otherwise pass")
+def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_threshold, encoding, throw):
     """
         Insert RDF triples from file RDF_FILE into the RDF dataset DATASET_NAME, described in the configuration file CONFIG. The dataset must use the PostgreSQL or PostgreSQL-MVCC backend.
     """
@@ -209,20 +206,24 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
     # insert rdf triples
     start = time()
     to_commit = 0
+    inserted=0
     # insert by bucket (and show a progress bar)
     with click.progressbar(length=nb_triples,
-                           label="Inserting RDF triples {}, encoding={}".format(nb_triples, encoding)) as bar:
+                           label="Inserting RDF triples 0/{}, encoding={}".format(nb_triples, encoding)) as bar:
 
         if format == 'hdt':
-            buckets = bucketify_bytes(iterator, block_size, encoding=encoding)
+            buckets = bucketify_bytes(iterator, block_size, encoding=encoding, throw=throw)
         else:
             buckets = bucketify(iterator, block_size)
 
         for bucket in buckets:
+            inserted += len(bucket)
             to_commit += len(bucket)
             # bulk load the bucket of RDF triples, then update progress bar
             execute_values(cursor, insert_into_query, bucket, page_size=block_size)
+            bar.label = "Inserting RDF triples {}/{}, encoding={}".format(inserted, nb_triples, encoding)
             bar.update(len(bucket))
+
             # commit if above threshold
             if to_commit >= commit_threshold:
                 # logger.info("Commit threshold reached. Committing all changes...")
