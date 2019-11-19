@@ -1,0 +1,19 @@
+{
+  "port": 8000,
+  "workers": 1,
+  "title": "My Linked Data Fragments server",
+  "datasources": {
+    "bsbm10": {
+      "title": "bsbm10 virtuoso",
+      "type": "SparqlDatasource",
+      "description": "BSBM 10 products with a Virtuoso back-end",
+      "settings": { "endpoint": "http://sage-virtuoso:8890/sparql", "defaultGraph": "http://sage.univ-nantes.fr/bsbm10" }
+    },
+    "bsbm10hdt": {
+      "title": "bsbm10 hdt",
+      "type": "HdtDatasource",
+      "description": "BSBM 10 products with HDT backend",
+      "settings": { "file": "/opt/data/datasets/bsbm10.hdt" }
+    }
+  }
+}

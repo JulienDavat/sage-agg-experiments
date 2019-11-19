@@ -2,7 +2,6 @@
 # Author: Thomas MINIER - MIT License 2017-2019
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
 from sage.query_engine.protobuf.iterators_pb2 import SavedGroupByAgg
-import subprocess, os
 
 class GroupByAggregator(PreemptableIterator):
     """

@@ -1,0 +1,16 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "How to init sage-postgres with data?",
+  "main": "reference.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^4.0.1",
+    "ldf-client": "^2.0.5",
+    "object-sizeof": "^1.5.2"
+  }
+}

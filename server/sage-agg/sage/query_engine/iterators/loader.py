@@ -7,9 +7,7 @@ from sage.query_engine.iterators.filter import FilterIterator
 from sage.query_engine.iterators.union import BagUnionIterator
 from sage.query_engine.agg.groupby import GroupByAggregator
 from sage.query_engine.agg.count import CountAggregator
-from sage.query_engine.agg.count_disk import CountDiskAggregator
 from sage.query_engine.agg.count_distinct import CountDistinctAggregator
-from sage.query_engine.agg.count_distinct_disk import CountDistinctDiskAggregator
 from sage.query_engine.agg.sum import SumAggregator
 from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.protobuf.utils import protoTriple_to_dict

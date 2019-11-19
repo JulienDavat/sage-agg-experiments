@@ -1,0 +1,57 @@
+version: '2.4'
+
+services:
+  sage-tpf:
+    container_name: sage-tpf
+    links:
+      - sage-virtuoso
+    build: https://github.com/LinkedDataFragments/Server.js.git
+    volumes:
+      - "../data:/opt/data/"
+    tty: true         # to have nice outputs
+    stdin_open: true  # to be able to use CTRL+C to stop the container
+    ports:
+      - 7140:8000 # port
+    command: /opt/data/config.json 8000 1
+    mem_limit: 6000M
+  sage-virtuoso:
+    container_name: sage-virtuoso
+    build:
+      context: "./../"
+      dockerfile: ./experiments/virtuoso/Dockerfile
+    environment:
+      SPARQL_UPDATE: "true"
+      DEFAULT_GRAPH: "http://sage.univ-nantes.fr/default"
+    volumes:
+      - "../data/virtuoso-data:/data"
+    ports:
+      - "7130:8890"
+      - "7131:1111"
+    mem_limit: 6000M
+  sage-postgres:
+    container_name: sage-postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: grall-a
+      POSTGRES_USER: grall-a
+      POSTGRES_PASSWORD: ''
+    ports:
+      - 7122:5432 # postgres port
+    mem_limit: 6000M
+  sage-agg:
+    container_name: sage-agg
+    links:
+      - sage-postgres
+    build:
+      context: ./..
+      dockerfile: ./experiments/sage/Dockerfile
+    volumes:
+      - "../data:/opt/data/"
+    tty: true         # to have nice outputs
+    stdin_open: true  # to be able to use CTRL+C to stop the container
+    ports:
+      - 7120:8000 # sage port
+      - 7121:5432 # postgres backend port
+    command: sage /opt/data/experiments.yaml --gunicorn-config /opt/data/sage-gunicorn.py
+    mem_limit: 6000M
