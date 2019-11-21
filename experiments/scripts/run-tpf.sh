@@ -35,7 +35,7 @@ do
     for i in $(seq 1 1 $RUNS)
     do
         echo "#### (${DATASETS[$dataset]}) Running tpf run $i... into $OUTPUT ####"
-        bash $CUR/execute-tpf.sh "$CUR/../../data/queries/queries-wo-construct-test.txt" "$OUTPUT/run-$i-${DATASETS[$dataset]}/" "http://localhost:7140/${DATASETS[$dataset]}"
+        bash $CUR/execute-tpf.sh "$CUR/../../data/queries/queries-wo-construct.txt" "$OUTPUT/run-$i-${DATASETS[$dataset]}/" "http://localhost:7140/${DATASETS[$dataset]}"
     done
 done
 
