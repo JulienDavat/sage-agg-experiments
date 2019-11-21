@@ -40,7 +40,7 @@ do
         for i in $(seq 1 1 $RUNS)
         do
             echo "#### (${DATASETS[$dataset]}) Running run $i... into $OUTPUT ####"
-            bash $CUR/execute-sage.sh "$CUR/../../data/queries/queries-wo-construct-test.txt" "$OUTPUT/run-$i-${DATASETS[$dataset]}-b-${BUFFER_SIZE[$buffer]}/" "http://localhost:7120/sparql/${DATASETS[$dataset]}" $JAR ${BUFFER_SIZE[$buffer]}
+            bash $CUR/execute-sage.sh "$CUR/../../data/queries/queries-wo-construct.txt" "$OUTPUT/run-$i-${DATASETS[$dataset]}-b-${BUFFER_SIZE[$buffer]}/" "http://localhost:7120/sparql/${DATASETS[$dataset]}" $JAR ${BUFFER_SIZE[$buffer]}
         done
     done
 done

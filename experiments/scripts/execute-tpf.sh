@@ -26,13 +26,14 @@ mkdir -p $OUTPUT/errors/
 RESFILE="${OUTPUT}/result.csv"
 
 # init results file with headers
-echo "query,time,calls,bytes,timeout,errors" > $RESFILE
+# echo "query,time,calls,bytes,timeout,errors" > $RESFILE
 
 # read queries
 input=$QUERIES
 let "q=1"
 while IFS= read -r query
 do
+    echo "Running tpf query $q ..."
     echo -n "${q}," >> $RESFILE
     # execution time
     node --max-old-space-size=6000 "$CUR/comunica/comunica.js" $SERVER -q "$query" -m $RESFILE > $OUTPUT/results/$q.log 2> $OUTPUT/errors/$q.err

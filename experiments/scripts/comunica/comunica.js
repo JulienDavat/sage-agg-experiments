@@ -82,12 +82,13 @@ function parseXmlToCsv(xml) {
   results.forEach(e => {
     if(!e.text) {
       const result = e
-      arr = []
+      arr = new Array(headers.length)
       e.getElementsByTagName('binding').forEach(b => {
         attr = b.attributes[0].value
+        index = headers.indexOf(attr)
         b.childNodes.forEach(ch => {
           if(!ch.text) {
-            arr.push("" + ch.textContent)
+            arr[index] = "" + ch.textContent
           }
         })
       })
