@@ -22,7 +22,7 @@ mkdir -p $OUTPUT/errors/
 RESFILE="${OUTPUT}/result.csv"
 
 # init results file with headers
-echo "query,time,httpCalls,serverTime,transfertSize,errors" > $RESFILE
+echo "query,time,calls,bytes" > $RESFILE
 
 # read queries
 input=$QUERIES
@@ -31,7 +31,7 @@ while IFS= read -r query
 do
     echo -n "${q}," >> $RESFILE
     # execution time
-    node ./reference.js $SERVER -q "$query" -m $RESFILE > $OUTPUT/results/$q.log 2> $OUTPUT/errors/$q.err
+    node ./comunica/comunica.js $SERVER -q "$query" -m $RESFILE > $OUTPUT/results/$q.log 2> $OUTPUT/errors/$q.err
     echo -n "," >> $RESFILE
     # nb errors during query processing
     echo `wc -l ${OUTPUT}/errors/${q}.err | awk '{print $1}'` >> $RESFILE

@@ -9,8 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@comunica/actor-init-sparql": "^1.9.4",
     "commander": "^4.0.1",
-    "ldf-client": "^2.0.5",
+    "dom-parser": "^0.1.6",
+    "jsdom": "^15.2.1",
     "object-sizeof": "^1.5.2"
   }
 }

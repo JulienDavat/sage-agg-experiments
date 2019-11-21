@@ -231,6 +231,7 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
                 # logger.info("All changes were successfully committed.")
                 to_commit = 0
     end = time()
+
     logger.info("RDF triples ingestion successfully completed in {}s".format(end - start))
 
     # run an ANALYZE query to rebuild statistics
