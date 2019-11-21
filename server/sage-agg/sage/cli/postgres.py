@@ -150,8 +150,18 @@ def index_postgres(config, dataset_name):
     logger.info("Additional B-tree indexes successfully created in {}s".format(stop - start))
 
     # commit and cleanup connection
+    logger.info("Committing...")
+    connection.commit()
+    # run an ANALYZE query to rebuild statistics
+    logger.info("Rebuilding table statistics...")
+    start = time()
+    cursor.execute("ANALYZE {}".format(table_name))
+    end = time()
+    logger.info("Table statistics successfully rebuilt in {}s".format(end - start))
+
     logger.info("Committing and cleaning up...")
     connection.commit()
+    # quit
     cursor.close()
     connection.close()
     logger.info("Sage PostgreSQL model for table {} successfully initialized".format(table_name))

@@ -10,8 +10,7 @@ program
     .usage('<server> [options]')
     .option('-q, --query <query>', 'evaluates the given SPARQL query')
     .option('-t, --timeout <timeout>', 'set SPARQL query timeout in milliseconds (default: 30mn)', 30 * 60 * 1000)
-    .option('-m, --measure <output>', 'measure the query execution time (in seconds) & append it to a file', './execution_times_ref.csv')
-    .option('-s, --silent', 'do not perform any measurement (silent mode)', false)
+    .option('-m, --measure <output>', 'measure the query execution time (in seconds) & append it to a file', __dirname + '/result.csv')
     .parse(process.argv)
 
 let timeoutId = undefined
@@ -76,7 +75,7 @@ function parseXmlToCsv(xml) {
   headers = []
   head.forEach(h => {
     if (!h.text) {
-      headers.push("?" + h.attributes[0].value)
+      headers.push("" + h.attributes[0].value)
     }
   })
   process.stdout.write(headers.join(',') + '\n')
