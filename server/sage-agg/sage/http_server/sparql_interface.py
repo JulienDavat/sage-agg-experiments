@@ -38,7 +38,7 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         engine = SageEngine()
         quota = graph.quota / 1000
         max_results = graph.max_results
-        bindings, saved_plan, is_done, statistics = engine.execute(plan, quota, max_results, optimized=optimized, buffer=buffer)
+        bindings, saved_plan, is_done = engine.execute(plan, quota, max_results, optimized=optimized, buffer=buffer)
 
         # commit (if necessary)
         graph.commit()
@@ -49,7 +49,7 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         if not is_done:
             next_page = encode_saved_plan(saved_plan)
         exportTime = (time() - start) * 1000
-        stats = {"cardinalities": cardinalities, "import": loading_time, "export": exportTime, **statistics}
+        stats = {"cardinalities": cardinalities, "import": loading_time, "export": exportTime}
 
         # send response
         if mimetype == "application/sparql-results+json":

@@ -20,6 +20,12 @@
       "type": "HdtDatasource",
       "description": "BSBM 1000 products with HDT backend",
       "settings": { "file": "/opt/data/datasets/bsbm1k.hdt" }
+    },
+    "dbpedia351": {
+      "title": "dbpedia 351 hdt",
+      "type": "HdtDatasource",
+      "description": "dbpedia 3.5.1 HDT backend",
+      "settings": { "file": "/opt/data/datasets/dbpedia.3.5.1_merged.nt.hdt" }
     }
   }
 }

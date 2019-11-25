@@ -35,6 +35,12 @@ mkdir -p $OUTPUT
 
 for dataset in "${!DATASETS[@]}"
 do
+    for i in $(seq 1 1 $RUNS)
+    do
+        echo "#### (${DATASETS[$dataset]}) Running run $i... into $OUTPUT ####"
+        bash $CUR/execute-sage.sh "$CUR/../../data/queries/queries-wo-construct.txt" "$OUTPUT/run-$i-${DATASETS[$dataset]}-normal/" "http://localhost:7120/sparql/${DATASETS[$dataset]}" $JAR "null"
+    done
+
     for buffer in "${!BUFFER_SIZE[@]}"
     do
         for i in $(seq 1 1 $RUNS)
@@ -48,6 +54,7 @@ done
 
 for dataset in "${!DATASETS[@]}"
 do
+    python3 $CUR/average.py -f $OUTPUT/run-*-${DATASETS[$dataset]}-normalresult.csv -o "$OUTPUT/average-${DATASETS[$dataset]}-normal.csv"
     for buffer in "${!BUFFER_SIZE[@]}"
     do
         python3 $CUR/average.py -f $OUTPUT/run-*-${DATASETS[$dataset]}-b-${BUFFER_SIZE[$buffer]}/result.csv -o "$OUTPUT/average-${DATASETS[$dataset]}-b-${BUFFER_SIZE[$buffer]}.csv"

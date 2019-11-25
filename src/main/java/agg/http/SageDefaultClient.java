@@ -363,18 +363,20 @@ public class SageDefaultClient implements SageRemoteClient {
         double decodingTimeEnd = (System.currentTimeMillis()) - decodingTimeStart;
         spy.reportDecodingResponseTime(decodingTimeEnd);
         spy.reportTransferSize(responseContent.getBytes().length);
-        spy.reportNextNumbers(sageResponse.stats.getNext_number(), sageResponse.stats.getNext_optimized_number());
-        spy.reportDbSize(sageResponse.stats.getDb_size());
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss:SS");
+        double planSize = 0;
+        if (sageResponse.next == null) {
+            spy.reportPlanSize(planSize);
+        } else {
+            planSize = sageResponse.next.getBytes().length;
+            spy.reportPlanSize(planSize);
+        }
         spy.reportLogs("[" + dateFormat.format(date) +  "]" +
-                " | size(bytes): " + responseContent.getBytes().length +
+                " | size(bytes): (" + responseContent.getBytes().length + ", " + planSize + ")" +
                 " | resume(ms): " + sageResponse.stats.getResumeTime() +
                 " | suspend(ms): " + sageResponse.stats.getSuspendTime() +
-                " | decoding(ms): " + decodingTimeEnd +
-                " | next(normal/optimized): (" + sageResponse.stats.getNext_number() +
-                    "," + sageResponse.stats.getNext_optimized_number() + ")" +
-                " | db_size: " + sageResponse.stats.getDb_size()
+                " | decoding(ms): " + decodingTimeEnd
         );
         return new QueryResults(sageResponse.bindings, sageResponse.next, sageResponse.stats);
     }

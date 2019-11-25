@@ -5,7 +5,9 @@ from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 from base64 import b64encode, b64decode
 from json import dumps
 from xml.etree import ElementTree
+import uuid
 
+saved_plans = dict()
 
 def sort_qparams(v):
     """Sort query params as subject, predicate, object, page, as the current ldf-client require about this particular order..."""
@@ -47,12 +49,22 @@ def encode_saved_plan(savedPlan):
     if savedPlan is None:
         return None
     bytes = savedPlan.SerializeToString()
-    return b64encode(bytes).decode('utf-8')
+    sp = b64encode(bytes).decode('utf-8')
+    if sp not in saved_plans:
+        # genereate uuid
+        id = str(uuid.uuid4())
+        saved_plans[id] = sp
+        return id
+    raise Exception("must not throw, report")
 
 
 def decode_saved_plan(bytes):
-    return b64decode(bytes) if bytes is not None else None
-
+    if bytes in saved_plans:
+        copy = b64decode(saved_plans[bytes])
+        del saved_plans[bytes]
+        return copy if bytes is not None else None
+    else:
+        raise Exception("must not throw, report")
 
 def sage_http_error(text, status=400):
     content = """

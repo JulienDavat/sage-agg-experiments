@@ -17,47 +17,7 @@ class TooManyResults(Exception):
     """
     pass
 
-
-class Statistics:
-    def __init__(self):
-        self._next = 0
-        self._next_optimized = 0
-        self._done = False
-        self._error = ''
-        self._db_size = 0
-
-    def set_db_size(self, size):
-        self._db_size = size
-
-    def set_done(self):
-        self._done = True
-
-    def set_error(self, error):
-        self._error = error
-
-    def get_next(self):
-        return self._next
-
-    def get_next_optimized(self):
-        return self._next_optimized
-
-    def set_next(self, val):
-        self._next = val
-
-    def set_next_optimized(self, val):
-        self._next_optimized = val
-
-    def serialize(self):
-        return dict({
-            'next': self._next,
-            'next_optimized': self._next_optimized,
-            'done': self._done,
-            'error': self._error,
-            'db_size': self._db_size,
-        })
-
-
-async def executor(plan, queue, limit, optimized, optimized_disk, stats):
+async def executor(plan, queue, limit, optimized, optimized_disk):
     """Executor used to evaluated a plan under a time quota"""
     try:
         cpt = 0
@@ -69,13 +29,10 @@ async def executor(plan, queue, limit, optimized, optimized_disk, stats):
             value = await plan.next()
             # discard None values
             cpt += 1
-            stats.set_next(stats.get_next() + 1)
             if value is not None:
                 await queue.put(value)
             if queue.qsize() >= limit:
                 raise TooManyResults()
-            else:
-                stats.set_next_optimized(stats.get_next_optimized() + 1)
             # WARNING: await sleep(0) cost a lot, so we only trigger it every 50 cycle.
             # additionnaly, there may be other call to await sleep(0) in index join in the pipeline.
             if cpt > 50:
@@ -114,17 +71,15 @@ class SageEngine(object):
         """
         results = list()
         queue = Queue()
-        stats = Statistics()
         query_done = False
         try:
-            task = wait_for(executor(plan, queue, limit, optimized, buffer, stats), timeout=quota)
+            task = wait_for(executor(plan, queue, limit, optimized, buffer), timeout=quota)
             self._loop.run_until_complete(task)
             query_done = True
-            stats.set_done()
         except asyncTimeoutError:
-            stats.set_error('asyncTimeoutError')
+            pass
         except TooManyResults:
-            stats.set_error('TooManyResults')
+            pass
         finally:
             # dont forget to close the event loop or we get a Too Many open files OSError
             self._loop.close()
@@ -134,7 +89,6 @@ class SageEngine(object):
                 # fetch partial aggregate if the query is an aggreation query
                 if plan.is_aggregator():
                     results += plan.generate_results()
-                #print('pre-results:', results)
                 if results == [{'?__default_group': 'https://sage-org.github.io/sage-engine#DefaultGroupKey'}]:
                     results = []
             # collect results from classic query
@@ -145,4 +99,4 @@ class SageEngine(object):
         root = RootTree()
         source_field = plan.serialized_name() + '_source'
         getattr(root, source_field).CopyFrom(plan.save())
-        return results, root, query_done, stats.serialize()
+        return results, root, query_done

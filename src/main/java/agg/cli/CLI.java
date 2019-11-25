@@ -147,17 +147,18 @@ public class CLI implements Callable<Void> {
             double trafficTotal = spy.getTotalTransferSize();
             double trafficMean = spy.getMeanTransferSize();
             double decodingMean = spy.getMeanDecodingResponseTime();
-            System.err.println(MessageFormat.format("SPARQL query executed in {0}s with {1} HTTP requests with {2} bytes received (mean = {3};  decoded in around {4} ms each)", duration, nbQueries, trafficTotal, trafficMean, decodingMean));
+            double planSize = spy.getTotalPlanSize();
+            System.err.println(MessageFormat.format("SPARQL query executed in {0}s with {1} HTTP requests with {2} - {3} bytes received (mean = {4};  decoded in around {5} ms each)", duration, nbQueries, trafficTotal, planSize, trafficMean, decodingMean));
         }
 
         if (this.measure != null) {
             double duration = spy.getExecutionTime();
             String csvLine = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
-                    duration, spy.getNbCallsRead(), spy.getTotalTransferSize(), spy.getNbCallsWrite(),
+                    duration, spy.getNbCallsRead(), spy.getTotalTransferSize(), spy.getTotalPlanSize(),
+                    spy.getNbCallsWrite(),
                     spy.getMeanHTTPTimesRead(), spy.getMeanHTTPTimesWrite(), spy.getMeanResumeTimeRead(),
                     spy.getMeanResumeTimeWrite(), spy.getMeanSuspendTimeRead(), spy.getMeanSuspendTimeWrite(),
-                    spy.getMeanTransferSize(), spy.getMeanNextNumber(), spy.getMeanNextNumberOptimized(),
-                    spy.getMaxDb_size()
+                    spy.getMeanTransferSize(), spy.getMeanNextNumber(), spy.getMeanNextNumberOptimized()
             );
             try {
                 Files.write(Paths.get(this.measure), csvLine.getBytes(), StandardOpenOption.APPEND);

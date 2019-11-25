@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.apache.jena.datatypes.BaseDatatype;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.graph.Node;
@@ -92,13 +93,16 @@ public class BindingsDeserializer extends JsonDeserializer<QuerySolutions> {
                     literal = node.trim();
                     Matcher langMatcher = LANG_PATTERN.matcher(literal);
                     Matcher typeMatcher = TYPE_PATTERN.matcher(literal);
-                    langMatcher.matches();
-                    typeMatcher.matches();
                     if (typeMatcher.matches()) {
                         if (typeMatcher.group(3).startsWith("<")) {
                             String type = typeMatcher.group(3);
                             RDFDatatype datatype = TypeMapper.getInstance().getTypeByName(type.substring(1, type.length() - 1));
-                            value = NodeFactory.createLiteral(typeMatcher.group(1), datatype);
+                            if(datatype == null) {
+                                RDFDatatype r = new BaseDatatype(type);
+                                value = NodeFactory.createLiteral(typeMatcher.group(1), r);
+                            } else {
+                                value = NodeFactory.createLiteral(typeMatcher.group(1), datatype);
+                            }
                         } else {
                             RDFDatatype datatype = TypeMapper.getInstance().getTypeByName(typeMatcher.group(3));
                             value = NodeFactory.createLiteral(typeMatcher.group(1), datatype);
