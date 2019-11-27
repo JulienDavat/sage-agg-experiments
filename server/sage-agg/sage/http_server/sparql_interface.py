@@ -19,6 +19,7 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         Execute a query using the SageEngine and returns the appropriate HTTP response.
         Any failure will results in a rollback/abort on the current query execution.
     """
+    print("Query: ", query)
     graph = None
     try:
         graph_name = format_graph_uri(default_graph_uri, url)

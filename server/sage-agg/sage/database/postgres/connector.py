@@ -291,7 +291,8 @@ class PostgresConnector(DatabaseConnector):
         table_name = config['name']
         host = config['host'] if 'host' in config else ''
         port = config['port'] if 'port' in config else 5432
-        return PostgresConnector(table_name, config['dbname'], config['user'], config['password'], host=host, port=port)
+        page_size = config['page_size'] if 'page_size' in config else 500
+        return PostgresConnector(table_name, config['dbname'], config['user'], config['password'], host=host, port=port, fetch_size=page_size)
 
     def insert(self, subject, predicate, obj):
         """

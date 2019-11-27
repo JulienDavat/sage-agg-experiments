@@ -12,6 +12,7 @@ datasets:
     password: ''
     host: sage-postgres
     port: 5432
+    page_size: 500000
   - name: bsbm100
     description: BSBM 100 products using Postgres backend
     backend: postgres
