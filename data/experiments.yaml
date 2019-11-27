@@ -1,8 +1,8 @@
 name: SaGe Experiment server
 maintainer: Grall Arnaud
 public_url: http://localhost:8000
-quota: 150
-max_results: 5000
+quota: 60
+max_results: 500000
 datasets:
   - name: bsbm1k
     description: BSBM 1K products using Postgres backend
@@ -12,7 +12,7 @@ datasets:
     password: ''
     host: sage-postgres
     port: 5432
-    page_size: 500000
+    page_size: 500
   - name: bsbm100
     description: BSBM 100 products using Postgres backend
     backend: postgres
@@ -37,3 +37,4 @@ datasets:
     password: ''
     host: sage-postgres
     port: 5432
+    page_size: 500000
