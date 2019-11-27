@@ -8,7 +8,7 @@ from sage.query_engine.protobuf.iterators_pb2 import RootTree
 from math import inf
 
 set_event_loop_policy(uvloop.EventLoopPolicy())
-
+from time import time
 
 class TooManyResults(Exception):
     """
@@ -72,7 +72,9 @@ class SageEngine(object):
         results = list()
         queue = Queue()
         query_done = False
+        start = time()
         try:
+            print('Processing....')
             task = wait_for(executor(plan, queue, limit, optimized, buffer), timeout=quota)
             self._loop.run_until_complete(task)
             query_done = True
@@ -85,6 +87,8 @@ class SageEngine(object):
             self._loop.close()
             # backward compatibility
             # if optimized and not optimized_disk:
+
+            print('Generating results....')
             if optimized:
                 # fetch partial aggregate if the query is an aggreation query
                 if plan.is_aggregator():
@@ -94,6 +98,7 @@ class SageEngine(object):
             # collect results from classic query
             while not queue.empty():
                 results.append(queue.get_nowait())
+            print('Returning response ({}) ...'.format(time() - start))
         # save plan
         # print('final results:', results)
         root = RootTree()

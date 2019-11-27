@@ -269,7 +269,7 @@ class PostgresConnector(DatabaseConnector):
 
         # create a SQL query to start a new index scan
         if last_read is None:
-            start_query, start_params = get_start_query(subject, predicate, obj, self._table_name, fetch_size=self._fetch_size)
+            start_query, start_params = get_start_query(subject, predicate, obj, self._table_name, fetch_size=500)
         else:
             # empty last_read key => the scan has already been completed
             if len(last_read) == 0:
