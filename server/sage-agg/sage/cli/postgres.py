@@ -14,7 +14,7 @@ from time import time
 def bucketify(iterable, bucket_size):
     """Group items from an iterable by buckets"""
     bucket = list()
-    for s, p, o in iterable:
+    for s, p, o, triple in iterable:
         bucket.append((s, p, o))
         if len(bucket) >= bucket_size:
             yield bucket
