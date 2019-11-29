@@ -54,7 +54,7 @@ done
 
 for dataset in "${!DATASETS[@]}"
 do
-    python3 $CUR/average.py -f $OUTPUT/run-*-${DATASETS[$dataset]}-normalresult.csv -o "$OUTPUT/average-${DATASETS[$dataset]}-normal.csv"
+    python3 $CUR/average.py -f $OUTPUT/run-*-${DATASETS[$dataset]}-normal/result.csv -o "$OUTPUT/average-${DATASETS[$dataset]}-normal.csv"
     for buffer in "${!BUFFER_SIZE[@]}"
     do
         python3 $CUR/average.py -f $OUTPUT/run-*-${DATASETS[$dataset]}-b-${BUFFER_SIZE[$buffer]}/result.csv -o "$OUTPUT/average-${DATASETS[$dataset]}-b-${BUFFER_SIZE[$buffer]}.csv"

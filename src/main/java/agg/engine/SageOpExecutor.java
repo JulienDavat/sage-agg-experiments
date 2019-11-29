@@ -9,8 +9,10 @@ import org.apache.jena.sparql.algebra.op.*;
 import org.apache.jena.sparql.core.*;
 import org.apache.jena.sparql.engine.ExecutionContext;
 import org.apache.jena.sparql.engine.QueryIterator;
+import org.apache.jena.sparql.engine.iterator.QueryIterFilterExpr;
 import org.apache.jena.sparql.engine.main.OpExecutor;
 import org.apache.jena.sparql.engine.main.QC;
+import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprAggregator;
 import agg.core.SageUtils;
 import agg.engine.iterators.agg.SageGroupByIterator;
@@ -18,6 +20,7 @@ import agg.engine.iterators.optional.OptJoin;
 import agg.engine.iterators.optional.OptionalIterator;
 import agg.engine.iterators.parallel.ParallelUnionIterator;
 import agg.model.SageGraph;
+import org.apache.jena.sparql.expr.ExprList;
 
 import java.util.HashSet;
 import java.util.List;
@@ -52,6 +55,7 @@ public class SageOpExecutor extends OpExecutor {
 
     @Override
     protected QueryIterator execute(OpExtend opExtend, QueryIterator input) {
+        System.out.println("Op extend");
         if (optimized) {
             // System.err.println("Execute op optimized");
             // gather all extend operations
@@ -169,7 +173,7 @@ public class SageOpExecutor extends OpExecutor {
         return super.execute(opUnion, input);
     }
 
-    /*@Override
+    @Override
     protected QueryIterator execute(OpFilter opFilter, QueryIterator input) {
         QueryIterator qIter;
         ExprList filters = opFilter.getExprs();
@@ -186,5 +190,5 @@ public class SageOpExecutor extends OpExecutor {
             qIter = new QueryIterFilterExpr(qIter, expr, execCxt);
         }
         return qIter;
-    }*/
+    }
 }

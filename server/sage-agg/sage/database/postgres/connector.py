@@ -7,7 +7,7 @@ import psycopg2
 from psycopg2.extras import execute_values
 import json
 from math import ceil
-
+from time import time
 
 def fetch_histograms(cursor, table_name, attribute_name):
     """
@@ -36,21 +36,27 @@ class PostgresIterator(DBIterator):
         self._connection = connection
         self._current_query = start_query
         self._table_name = table_name
+        self._fetch_size=fetch_size
         # resume query execution with a SQL query
+        start = time()
         self._cursor.execute(self._current_query, start_params)
+        print('=> First iteration for ({}, {}) (page_size={}) tooks {} seconds.'.format(self._current_query, start_params, self._fetch_size, time() - start))
         # always keep the current row buffered inside the iterator
         self._last_read = self._cursor.fetchone()
-        self._fetch_size=fetch_size
+
 
     def __del__(self):
         """Destructor"""
         self._cursor.close()
 
     def __advance_iteration(self, last_read):
+
         query, params = get_resume_query(self._pattern["subject"], self._pattern["predicate"], self._pattern["object"], last_read, self._table_name, symbol=">", fetch_size=self._fetch_size)
         if query is not None and params is not None:
             self._current_query = query
+            start = time()
             self._cursor.execute(self._current_query, params)
+            print('=> Next iteration for ({}, {}) (page_size={}) tooks {} seconds.'.format(query, params, self._fetch_size, time() - start))
 
     def last_read(self):
         """Return the index ID of the last element read"""

@@ -46,7 +46,7 @@ async def run():
                     last = record
                     c += 1
             else:
-                async for record in stmt.cursor(last["subject"], last["predicate"], last["object"]):
+                async for record in stmt.cursor((last["subject"], last["predicate"], last["object"])):
                     last = record
                     c += 1
             total += c

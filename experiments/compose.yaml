@@ -36,9 +36,13 @@ services:
       POSTGRES_DB: grall-a
       POSTGRES_USER: grall-a
       POSTGRES_PASSWORD: ''
+      PGDATA: "/data/pgdata"
     ports:
       - 7122:5432 # postgres port
     mem_limit: 6000M
+    volumes:
+      - "./postgres:/data"
+    command: postgres -c 'config_file=/data/postgresql.conf'
   sage-agg:
     container_name: sage-agg
     links:
