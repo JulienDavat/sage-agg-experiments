@@ -72,9 +72,7 @@ class SageEngine(object):
         results = list()
         queue = Queue()
         query_done = False
-        start = time()
         try:
-            #print('Processing....')
             task = wait_for(executor(plan, queue, limit, optimized, buffer), timeout=quota)
             self._loop.run_until_complete(task)
             query_done = True

@@ -1,5 +1,5 @@
 Flask==1.0.2
-uvloop==0.13.0
+uvloop==0.14.0
 marshmallow==2.15.1
 PyYAML==3.13
 rdflib==4.2.2
