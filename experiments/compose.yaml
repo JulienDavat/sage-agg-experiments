@@ -12,7 +12,7 @@ services:
     stdin_open: true  # to be able to use CTRL+C to stop the container
     ports:
       - 7140:8000 # port
-    command: /opt/data/config.json 8000 1
+    command: /opt/data/configs/config.json 8000 1
     mem_limit: 6000M
   sage-virtuoso:
     container_name: sage-virtuoso
@@ -42,7 +42,7 @@ services:
     mem_limit: 6000M
     volumes:
       - "./postgres:/data"
-    command: postgres -c 'config_file=/data/postgresql.conf'
+    command: postgres -c listen_addresses='*' -c enable_bitmapscan=0 -c enable_seqscan=0 -c work_mem=50MB -c effective_cache_size=1500MB -c shared_buffers=2000MB -c max_parallel_workers_per_gather=0
   sage-agg:
     container_name: sage-agg
     links:
@@ -57,5 +57,5 @@ services:
     ports:
       - 7120:8000 # sage port
       - 7121:5432 # postgres backend port
-    command: sage /opt/data/experiments.yaml --gunicorn-config /opt/data/sage-gunicorn.py
+    command: sage /opt/data/configs/experiments.yaml --gunicorn-config /opt/data/configs/sage-gunicorn.py
     mem_limit: 6000M

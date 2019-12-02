@@ -61,5 +61,5 @@ class SageSparqlQuery(Schema):
     query = fields.Str(required=True)
     defaultGraph = fields.Str(required=True)
     next = fields.Str(required=False, allow_none=True)
-    optimized = fields.Bool(required=False, allow_none=True)
-    buffer = fields.Int(required=False, allow_none=False)
+    optimized = fields.Bool(required=False, allow_none=True, missing=False)
+    buffer = fields.Int(required=False,  missing=-1)

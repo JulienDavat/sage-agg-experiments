@@ -12,31 +12,30 @@ def get_start_query(subj, pred, obj, table_name, fetch_size=500):
     query = "SELECT * FROM {} ".format(table_name)
     params = None
     if kind == 'spo':
-        query += "WHERE md5(subject) = md5(%s) AND md5(predicate) = md5(%s) AND md5(object) = md5(%s) ORDER BY md5(subject), md5(predicate), md5(object)"
+        query += "WHERE subject = %s AND predicate = %s AND md5(object) = md5(%s) ORDER BY subject, predicate, md5(object)"
         params = (subj, pred, obj)
     elif kind == '???':
-        query += ' ORDER BY md5(subject), md5(predicate), md5(object)'
+        query += ' ORDER BY subject, predicate, md5(object)'
     elif kind == 's??':
-        query += "WHERE md5(subject) = md5(%s) ORDER BY md5(subject), md5(predicate), md5(object)"
+        query += "WHERE subject = %s ORDER BY subject, predicate, md5(object)"
         params = [subj]
     elif kind == 'sp?':
-        query += "WHERE md5(subject) = md5(%s) AND md5(predicate) = md5(%s) ORDER BY md5(subject), md5(predicate), md5(object)"
+        query += "WHERE subject = %s AND predicate = %s ORDER BY subject, predicate, md5(object)"
         params = (subj, pred)
     elif kind == '?p?':
-        query += "WHERE md5(predicate) = md5(%s) ORDER BY md5(predicate), md5(object), md5(subject)"
+        query += "WHERE predicate = %s ORDER BY predicate, md5(object), subject"
         params = [pred]
     elif kind == '?po':
-        query += "WHERE md5(predicate) = md5(%s) AND md5(object) = md5(%s) ORDER BY md5(predicate), md5(object), md5(subject)"
+        query += "WHERE predicate = %s AND md5(object) = md5(%s) ORDER BY predicate, md5(object), subject"
         params = (pred, obj)
     elif kind == 's?o':
-        query += "WHERE md5(subject) = md5(%s) AND md5(object) = md5(%s) ORDER BY md5(object), md5(subject), md5(predicate)"
+        query += "WHERE subject = %s AND md5(object) = md5(%s) ORDER BY md5(object), subject, predicate"
         params = (subj, obj)
     elif kind == '??o':
-        query += "WHERE md5(object) = md5(%s) ORDER BY md5(object), md5(subject), md5(predicate)"
+        query += "WHERE md5(object) = md5(%s) ORDER BY md5(object), subject, predicate"
         params = [obj]
     else:
         raise Exception("Unkown pattern type: {}".format(kind))
-    query += " LIMIT {}".format(fetch_size)
     return query, params
 
 
@@ -52,29 +51,28 @@ def get_resume_query(subj, pred, obj, last_read, table_name, fetch_size=500, sym
     if kind == 'spo':
         return None, None
     elif kind == '???':
-        query += "WHERE (md5(subject), md5(predicate), md5(object)) {} (md5(%s), md5(%s), md5(%s)) ORDER BY md5(subject), md5(predicate), md5(object)".format(symbol)
+        query += "WHERE (subject, predicate, md5(object)) {} (%s, %s, md5(%s)) ORDER BY subject, predicate, md5(object)".format(symbol)
         params = (last_s, last_p, last_o)
     elif kind == 's??':
-        query += "WHERE md5(subject) = md5(%s) AND (md5(predicate), md5(object)) {} (md5(%s), md5(%s)) ORDER BY md5(subject), md5(predicate), md5(object)".format(symbol)
+        query += "WHERE subject = %s AND (predicate, md5(object)) {} (%s, md5(%s)) ORDER BY subject, predicate, md5(object)".format(symbol)
         params = (last_s, last_p, last_o)
     elif kind == 'sp?':
-        query += "WHERE md5(subject) = md5(%s) AND md5(predicate) = md5(%s) AND (md5(object)) {} (md5(%s)) ORDER BY md5(subject), md5(predicate), md5(object)".format(symbol)
+        query += "WHERE subject = %s AND predicate = %s AND (md5(object)) {} (md5(%s)) ORDER BY subject, predicate, md5(object)".format(symbol)
         params = (last_s, last_p, last_o)
     elif kind == '?p?':
-        query += "WHERE md5(predicate) = md5(%s) AND (md5(object), md5(subject)) {} (md5(%s), md5(%s)) ORDER BY md5(predicate), md5(object), md5(subject)".format(symbol)
+        query += "WHERE predicate = %s AND (md5(object), subject) {} (md5(%s), %s) ORDER BY predicate, md5(object), subject".format(symbol)
         params = (last_p, last_o, last_s)
     elif kind == '?po':
-        query += "WHERE md5(predicate) = md5(%s) AND md5(object) = md5(%s) AND (md5(subject)) {} (md5(%s)) ORDER BY md5(predicate), md5(object), md5(subject)".format(symbol)
+        query += "WHERE predicate = %s AND md5(object) = md5(%s) AND (subject) {} (%s) ORDER BY predicate, md5(object), subject".format(symbol)
         params = (last_p, last_o, last_s)
     elif kind == 's?o':
-        query += "WHERE md5(subject) = md5(%s) AND md5(object) = md5(%s) AND (md5(predicate)) {} (md5(%s)) ORDER BY md5(object), md5(subject), md5(predicate)".format(symbol)
+        query += "WHERE subject = %s AND md5(object) = md5(%s) AND (predicate) {} (%s) ORDER BY md5(object), subject, predicate".format(symbol)
         params = (last_s, last_o, last_p)
     elif kind == '??o':
-        query += "WHERE md5(object) = md5(%s) AND (md5(subject), md5(predicate)) {} (md5(%s), md5(%s)) ORDER BY md5(object), md5(subject), md5(predicate)".format(symbol)
+        query += "WHERE md5(object) = md5(%s) AND (subject, predicate) {} (%s, %s) ORDER BY md5(object), subject, predicate".format(symbol)
         params = (last_o, last_s, last_p)
     else:
         raise Exception("Unkown pattern type: {}".format(kind))
-    query += " LIMIT {}".format(fetch_size)
     return query, params
 
 

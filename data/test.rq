@@ -1,1 +1,0 @@
-SELECT (COUNT(DISTINCT ?o) AS ?count) ?c ?p WHERE { ?s a ?c ; ?p ?o . } GROUP BY ?c ?p

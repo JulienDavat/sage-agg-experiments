@@ -19,7 +19,6 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         Execute a query using the SageEngine and returns the appropriate HTTP response.
         Any failure will results in a rollback/abort on the current query execution.
     """
-    print("Query: ", query)
     graph = None
     try:
         graph_name = format_graph_uri(default_graph_uri, url)
@@ -87,7 +86,7 @@ def sparql_blueprint(dataset, logger):
             query = request.args.get("query") or None
             default_graph_uri = request.args.get("default-graph-uri") or None
             next_link = request.args.get("next") or None
-            optimized = request.args.get("optimized") or None
+            optimized = request.args.get("optimized") or False
             buffer_size = request.args.get("buffer") or -1
             # ensure that both the query and default-graph-uri params are set
             if (query is None or default_graph_uri is None) and (next_link is None or default_graph_uri is None):

@@ -22,15 +22,15 @@ POSTGRES_CREATE_MVCC_TABLE = """
 POSTGRES_CREATE_INDEXES = [
     # Create index of SPO
     """
-    CREATE INDEX {}_spo_index ON {}(md5(subject),md5(predicate),md5(object));
+    CREATE INDEX {}_spo_index ON {}(subject,predicate,md5(object));
     """,
     # Create index of OSP
     """
-    CREATE INDEX {}_osp_index ON {}(md5(object),md5(subject),md5(predicate));
+    CREATE INDEX {}_osp_index ON {}(md5(object),subject,predicate);
     """,
     # Create index on POS
     """
-    CREATE INDEX {}_pos_index ON {}(md5(predicate),md5(object),md5(subject));
+    CREATE INDEX {}_pos_index ON {}(predicate,md5(object),subject);
     """
 ]
 

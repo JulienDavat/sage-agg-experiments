@@ -1,7 +1,7 @@
 name: SaGe Experiment server
 maintainer: Grall Arnaud
 public_url: http://localhost:8000
-quota: 150
+quota: 1000
 max_results: 5000
 datasets:
   - name: bsbm1k
@@ -10,29 +10,29 @@ datasets:
     dbname: grall-a
     user: grall-a
     password: ''
-    host: sage-postgres
-    port: 5432
+    host: localhost
+    port: 5433
   - name: bsbm100
     description: BSBM 100 products using Postgres backend
     backend: postgres
     dbname: grall-a
     user: grall-a
     password: ''
-    host: sage-postgres
-    port: 5432
+    host: localhost
+    port: 5433
   - name: bsbm10
     description: BSBM 10 products using Postgres backend
     backend: postgres
     dbname: grall-a
     user: grall-a
     password: ''
-    host: sage-postgres
-    port: 5432
+    host: localhost
+    port: 5433
   - name: dbpedia351
     description: Dbpedia 3.5.1 using Postgres backend
     backend: postgres
     dbname: grall-a
     user: grall-a
     password: ''
-    host: sage-postgres
-    port: 5432
+    host: localhost
+    port: 5433

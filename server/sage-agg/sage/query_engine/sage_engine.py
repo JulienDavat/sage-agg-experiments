@@ -74,7 +74,7 @@ class SageEngine(object):
         query_done = False
         start = time()
         try:
-            print('Processing....')
+            #print('Processing....')
             task = wait_for(executor(plan, queue, limit, optimized, buffer), timeout=quota)
             self._loop.run_until_complete(task)
             query_done = True
@@ -88,7 +88,7 @@ class SageEngine(object):
             # backward compatibility
             # if optimized and not optimized_disk:
 
-            print('Generating results....')
+            #print('Generating results....')
             if optimized:
                 # fetch partial aggregate if the query is an aggreation query
                 if plan.is_aggregator():
@@ -98,10 +98,11 @@ class SageEngine(object):
             # collect results from classic query
             while not queue.empty():
                 results.append(queue.get_nowait())
-            print('Returning response ({}) ...'.format(time() - start))
+            #print('Returning response ({}) ...'.format(time() - start))
         # save plan
         # print('final results:', results)
+        saved_plan = plan.save()
         root = RootTree()
         source_field = plan.serialized_name() + '_source'
-        getattr(root, source_field).CopyFrom(plan.save())
+        getattr(root, source_field).CopyFrom(saved_plan)
         return results, root, query_done
