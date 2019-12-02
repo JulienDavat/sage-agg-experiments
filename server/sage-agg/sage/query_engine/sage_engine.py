@@ -1,6 +1,6 @@
 # sage_engine.py
 # Author: Thomas MINIER - MIT License 2017-2018
-from asyncio import Queue, get_event_loop, wait_for, sleep, set_event_loop_policy, new_event_loop, set_event_loop, get_running_loop
+from asyncio import Queue, get_event_loop, wait_for, sleep, set_event_loop_policy, new_event_loop, set_event_loop
 from asyncio import TimeoutError as asyncTimeoutError
 import uvloop
 from sage.query_engine.iterators.utils import IteratorExhausted
@@ -50,7 +50,7 @@ class SageEngine(object):
     def __init__(self):
         super(SageEngine, self).__init__()
         try:
-            self._loop = get_running_loop()
+            self._loop = get_event_loop()
         except RuntimeError as e:
             self._loop = new_event_loop()
             set_event_loop(self._loop)
