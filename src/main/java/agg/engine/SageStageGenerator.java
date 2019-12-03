@@ -51,7 +51,7 @@ public class SageStageGenerator implements StageGenerator {
     public QueryIterator execute(BasicPattern pattern,
                                  QueryIterator input,
                                  ExecutionContext execCxt) {
-        System.out.println("no filter");
+        // System.out.println("no filter");
         Graph g = execCxt.getActiveGraph();
 
         Set<Var> varSet = this.getVarSetFromContext(execCxt);
@@ -116,7 +116,7 @@ public class SageStageGenerator implements StageGenerator {
                                  QueryIterator input,
                                  ExecutionContext execCxt,
                                  ExprList filters) {
-        System.out.println("filters:" + filters);
+        // System.out.println("filters:" + filters);
         Graph g = execCxt.getActiveGraph();
 
         Set<Var> varSet = this.getVarSetFromContext(execCxt);

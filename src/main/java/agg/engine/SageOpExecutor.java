@@ -55,7 +55,7 @@ public class SageOpExecutor extends OpExecutor {
 
     @Override
     protected QueryIterator execute(OpExtend opExtend, QueryIterator input) {
-        System.out.println("Op extend");
+        // System.out.println("Op extend");
         if (optimized) {
             // System.err.println("Execute op optimized");
             // gather all extend operations
