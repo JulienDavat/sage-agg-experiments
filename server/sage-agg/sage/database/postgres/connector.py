@@ -41,7 +41,7 @@ class PostgresIterator(DBIterator):
         self._table_name = table_name
         self._fetch_size = fetch_size
         # resume query execution with a SQL query
-        print('[PostgresIterator] Executing: {} with {}'.format(start_query, start_params))
+        # print('[PostgresIterator] Executing: {} with {}'.format(start_query, start_params))
         self._start = time()
         self._cursor.execute(self._current_query, start_params)
         # always keep the current set of rows buffered inside the iterator
@@ -62,7 +62,11 @@ class PostgresIterator(DBIterator):
             return ''
         triple = self._last_reads[0]
         print('[PostgresIterator] Red {} triples during this quantum'.format(self._red))
-        print('[PostgresIterator] Average overhead per triple is: {}'.format(reduce(lambda a, b: a + b, self._redtab)/len(self._redtab)))
+        if len(self._redtab) > 0:
+            res = reduce(lambda a, b: a + b, self._redtab)/len(self._redtab)
+        else:
+            res = 0
+        print('[PostgresIterator] Average overhead per triple is: {}'.format(res))
         return json.dumps({
             's': triple[0],
             'p': triple[1],
