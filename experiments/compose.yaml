@@ -10,9 +10,9 @@ services:
     ports:
       - 7140:8000 # port
     command: /opt/data/configs/config.json 8000 1
-    mem_limit: 6000M
   sage-virtuoso:
     image: tenforce/virtuoso:1.3.2-virtuoso7.2.5.1
+    # build: https://github.com/tenforce/docker-virtuoso.git
     container_name: sage-virtuoso
     environment:
       SPARQL_UPDATE: "true"
@@ -23,13 +23,12 @@ services:
       VIRT_SPARQL_MaxQueryExecutionTime: "9999999"
       VIRT_Parameters_MaxQueryMem: "4000M"
       VIRT_Parameters_HashJoinSpace: "50M"
-      VIRT_Parameters_ThreadsPerQuery: "0"
+      VIRT_Parameters_ThreadsPerQuery: "1"
     volumes:
-      - "../data/virtuoso-data:/data"
+      - "../data/datasets:/data/toLoad"
     ports:
       - "7130:8890"
       - "7131:1111"
-    mem_limit: 6000M
   sage-postgres:
     container_name: sage-postgres
     image: postgres
@@ -41,7 +40,6 @@ services:
       PGDATA: "/data/pgdata"
     ports:
       - 7122:5432 # postgres port
-    mem_limit: 6000M
     volumes:
       - "./postgres:/data"
     command: postgres -c listen_addresses='*' -c enable_bitmapscan=0 -c enable_seqscan=0 -c work_mem=50MB -c effective_cache_size=2000MB -c shared_buffers=2000MB -c max_parallel_workers_per_gather=0
@@ -60,4 +58,3 @@ services:
       - 7120:8000 # sage port
       - 7121:5432 # postgres backend port
     command: sage /opt/data/configs/experiments.yaml --gunicorn-config /opt/data/configs/sage-gunicorn.py
-    mem_limit: 6000M
