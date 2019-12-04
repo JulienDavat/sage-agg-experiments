@@ -1,10 +1,7 @@
 version: '2.4'
-
 services:
   sage-tpf:
     container_name: sage-tpf
-    links:
-      - sage-virtuoso
     build: https://github.com/LinkedDataFragments/Server.js.git
     volumes:
       - "../data:/opt/data/"
