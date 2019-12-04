@@ -25,6 +25,7 @@ services:
       VIRT_Parameters_HashJoinSpace: "50M"
       VIRT_Parameters_ThreadsPerQuery: "1"
     volumes:
+      - "./virtuoso/:/data/"
       - "../data/datasets:/data/toLoad"
     ports:
       - "7130:8890"
