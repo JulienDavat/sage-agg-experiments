@@ -20,12 +20,14 @@ RUNS=$1
 OUTPUT=$2
 DATASETS=()
 while read -rd,; do DATASETS+=("$REPLY"); done <<<"$3,";
+ADDR=$4
+QUERIES=$5
 
 JAR="$CUR/../../build/libs/sage-sparql-void-fat-1.0.jar"
 
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 5 ]; then
   echo "Illegal number of parameters."
-  echo "Usage: bash run-virtuoso.sh <number-of-runs> <output-folder> \"<comma-seperated-list-of-datasets>\""
+  echo "Usage: bash run-virtuoso.sh <number-of-runs> <output-folder> \"<comma-seperated-list-of-datasets>\" <addr:port> <path-to-queries-to-execute>"
   exit
 fi
 
@@ -36,7 +38,7 @@ do
     for i in $(seq 1 1 $RUNS)
     do
         echo "#### (${DATASETS[$dataset]}) Running Virtuoso run $i... into $OUTPUT ####"
-        bash $CUR/execute-virtuoso.sh "$CUR/../../data/queries/queries-wo-construct.txt" "$OUTPUT/run-$i-${DATASETS[$dataset]}/" "http://localhost:7130/sparql" "http://sage.univ-nantes.fr/${DATASETS[$dataset]}" $JAR
+        bash $CUR/execute-virtuoso.sh "$QUERIES" "$OUTPUT/run-$i-${DATASETS[$dataset]}/" "http://$ADDR/sparql" "http://sage.univ-nantes.fr/${DATASETS[$dataset]}" $JAR
     done
 done
 

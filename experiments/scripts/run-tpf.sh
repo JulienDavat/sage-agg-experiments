@@ -21,10 +21,12 @@ RUNS=$1
 OUTPUT=$2
 DATASETS=()
 while read -rd,; do DATASETS+=("$REPLY"); done <<<"$3,";
+ADDR=$4
+QUERIES=$5
 
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 5 ]; then
   echo "Illegal number of parameters."
-  echo "Usage: bash run-tpf.sh <number-of-runs> <output-folder> \"<comma-seperated-list-of-datasets>\" "
+  echo "Usage: bash run-tpf.sh <number-of-runs> <output-folder> \"<comma-seperated-list-of-datasets>\" <addr:port> <path-to-queries-to-execute>"
   exit
 fi
 
@@ -35,7 +37,7 @@ do
     for i in $(seq 1 1 $RUNS)
     do
         echo "#### (${DATASETS[$dataset]}) Running tpf run $i... into $OUTPUT ####"
-        bash $CUR/execute-tpf.sh "$CUR/../../data/queries/queries-wo-construct.txt" "$OUTPUT/run-$i-${DATASETS[$dataset]}/" "http://localhost:7140/${DATASETS[$dataset]}"
+        bash $CUR/execute-tpf.sh "$QUERIES" "$OUTPUT/run-$i-${DATASETS[$dataset]}/" "http://$ADDR/${DATASETS[$dataset]}"
     done
 done
 
