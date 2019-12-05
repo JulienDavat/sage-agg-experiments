@@ -3,9 +3,9 @@ from time import time
 import math
 from functools import reduce
 
-dbname = 'grall-a'
-user = 'grall-a'
-password = ''
+dbname = 'grall'
+user = 'grall'
+password = 'admin'
 host = 'localhost'
 port = 5432
 table_name = 'bsbm1k'
