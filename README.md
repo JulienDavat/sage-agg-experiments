@@ -41,6 +41,14 @@ nohup bash experiments/scripts/run-tpf.sh 3 output/tpf "bsbm10,bsbm100,bsbm1k"  
 nohup bash experiments/scripts/run-tpf.sh 3 output/sage "bsbm10,bsbm100,bsbm1k" "0,100000,1000000,1000000000" &
 # dbpedia
 nohup bash experiments/scripts/run-sage.sh 3 output/sage-dbpedia "dbpedia351" "0,100000,1000000,1000000000" &
+
+# big 
+nohup bash experiments/scripts/run-virtuoso.sh 3 output/third/virtuoso/ "bsbm10,bsbm100,bsbm1k" localhost:7130 data/queries/to_run.txt && \
+    bash experiments/scripts/run-tpf.sh 3 output/third/tpf/ "bsbm10,bsbm100,bsbm1k" localhost:7140 data/queries/to_run.txt && \
+    bash experiments/scripts/run-sage.sh 3 output/third/sage/ "bsbm10,bsbm100,bsbm1k" "0,100000,1000000,1000000000" localhost:7120 data/queries/to_run.txt &
+    
+     
+
 ````
 
 

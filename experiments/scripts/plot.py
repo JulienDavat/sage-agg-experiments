@@ -18,8 +18,8 @@ print("Output: ", args.o)
 
 def process():
     datasets = ['bsbm10', 'bsbm100', 'bsbm1k']
-    buffer_size = [0, 100000, 1000000, 1000000000]
-    buffer_size_strings = ["0", "100Kb", "1Mb", "1Gb"]
+    buffer_size = [0]
+    buffer_size_strings = ["0"]
 
     tpf_dir = args.dir + "/tpf/"
     sage_dir = args.dir + "/sage/"
@@ -31,7 +31,7 @@ def process():
     queries = dict()
     distinct = [3,4,5,6,7,9,10,11,12,13,15,16,17,19,20,21]
     non_distinct = [3,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44]
-    toProcess = list(range(1, 53))
+    toProcess = list(range(1, 32))
 
     print(toProcess)
     for d in datasets:
@@ -168,8 +168,8 @@ def final(log=False, val={}):
     plt.plot(x, list(map(lambda e: e[0], virtuoso)), label="virtuoso", **options)
     plt.plot(x, list(map(lambda e: e[0], sage["normal"])), label="sage", **options)
     plt.plot(x, list(map(lambda e: e[0], sage[0])), label="sage-agg-0", **options)
-    plt.plot(x, list(map(lambda e: e[0], sage[100000])), label="sage-agg-100Kb", **options)
-    plt.plot(x, list(map(lambda e: e[0], sage[1000000000])), label="sage-agg-1Gb", **options)
+    # plt.plot(x, list(map(lambda e: e[0], sage[100000])), label="sage-agg-100Kb", **options)
+    # plt.plot(x, list(map(lambda e: e[0], sage[1000000000])), label="sage-agg-1Gb", **options)
     plt.plot(x, list(map(lambda e: e[0], tpf)), label="tpf", **options)
     plt.xticks(x, datasets)
     plt.ylabel("Http requests")
@@ -178,9 +178,9 @@ def final(log=False, val={}):
     plt.plot(x, list(map(lambda e: e[1], virtuoso)), label="virtuoso", **options)
     plt.plot(x, list(map(lambda e: e[1], sage["normal"])), label="sage", **options)
     plt.plot(x, list(map(lambda e: e[1], sage[0])), label="sage-agg-0", **options)
-    print(list(map(lambda e: e[2], sage[100000])), list(map(lambda e: e[2], sage[1000000000])))
-    plt.plot(x, list(map(lambda e: e[1], sage[100000])), label="sage-agg-100Kb", **options)
-    plt.plot(x, list(map(lambda e: e[1], sage[1000000000])), label="sage-agg-1Gb", **options)
+    # print(list(map(lambda e: e[2], sage[100000])), list(map(lambda e: e[2], sage[1000000000])))
+    # plt.plot(x, list(map(lambda e: e[1], sage[100000])), label="sage-agg-100Kb", **options)
+    # plt.plot(x, list(map(lambda e: e[1], sage[1000000000])), label="sage-agg-1Gb", **options)
     plt.plot(x, list(map(lambda e: e[1], tpf)), label="tpf", **options)
     plt.xticks(x, datasets)
     plt.ylabel("Execution time (s)")
@@ -189,8 +189,8 @@ def final(log=False, val={}):
     plt.plot(x, list(map(lambda e: e[2], virtuoso)), label="virtuoso", **options)
     plt.plot(x, list(map(lambda e: e[2], sage["normal"])), label="sage", **options)
     plt.plot(x, list(map(lambda e: e[2], sage[0])), label="sage-agg-0", **options)
-    plt.plot(x, list(map(lambda e: e[2], sage[100000])), label="sage-agg-100Kb", **options)
-    plt.plot(x, list(map(lambda e: e[2], sage[1000000000])), label="sage-agg-1Gb", **options)
+    # plt.plot(x, list(map(lambda e: e[2], sage[100000])), label="sage-agg-100Kb", **options)
+    # plt.plot(x, list(map(lambda e: e[2], sage[1000000000])), label="sage-agg-1Gb", **options)
     plt.plot(x, list(map(lambda e: e[2], tpf)), label="tpf", **options)
     plt.xticks(x, datasets)
     plt.ylabel("Traffic (bytes)")
@@ -200,7 +200,7 @@ def final(log=False, val={}):
     plt.savefig(fname=args.o + 'final.png', quality=100, format='png', dpi=100)
     plt.close()
 
-# final(log=True, val=process())
+final(log=True, val=process())
 
 
 def process_quotas():
@@ -281,7 +281,7 @@ def process_quotas():
         "queries": queries
     }
 
-def plot_quotas(log=True, val=process_quotas()):
+def plot_quotas(log=True, val = {}):
     dataset = val["dataset"]
     sage = val["sage"]
     fig, axes = plt.subplots(figsize=(14, 10), nrows=3, ncols=1, sharex=True)
@@ -347,4 +347,4 @@ def plot_quotas(log=True, val=process_quotas()):
 
 
 
-plot_quotas()
+# plot_quotas()
