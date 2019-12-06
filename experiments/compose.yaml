@@ -24,9 +24,10 @@ services:
       VIRT_Parameters_MaxQueryMem: "4000M"
       VIRT_Parameters_HashJoinSpace: "50M"
       VIRT_Parameters_ThreadsPerQuery: "1"
+      VIRT_Parameters_DirsAllowed: "., /usr/local/virtuoso-opensource/share/virtuoso/vad, /data/toLoad"
     volumes:
       - "./virtuoso/:/data/"
-      - "../data/datasets:/data/toLoad"
+      - "../data/datasets/toLoad:/data/toLoad"
     ports:
       - "7130:8890"
       - "7131:1111"

@@ -16,7 +16,10 @@ if args.dir is None or args.o is None:
 
 print("Output: ", args.o)
 
-def process():
+normal = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+normal_wo_distinct = [1,19,20,21,22,6,23,24,25,26,11,27,28,29,30,31]
+
+def process(toProcess = []):
     datasets = ['bsbm10', 'bsbm100', 'bsbm1k']
     buffer_size = [0]
     buffer_size_strings = ["0"]
@@ -29,9 +32,6 @@ def process():
     sage = dict()
     tpf = []
     queries = dict()
-    distinct = [3,4,5,6,7,9,10,11,12,13,15,16,17,19,20,21]
-    non_distinct = [3,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44]
-    toProcess = list(range(1, 32))
 
     print(toProcess)
     for d in datasets:
@@ -70,7 +70,6 @@ def process():
                     total_execution_time += float(row[0]) * 1000
                     t = float(row[2]) - 36 * (float(row[1]) - 1)
                     total_traffic += t
-                    print(t)
                     if r not in queries:
                         queries[r] = dict()
                     if "sage" not in queries[r]:
@@ -98,7 +97,6 @@ def process():
                         total_execution_time += float(row[0]) * 1000
                         t = float(row[2]) - 36 * (float(row[1]) - 1)
                         total_traffic += t
-                        print(t)
                         if r not in queries:
                             queries[r] = dict()
                         if "sage" not in queries[r]:
@@ -150,57 +148,92 @@ def scale(log=True):
     if log:
         plt.yscale('log')
 
-def final(log=False, val={}):
+def final(log=False):
+    val = process(normal)
     datasets = val["datasets"]
     virtuoso = val["virtuoso"]
     sage = val["sage"]
     tpf = val["tpf"]
 
 
-    fig, axes = plt.subplots(figsize=(16, 12), nrows=3, ncols=1, sharex=True)
+    fig, axes = plt.subplots(figsize=(16, 12), nrows=3, ncols=2, sharex=True, sharey='row')
+    print(axes)
     options = {
         "linestyle": "dashed",
         "marker": 'o',
         "markersize": 8
     }
-    plt.subplot(131)
     x = np.arange(len(datasets))
-    plt.plot(x, list(map(lambda e: e[0], virtuoso)), label="virtuoso", **options)
-    plt.plot(x, list(map(lambda e: e[0], sage["normal"])), label="sage", **options)
-    plt.plot(x, list(map(lambda e: e[0], sage[0])), label="sage-agg-0", **options)
-    # plt.plot(x, list(map(lambda e: e[0], sage[100000])), label="sage-agg-100Kb", **options)
-    # plt.plot(x, list(map(lambda e: e[0], sage[1000000000])), label="sage-agg-1Gb", **options)
-    plt.plot(x, list(map(lambda e: e[0], tpf)), label="tpf", **options)
-    plt.xticks(x, datasets)
-    plt.ylabel("Http requests")
-    scale(log)
-    plt.subplot(132)
-    plt.plot(x, list(map(lambda e: e[1], virtuoso)), label="virtuoso", **options)
-    plt.plot(x, list(map(lambda e: e[1], sage["normal"])), label="sage", **options)
-    plt.plot(x, list(map(lambda e: e[1], sage[0])), label="sage-agg-0", **options)
-    # print(list(map(lambda e: e[2], sage[100000])), list(map(lambda e: e[2], sage[1000000000])))
-    # plt.plot(x, list(map(lambda e: e[1], sage[100000])), label="sage-agg-100Kb", **options)
-    # plt.plot(x, list(map(lambda e: e[1], sage[1000000000])), label="sage-agg-1Gb", **options)
-    plt.plot(x, list(map(lambda e: e[1], tpf)), label="tpf", **options)
-    plt.xticks(x, datasets)
-    plt.ylabel("Execution time (s)")
-    scale(log)
-    plt.subplot(133)
-    plt.plot(x, list(map(lambda e: e[2], virtuoso)), label="virtuoso", **options)
-    plt.plot(x, list(map(lambda e: e[2], sage["normal"])), label="sage", **options)
-    plt.plot(x, list(map(lambda e: e[2], sage[0])), label="sage-agg-0", **options)
-    # plt.plot(x, list(map(lambda e: e[2], sage[100000])), label="sage-agg-100Kb", **options)
-    # plt.plot(x, list(map(lambda e: e[2], sage[1000000000])), label="sage-agg-1Gb", **options)
-    plt.plot(x, list(map(lambda e: e[2], tpf)), label="tpf", **options)
-    plt.xticks(x, datasets)
-    plt.ylabel("Traffic (bytes)")
-    scale(log)
-    plt.legend()
+
+    ######### LEFT SIDE ###########
+
+    axes[0][0].plot(x, list(map(lambda e: e[0], virtuoso)), label="virtuoso", **options)
+    axes[0][0].plot(x, list(map(lambda e: e[0], sage["normal"])), label="sage", **options)
+    axes[0][0].plot(x, list(map(lambda e: e[0], sage[0])), label="sage-agg-0", **options)
+    axes[0][0].plot(x, list(map(lambda e: e[0], tpf)), label="tpf", **options)
+    axes[0][0].set_xticks(x)
+    axes[0][0].set_xticklabels(datasets)
+    axes[0][0].set_ylabel("Http requests")
+    axes[0][0].set_yscale('log')
+
+    axes[1][0].plot(x, list(map(lambda e: e[1], virtuoso)), label="virtuoso", **options)
+    axes[1][0].plot(x, list(map(lambda e: e[1], sage["normal"])), label="sage", **options)
+    axes[1][0].plot(x, list(map(lambda e: e[1], sage[0])), label="sage-agg-0", **options)
+    axes[1][0].plot(x, list(map(lambda e: e[1], tpf)), label="tpf", **options)
+    axes[1][0].set_xticks(x)
+    axes[1][0].set_xticklabels(datasets)
+    axes[1][0].set_ylabel("Execution time (s)")
+    axes[1][0].set_yscale('log')
+
+    axes[2][0].plot(x, list(map(lambda e: e[2], virtuoso)), label="virtuoso", **options)
+    axes[2][0].plot(x, list(map(lambda e: e[2], sage["normal"])), label="sage", **options)
+    axes[2][0].plot(x, list(map(lambda e: e[2], sage[0])), label="sage-agg-0", **options)
+    axes[2][0].plot(x, list(map(lambda e: e[2], tpf)), label="tpf", **options)
+    axes[2][0].set_xticks(x)
+    axes[2][0].set_xticklabels(datasets)
+    axes[2][0].set_ylabel("Traffic (bytes)")
+    axes[2][0].set_yscale('log')
+
+    ######### RIGHT SIDE ###########
+    axes[0][1].plot(x, list(map(lambda e: e[0], virtuoso)), label="virtuoso", **options)
+    axes[0][1].plot(x, list(map(lambda e: e[0], sage["normal"])), label="sage", **options)
+    axes[0][1].plot(x, list(map(lambda e: e[0], sage[0])), label="sage-agg-0", **options)
+    axes[0][1].plot(x, list(map(lambda e: e[0], tpf)), label="tpf", **options)
+    axes[0][1].set_xticks(x)
+    axes[0][1].set_xticklabels(datasets)
+    axes[0][1].set_ylabel("Http requests")
+    axes[0][1].set_yscale('log')
+
+    val = process(normal_wo_distinct)
+    datasets = val["datasets"]
+    virtuoso = val["virtuoso"]
+    sage = val["sage"]
+    tpf = val["tpf"]
+
+    axes[1][1].plot(x, list(map(lambda e: e[1], virtuoso)), label="virtuoso", **options)
+    axes[1][1].plot(x, list(map(lambda e: e[1], sage["normal"])), label="sage", **options)
+    axes[1][1].plot(x, list(map(lambda e: e[1], sage[0])), label="sage-agg-0", **options)
+    axes[1][1].plot(x, list(map(lambda e: e[1], tpf)), label="tpf", **options)
+    axes[1][1].set_xticks(x)
+    axes[1][1].set_xticklabels(datasets)
+    axes[1][1].set_ylabel("Execution time (s)")
+    axes[1][1].set_yscale('log')
+
+    axes[2][1].plot(x, list(map(lambda e: e[2], virtuoso)), label="virtuoso", **options)
+    axes[2][1].plot(x, list(map(lambda e: e[2], sage["normal"])), label="sage", **options)
+    axes[2][1].plot(x, list(map(lambda e: e[2], sage[0])), label="sage-agg-0", **options)
+    axes[2][1].plot(x, list(map(lambda e: e[2], tpf)), label="tpf", **options)
+    axes[2][1].set_xticks(x)
+    axes[2][1].set_xticklabels(datasets)
+    axes[2][1].set_ylabel("Traffic (bytes)")
+    axes[2][1].set_yscale('log')
+
+    axes[2][0].legend()
     fig.suptitle("Number of Http requests, Execution time (s) and Traffic (bytes) for each dataset")
     plt.savefig(fname=args.o + 'final.png', quality=100, format='png', dpi=100)
     plt.close()
 
-final(log=True, val=process())
+final(log=True)
 
 
 def process_quotas():
@@ -233,7 +266,6 @@ def process_quotas():
                     total_execution_time += float(row[0]) * 1000
                     t = float(row[2]) - 36 * (float(row[1]) - 1)
                     total_traffic += t
-                    print(t)
                     if r not in queries:
                         queries[r] = dict()
                     if "sage" not in queries[r]:
@@ -261,7 +293,6 @@ def process_quotas():
                         total_execution_time += float(row[0]) * 1000
                         t = float(row[2]) - 36 * (float(row[1]) - 1)
                         total_traffic += t
-                        print(t)
                         if r not in queries:
                             queries[r] = dict()
                         if "sage" not in queries[r]:

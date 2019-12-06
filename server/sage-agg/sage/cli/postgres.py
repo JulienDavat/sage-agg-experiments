@@ -25,6 +25,7 @@ def bucketify(iterable, bucket_size):
 
 def bucketify_bytes(iterable, bucket_size, encoding='utf-8', throw=True):
     """Group items from an iterable by buckets"""
+    print("Throwable: ", throw)
     bucket = list()
     for s, p, o in iterable:
         s_encoded = s
@@ -240,6 +241,9 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
                 connection.commit()
                 # logger.info("All changes were successfully committed.")
                 to_commit = 0
+            if inserted > 10:
+                connection.commit()
+                break
     end = time()
 
     logger.info("RDF triples ingestion successfully completed in {}s".format(end - start))

@@ -6,6 +6,8 @@ data/datasets/dbpedia351.ttl
 .DS_Store
 sage-sparql-void.iml
 .idea
+experiments/virtuoso
+experiments/postgres/pgdata
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
