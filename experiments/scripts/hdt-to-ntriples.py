@@ -32,7 +32,6 @@ def write(file, block):
         s = "" + formatTriple(block[0])
     else:
         s = "".join(map(lambda e: formatTriple(e), block))
-    print(s)
     file.write(s)
 
 def transform(input, output):
