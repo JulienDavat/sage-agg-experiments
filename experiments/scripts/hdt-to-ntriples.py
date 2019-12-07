@@ -3,7 +3,6 @@ import argparse
 import os
 from time import time
 import click
-from rdflib import Graph
 from rdflib.util import from_n3
 import re
 
@@ -12,14 +11,17 @@ parser.add_argument('-i', action='store', default='dataset.hdt', help='Input fil
 parser.add_argument('-o', action='store', default='dataset.nt', help='Output file in ntriples format')
 args = parser.parse_args()
 
-block_size = 500
+block_size = 50000
 
 LANG_PATTERN = re.compile('\"([\w\W]*)\"(@)(.+)')
 TYPE_PATTERN = re.compile('\"([\w\W]*)\"(\^\^)(.+)')
-
+SPECIAL_CHAR = re.compile('[^\w:\/\-@\. ]+') # all non characters except : / - @ . and space
 
 def escape(lit):
-    return lit.replace('"', '\\"').replace('\r', '\\r').replace('\n', '\\n')
+    if not lit.startswith("http://"):
+        return re.sub(SPECIAL_CHAR, '', lit)
+    else:
+        return lit
 
 def formatTriple(e):
     return e[0] + " " + e[1] + " " + e[2] + " . \n"
@@ -30,6 +32,7 @@ def write(file, block):
         s = "" + formatTriple(block[0])
     else:
         s = "".join(map(lambda e: formatTriple(e), block))
+    print(s)
     file.write(s)
 
 def transform(input, output):
@@ -50,7 +53,6 @@ def transform(input, output):
         start = time()
         with click.progressbar(label="Progression", length=card) as bar:
             for s, p, o in it:
-                # now decode it, or handle any error
                 try:
                     s, p, o = s.decode('UTF-8'), p.decode('UTF-8'), o.decode('UTF-8')
                     if not s.startswith('\"'):
@@ -63,7 +65,7 @@ def transform(input, output):
                         raise Exception("predicate not handled")
                     if not o.startswith("\""):
                         o = "<{}>".format(o)
-                    #else:
+                    else:
                         if LANG_PATTERN.match(o):
                             lit, symbol, lang = LANG_PATTERN.findall(o)[0]
                             lit = escape(lit)
@@ -75,23 +77,18 @@ def transform(input, output):
                         else:
                             o = '"' + escape(o[1:len(o) - 1]) + '"'
 
-                    graph = Graph('IOMemory')
-                    graph.add((from_n3(s), from_n3(p), from_n3(o)))
-                    triples = graph.triples((None, None, None))
-                    for s, p, o in triples:
-                        block.append((s.n3(), p.n3(), o.n3()))
-                        red += 1
-
+                    triple = (from_n3(s).n3(), from_n3(p).n3(), from_n3(o).n3())
+                    block.append(triple)
+                    red += 1
                     if len(block) == block_size:
                         write(file, block)
-                        bar.label = "Progression ({}/{}) ".format(red, card)
+                        bar.label = "Progression ({}/{}) throughput is {}/s ".format(red, card, red / (time() - start))
                         bar.update(block_size)
                         block = []
                 except UnicodeDecodeError as err:
                     pass
                 except Exception as err:
-                    print(err)
-                    exit(1)
+                    print("(do nothing) Error: ", err)
             if len(block) > 0:
                 write(file, block)
             print("\n {} triples written in {} seconds".format(red, time() - start))
