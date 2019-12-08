@@ -1,7 +1,7 @@
 name: SaGe Experiment server
 maintainer: Grall Arnaud
 public_url: http://localhost:8000
-quota: 1500
+quota: 60000
 max_results: 999999999
 datasets:
   - name: bsbm1k
