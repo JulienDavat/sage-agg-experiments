@@ -21,6 +21,8 @@ services:
       VIRT_SPARQL_ResultSetMaxRows: "9999999"
       VIRT_SPARQL_MaxQueryCostEstimationTime: "9999999"
       VIRT_SPARQL_MaxQueryExecutionTime: "9999999"
+      VIRT_Parameters_NumberOfBuffers: "500000"
+      VIRT_Parameters_MaxDirtyBuffers: "375000"
       VIRT_Parameters_MaxQueryMem: "4000M"
       VIRT_Parameters_HashJoinSpace: "50M"
       VIRT_Parameters_ThreadsPerQuery: "1"
