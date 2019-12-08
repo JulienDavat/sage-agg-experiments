@@ -59,12 +59,11 @@ def wccount(filename):
 def yield_triples(file):
     total = 0
     blocks = []
-    block_size = 2000
+    block_size = 1000
     parsed = 0
     print('-> starting yielding...')
     to_read = ""
     for cnt, line in enumerate(file):
-        print(cnt, line)
         try:
             # do not touch  all the lines below. We read every new line,
             # if we see a triple on multiple lines aka we cant find any matches, we continue to read
