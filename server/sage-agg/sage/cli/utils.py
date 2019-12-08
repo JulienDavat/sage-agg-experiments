@@ -10,7 +10,7 @@ from time import time
 import re
 from rdflib.util import from_n3
 
-SAGE_NTRIPLES_REGEX = re.compile('^(\<.*\>) (\<.*\>) (.*|.*\n.*) .$')
+SAGE_NTRIPLES_REGEX = re.compile('(\<.*\>) (\<.*\>) (.*) \.')
 
 def load_dataset(config_path, dataset_name, logger, backends=[]):
     """Load a dataset from a Sage config file"""
