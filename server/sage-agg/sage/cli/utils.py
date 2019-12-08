@@ -59,7 +59,7 @@ def wccount(filename):
 def yield_triples(file):
     total = 0
     blocks = []
-    block_size = 1000
+    block_size = 2000
     start = time()
     parsed = 0
     print('-> starting yielding...')
@@ -68,7 +68,6 @@ def yield_triples(file):
         blocks.append((from_n3(triple[0]), from_n3(triple[1]), from_n3(triple[2])))
         parsed += 1
         if cnt % block_size == 0:
-            print('-> Parsed {} triples in {} s'.format(parsed, time() - start))
             parsed = 0
             for t in blocks:
                 total += 1
@@ -78,7 +77,6 @@ def yield_triples(file):
 
     if len(blocks) > 0:
         start = time()
-        print('-> Parsed {} triples in {} s'.format(parsed, time() - start))
         for t in blocks:
             total += 1
             yield __n3_to_str(t)
