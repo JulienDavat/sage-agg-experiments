@@ -5,6 +5,7 @@ from os.path import isfile
 from yaml import load
 from rdflib import Graph
 from hdt import HDTDocument
+import subprocess
 
 def load_dataset(config_path, dataset_name, logger, backends=[]):
     """Load a dataset from a Sage config file"""
@@ -44,16 +45,52 @@ def __n3_to_str(triple):
     return (s, p, o, triple)
 
 
+def wccount(filename):
+    return int(subprocess.run('wc -l ' + filename + " | awk '{print $1}'",
+                              shell=True,
+                              text=True,
+                              stdout=subprocess.PIPE).stdout)
+
+def parse(data):
+    g = Graph('IOMemory')
+    g.parse(data=data, format='nt')
+    res = []
+    triples = g.triples((None, None, None))
+    for t in triples:
+        res.append(t)
+    try:
+        if len(res) > 1:
+            raise Exception("More than one triple in this line... Abort.")
+        else:
+            return __n3_to_str(res[0])
+    except Exception as e:
+        print(e)
+        exit(1)
+
+
+def yield_triples(file):
+    for cnt, line in enumerate(file):
+        yield parse(data=line)
+
+
 def get_rdf_reader(file_path, format='nt'):
     """Get an iterator over RDF triples from a file"""
     iterator = None
     nb_triples = 0
     # load using rdflib
-    if format == 'nt' or format == 'ttl':
+    if format == 'ttl':
         g = Graph()
         g.parse(file_path, format=format)
         nb_triples = len(g)
         iterator = map(__n3_to_str, g.triples((None, None, None)))
+    elif format == 'nt':
+        print('Counting triples using the wc command...')
+        total = wccount(file_path)
+        print('The file contains {} triples.'.format(total))
+        f = open(file_path, 'r')
+        iter = yield_triples(f)
+        return iter, total, f
+
     elif format == 'hdt':
         # load HDTDocument without additional indexes (not needed since we do a ?s ?p ?o)
         doc = HDTDocument(file_path, True, True)

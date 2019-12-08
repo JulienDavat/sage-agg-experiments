@@ -174,7 +174,7 @@ def index_postgres(config, dataset_name):
 @click.argument("dataset_name")
 @click.option("-f", "--format", type=click.Choice(["nt", "ttl", "hdt"]),
               default="nt", show_default=True, help="Format of the input file. Supported: nt (N-triples), ttl (Turtle) and hdt (HDT).")
-@click.option("-b", "--block_size", type=int, default=100, show_default=True,
+@click.option("-b", "--block_size", type=int, default=500, show_default=True,
               help="Block size used for the bulk loading")
 @click.option("-c", "--commit_threshold", type=int, default=500000, show_default=True,
               help="Commit after sending this number of RDF triples")
@@ -208,7 +208,11 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
     insert_into_query = p_utils.get_postgres_insert_into(table_name, enable_mvcc=enable_mvcc)
 
     logger.info("Reading RDF source file...")
-    iterator, nb_triples = get_rdf_reader(rdf_file, format=format)
+    iterator, nb_triples = None, None
+    if format == 'nt':
+        iterator, nb_triples, file = get_rdf_reader(rdf_file, format=format)
+    else:
+        iterator, nb_triples = get_rdf_reader(rdf_file, format=format)
     logger.info("RDF source file loaded. Found ~{} RDF triples to ingest.".format(nb_triples))
 
     logger.info("Starting RDF triples ingestion...")
@@ -221,13 +225,7 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
     # insert by bucket (and show a progress bar)
     with click.progressbar(length=nb_triples,
                            label="Inserting RDF triples 0/{}, encoding={}".format(nb_triples, encoding)) as bar:
-
-        if format == 'hdt':
-            buckets = bucketify_bytes(iterator, block_size, encoding=encoding, throw=throw)
-        else:
-            buckets = bucketify(iterator, block_size)
-
-        for bucket in buckets:
+        def do_it(inserted, to_commit, bucket):
             inserted += len(bucket)
             to_commit += len(bucket)
             # bulk load the bucket of RDF triples, then update progress bar
@@ -241,9 +239,13 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
                 connection.commit()
                 # logger.info("All changes were successfully committed.")
                 to_commit = 0
-            if inserted > 10:
-                connection.commit()
-                break
+            return inserted, to_commit
+        if format == 'hdt':
+            for bucket in bucketify_bytes(iterator, block_size, encoding=encoding, throw=throw):
+                inserted, to_commit = do_it(inserted, to_commit, bucket)
+        else:
+            for bucket in bucketify(iterator, block_size):
+                inserted, to_commit = do_it(inserted, to_commit, bucket)
     end = time()
 
     logger.info("RDF triples ingestion successfully completed in {}s".format(end - start))
@@ -261,3 +263,5 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
     cursor.close()
     connection.close()
     logger.info("RDF data from file '{}' successfully inserted into RDF dataset '{}'".format(rdf_file, table_name))
+    if format == 'nt':
+        file.close()
