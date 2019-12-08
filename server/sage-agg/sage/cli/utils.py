@@ -6,6 +6,11 @@ from yaml import load
 from rdflib import Graph
 from hdt import HDTDocument
 import subprocess
+from time import time
+import re
+from rdflib.util import from_n3
+
+SAGE_NTRIPLES_REGEX = re.compile('(\<.*\>) (\<.*\>) (.*) .')
 
 def load_dataset(config_path, dataset_name, logger, backends=[]):
     """Load a dataset from a Sage config file"""
@@ -51,29 +56,38 @@ def wccount(filename):
                               text=True,
                               stdout=subprocess.PIPE).stdout)
 
-def parse(data):
-    g = Graph('IOMemory')
-    g.parse(data=data, format='nt')
-    res = []
-    triples = g.triples((None, None, None))
-    for t in triples:
-        res.append(t)
-    try:
-        if len(res) > 1:
-            raise Exception("More than one triple in this line... Abort.")
-        else:
-            return __n3_to_str(res[0])
-    except Exception as e:
-        print(e)
-        exit(1)
-
-
 def yield_triples(file):
+    total = 0
+    blocks = []
+    block_size = 100000
+    start = time()
+    parsed = 0
+    print('-> starting yielding...')
     for cnt, line in enumerate(file):
-        yield parse(data=line)
+        triple = SAGE_NTRIPLES_REGEX.findall(line)[0]
+        blocks.append((from_n3(triple[0]), from_n3(triple[1]), from_n3(triple[2])))
+        parsed += 1
+        if cnt % block_size == 0:
+            print('-> Parsed {} triples in {} s'.format(parsed, time() - start))
+            parsed = 0
+            for t in blocks:
+                total += 1
+                yield __n3_to_str(t)
+            blocks = []
+            start = time()
+
+    if len(blocks) > 0:
+        start = time()
+        print('-> Parsed {} triples in {} s'.format(parsed, time() - start))
+        for t in blocks:
+            total += 1
+            yield __n3_to_str(t)
+    print('-> yielded {} triples'.format(total))
+
 
 
 def get_rdf_reader(file_path, format='nt'):
+
     """Get an iterator over RDF triples from a file"""
     iterator = None
     nb_triples = 0
