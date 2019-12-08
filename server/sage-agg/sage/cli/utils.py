@@ -59,7 +59,7 @@ def wccount(filename):
 def yield_triples(file):
     total = 0
     blocks = []
-    block_size = 100000
+    block_size = 1000
     start = time()
     parsed = 0
     print('-> starting yielding...')
