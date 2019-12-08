@@ -10,7 +10,7 @@ from time import time
 import re
 from rdflib.util import from_n3
 
-SAGE_NTRIPLES_REGEX = re.compile('(\<.*\>) (\<.*\>) (.*) .')
+SAGE_NTRIPLES_REGEX = re.compile('^(\<.*\>) (\<.*\>) (.*|.*\n.*) .$')
 
 def load_dataset(config_path, dataset_name, logger, backends=[]):
     """Load a dataset from a Sage config file"""
@@ -60,23 +60,61 @@ def yield_triples(file):
     total = 0
     blocks = []
     block_size = 2000
-    start = time()
     parsed = 0
     print('-> starting yielding...')
+    to_read = ""
     for cnt, line in enumerate(file):
-        triple = SAGE_NTRIPLES_REGEX.findall(line)[0]
-        blocks.append((from_n3(triple[0]), from_n3(triple[1]), from_n3(triple[2])))
-        parsed += 1
-        if cnt % block_size == 0:
-            parsed = 0
-            for t in blocks:
-                total += 1
-                yield __n3_to_str(t)
-            blocks = []
-            start = time()
+        print(cnt, line)
+        try:
+            # do not touch  all the lines below. We read every new line,
+            # if we see a triple on multiple lines aka we cant find any matches, we continue to read
+            # and we accumulate the string and test the accumulated string, on a match we continue
+            if to_read == "":
+                triple = SAGE_NTRIPLES_REGEX.findall(line)
+                to_read += line
+                if len(triple) > 0:
+                    triple = triple[0]
+                    blocks.append((from_n3(triple[0]), from_n3(triple[1]), from_n3(triple[2])))
+                    parsed += 1
+                    to_read = ""
+                else:
+                    to_read = to_read.replace('\n', '')
+            else:
+                to_read += line
+                triple = SAGE_NTRIPLES_REGEX.findall(to_read)
+                # try to eat it with rdflib
+                if len(triple) > 0:
+                    triple = triple[0]
+                    blocks.append((from_n3(triple[0]), from_n3(triple[1]), from_n3(triple[2])))
+                    parsed += 1
+                    to_read = ""
+                else:
+                    to_read = to_read.replace('\n', '')
+                    # try:
+                    #     #print('try to RDFLIB EAT: ', to_read)
+                    #     g = Graph('IOMemory')
+                    #     g.parse(data=to_read, format='nt')
+                    #     triple = next(g.triples((None, None, None)))
+                    #     blocks.append((from_n3(triple[0]), from_n3(triple[1]), from_n3(triple[2])))
+                    #     parsed += 1
+                    #     to_read = ""
+                    #     g.close()
+                    # except Exception as e:
+                    #     print("Error({})".format(e))
+                    #     # continue to eat
+                    #     pass
+            if cnt % block_size == 0:
+                parsed = 0
+                for t in blocks:
+                    total += 1
+                    yield __n3_to_str(t)
+                blocks = []
+        except Exception as err:
+            print(err)
+            print(line)
+            exit(1)
 
     if len(blocks) > 0:
-        start = time()
         for t in blocks:
             total += 1
             yield __n3_to_str(t)
