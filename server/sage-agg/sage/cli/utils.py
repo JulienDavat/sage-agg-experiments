@@ -62,7 +62,7 @@ def wccount(filename):
 def yield_triples(file):
     total = 0
     blocks = []
-    block_size = 1000
+    block_size = 5000
     parsed = 0
     print('-> starting yielding...')
     to_read = ""
@@ -84,7 +84,6 @@ def yield_triples(file):
             else:
                 to_read += line
                 triple = SAGE_NTRIPLES_REGEX.findall(to_read)
-                # try to eat it with rdflib
                 if len(triple) > 0:
                     triple = triple[0]
                     blocks.append((from_n3(triple[0]), from_n3(triple[1]), from_n3(triple[2])))
@@ -92,19 +91,6 @@ def yield_triples(file):
                     to_read = ""
                 else:
                     to_read = to_read.replace('\n', '')
-                    # try:
-                    #     #print('try to RDFLIB EAT: ', to_read)
-                    #     g = Graph('IOMemory')
-                    #     g.parse(data=to_read, format='nt')
-                    #     triple = next(g.triples((None, None, None)))
-                    #     blocks.append((from_n3(triple[0]), from_n3(triple[1]), from_n3(triple[2])))
-                    #     parsed += 1
-                    #     to_read = ""
-                    #     g.close()
-                    # except Exception as e:
-                    #     print("Error({})".format(e))
-                    #     # continue to eat
-                    #     pass
             if cnt % block_size == 0:
                 parsed = 0
                 for t in blocks:
