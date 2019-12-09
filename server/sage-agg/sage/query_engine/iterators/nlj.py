@@ -1,12 +1,13 @@
 # nlj.py
 # Author: Thomas MINIER - MIT License 2017-2018
+from asyncio import sleep
+
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
 from sage.query_engine.iterators.scan import ScanIterator
+from sage.query_engine.iterators.utils import IteratorExhausted
 from sage.query_engine.iterators.utils import apply_bindings, tuple_to_triple
 from sage.query_engine.protobuf.iterators_pb2 import TriplePattern, SavedIndexJoinIterator
 from sage.query_engine.protobuf.utils import pyDict_to_protoDict
-from sage.query_engine.iterators.utils import IteratorExhausted
-from asyncio import sleep
 
 
 class IndexJoinIterator(PreemptableIterator):
@@ -32,7 +33,8 @@ class IndexJoinIterator(PreemptableIterator):
             self._currentIter = self._initInnerLoop(self._innerTriple, self._currentBinding, last_read=iterOffset)
 
     def __repr__(self):
-        return "<IndexJoinIterator (%s JOIN {%s %s %s})>" % (str(self._source), self._innerTriple['subject'], self._innerTriple['predicate'], self._innerTriple['object'])
+        return "<IndexJoinIterator (%s JOIN {%s %s %s})>" % (
+        str(self._source), self._innerTriple['subject'], self._innerTriple['predicate'], self._innerTriple['object'])
 
     def serialized_name(self):
         return "join"
@@ -49,7 +51,8 @@ class IndexJoinIterator(PreemptableIterator):
         return self._source.has_next() or (self._currentIter is not None and self._currentIter.has_next())
 
     def _initInnerLoop(self, triple, mappings, last_read=None):
-        (s, p, o) = (apply_bindings(triple['subject'], mappings), apply_bindings(triple['predicate'], mappings), apply_bindings(triple['object'], mappings))
+        (s, p, o) = (apply_bindings(triple['subject'], mappings), apply_bindings(triple['predicate'], mappings),
+                     apply_bindings(triple['object'], mappings))
         iterator, card = self._hdtDocument.search(s, p, o, last_read=last_read)
         if card == 0:
             return None

@@ -1,33 +1,34 @@
 package agg.engine.iterators.boundjoin;
 
+import agg.engine.iterators.base.BufferedIterator;
+import agg.http.SageRemoteClient;
+import agg.http.results.QueryResults;
 import com.google.common.collect.Lists;
 import org.apache.jena.query.ARQ;
 import org.apache.jena.sparql.core.BasicPattern;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.binding.BindingHashMap;
-import agg.engine.iterators.base.BufferedIterator;
-import agg.http.SageRemoteClient;
-import agg.http.results.QueryResults;
 import org.slf4j.Logger;
 
 import java.util.*;
 
 /**
  * Evaluates an Union of bounded BGP (as produced by a Bound join) using a SaGe server
+ *
  * @author Thomas Minier
  */
 public class BoundIterator extends BufferedIterator {
-    private String graphURI;
-    private SageRemoteClient client;
     protected Optional<String> nextLink;
     protected boolean hasNextPage;
+    protected Set<Var> projection;
+    private String graphURI;
+    private SageRemoteClient client;
     private List<BasicPattern> bag;
     private List<Binding> block;
     private int bagSize;
     private Map<Integer, Binding> rewritingMap;
     private boolean isContainmentQuery;
-    protected Set<Var> projection;
     private Logger logger;
 
     public BoundIterator(String graphURI, SageRemoteClient client, List<BasicPattern> bag, List<Binding> block, Map<Integer, Binding> rewritingMap, boolean isContainmentQuery, Set<Var> projection) {
@@ -51,13 +52,14 @@ public class BoundIterator extends BufferedIterator {
     /**
      * Find a rewriting key in a list of variables
      * For example, in [ ?s, ?o_1 ], the rewriting key is 1
+     *
      * @param vars List of SPARQL variables to analyze
      * @return The rewriting key found, or -1 if no key was found
      */
     private int findKey(List<Var> vars) {
         int key = -1;
-        for(Var v: vars) {
-            for(int k = 0; k <= bagSize; k++) {
+        for (Var v : vars) {
+            for (int k = 0; k <= bagSize; k++) {
                 if (v.getVarName().endsWith("_" + k)) {
                     return k;
                 }
@@ -68,14 +70,15 @@ public class BoundIterator extends BufferedIterator {
 
     /**
      * Undo the bound join rewriting on solutions bindings, e.g., rewrite all variables "?o_1" to "?o"
-     * @param key Rewriting key used
+     *
+     * @param key   Rewriting key used
      * @param input Binding to process
-     * @param vars List of the binding variables
+     * @param vars  List of the binding variables
      * @return
      */
-    private BindingHashMap revertBinding (int key, Binding input, List<Var> vars) {
+    private BindingHashMap revertBinding(int key, Binding input, List<Var> vars) {
         BindingHashMap newBinding = new BindingHashMap();
-        for(Var v: vars) {
+        for (Var v : vars) {
             String vName = v.getVarName();
             if (vName.endsWith("_" + key)) {
                 int index = vName.indexOf("_" + key);
@@ -90,6 +93,7 @@ public class BoundIterator extends BufferedIterator {
 
     /**
      * Undo the rewriting on solutions bindings, and then merge each of them with the corresponding input binding
+     *
      * @param input Solutions bindings to process
      * @return
      */
@@ -101,7 +105,7 @@ public class BoundIterator extends BufferedIterator {
         if (input.isEmpty() && isContainmentQuery) {
             solutions.addAll(block);
         } else if (!input.isEmpty()) {
-            for(Binding oldBinding: input) {
+            for (Binding oldBinding : input) {
                 List<Var> vars = Lists.newArrayList(oldBinding.vars());
                 int key = findKey(vars);
                 // rewrite binding, and then merge it with the corresponding one in the bucket
@@ -117,6 +121,7 @@ public class BoundIterator extends BufferedIterator {
 
     /**
      * Do something with bound join query results
+     *
      * @param results - Query results fetched from the Sage server
      */
     private List<Binding> reviewResults(QueryResults results) {

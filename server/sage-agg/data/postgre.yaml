@@ -4,24 +4,21 @@ public_url: http://localhost:8000
 quota: 75
 max_results: 2000
 datasets:
--
-  name: bsbm1k
-  description: BSBM 1K products
-  backend: postgre
-  dbname: minier-t
-  user: minier-t
-  password: ''
--
-  name: watdiv
-  description: watdiv 10M triples
-  backend: postgre
-  dbname: minier-t
-  user: minier-t
-  password: ''
--
-  name: testouille
-  description: tests with mvcc
-  backend: postgre-mvcc
-  dbname: minier-t
-  user: minier-t
-  password: ''
+  - name: bsbm1k
+    description: BSBM 1K products
+    backend: postgre
+    dbname: minier-t
+    user: minier-t
+    password: ''
+  - name: watdiv
+    description: watdiv 10M triples
+    backend: postgre
+    dbname: minier-t
+    user: minier-t
+    password: ''
+  - name: testouille
+    description: tests with mvcc
+    backend: postgre-mvcc
+    dbname: minier-t
+    user: minier-t
+    password: ''

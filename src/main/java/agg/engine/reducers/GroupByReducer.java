@@ -1,7 +1,7 @@
 package agg.engine.reducers;
 
-import org.apache.jena.sparql.engine.binding.Binding;
 import agg.http.data.SolutionGroup;
+import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,6 +10,7 @@ import java.util.Map;
 
 /**
  * A reducer used to reconstruct GROUP BY results
+ *
  * @author Thomas Minier
  */
 public class GroupByReducer implements Reducer {

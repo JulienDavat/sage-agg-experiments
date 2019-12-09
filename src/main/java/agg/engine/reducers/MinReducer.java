@@ -6,6 +6,7 @@ import org.apache.jena.sparql.expr.NodeValue;
 
 /**
  * A reducer used to reconstruct MIN aggregation
+ *
  * @author Thomas Minier
  */
 public class MinReducer extends UnaryReducer {

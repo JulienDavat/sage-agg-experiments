@@ -1,7 +1,8 @@
 # count.py
 # Author: Thomas MINIER - MIT License 2017-2019
-from sage.query_engine.agg.partial_agg import PartialAggregator
 from sage.query_engine.agg.bb import BoundedBuffer
+from sage.query_engine.agg.partial_agg import PartialAggregator
+
 
 class CountAggregator(PartialAggregator):
     """A CountAggregator evaluates a COUNT aggregation"""
@@ -33,7 +34,8 @@ class CountAggregator(PartialAggregator):
 
     def done_bounded(self, group_key, groups):
         """Complete the aggregation for a group and return the result"""
-        return '"{}"^^<http://www.w3.org/2001/XMLSchema#integer>'.format(groups[group_key][self.get_id()][0]), groups[group_key][self.get_id()][1]
+        return '"{}"^^<http://www.w3.org/2001/XMLSchema#integer>'.format(groups[group_key][self.get_id()][0]), \
+               groups[group_key][self.get_id()][1]
 
     def get_type(self):
         """Return the name of the aggregator (used for serialization)"""

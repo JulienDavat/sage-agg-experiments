@@ -1,6 +1,7 @@
 # min.py
 # Author: Thomas MINIER - MIT License 2017-2019
 from abc import abstractmethod
+
 from sage.query_engine.agg.partial_agg import PartialAggregator
 
 

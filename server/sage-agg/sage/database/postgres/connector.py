@@ -1,22 +1,24 @@
 # postgre_connector.py
 # Author: Thomas MINIER - MIT License 2017-2019
-from sage.database.db_connector import DatabaseConnector
-from sage.database.db_iterator import DBIterator, EmptyIterator
-from sage.database.postgres.queries import get_start_query, get_resume_query, get_insert_query, get_insert_many_query, get_delete_query
-from math import ceil
-from time import time
-from sage.database.postgres.transaction_manager import TransactionManager
-from sage.database.postgres.utils import id_to_predicate
 import json
 import uuid
 from functools import reduce
+from math import ceil
+from time import time
+
+from sage.database.db_connector import DatabaseConnector
+from sage.database.db_iterator import DBIterator, EmptyIterator
+from sage.database.postgres.queries import get_start_query, get_resume_query, get_insert_query, get_delete_query
+from sage.database.postgres.transaction_manager import TransactionManager
+from sage.database.postgres.utils import id_to_predicate
 
 
 def fetch_histograms(cursor, table_name, attribute_name):
     """
         Download PostgreSQL histograms from a given table and attribute
     """
-    base_query = "SELECT null_frac, n_distinct, most_common_vals, most_common_freqs FROM pg_stats WHERE tablename = '{}' AND attname = '{}'".format(table_name, attribute_name)
+    base_query = "SELECT null_frac, n_distinct, most_common_vals, most_common_freqs FROM pg_stats WHERE tablename = '{}' AND attname = '{}'".format(
+        table_name, attribute_name)
     cursor.execute(base_query)
     record = cursor.fetchone()
     null_frac, n_distinct, most_common_vals, most_common_freqs = record
@@ -46,7 +48,7 @@ class PostgresIterator(DBIterator):
         self._cursor.execute(self._current_query, start_params)
         # always keep the current set of rows buffered inside the iterator
         self._last_reads = self._cursor.fetchmany(size=100)
-        #print('fetching one in {}seconds'.format(time() - self._start))
+        # print('fetching one in {}seconds'.format(time() - self._start))
         # stats
         self._red = 0
         self._redtab = []
@@ -63,7 +65,7 @@ class PostgresIterator(DBIterator):
         triple = self._last_reads[0]
         print('[PostgresIterator] Red {} triples during this quantum'.format(self._red))
         if len(self._redtab) > 0:
-            res = reduce(lambda a, b: a + b, self._redtab)/len(self._redtab)
+            res = reduce(lambda a, b: a + b, self._redtab) / len(self._redtab)
         else:
             res = 0
         print('[PostgresIterator] Average overhead per triple is: {}'.format(res))
@@ -92,7 +94,7 @@ class PostgresIterator(DBIterator):
         if len(self._last_reads) == 0:
             st = time()
             self._last_reads = self._cursor.fetchmany(size=self._fetch_size)
-            #print('fetching many {} in {}seconds'.format(self._fetch_size, time() - st))
+            # print('fetching many {} in {}seconds'.format(self._fetch_size, time() - st))
         return len(self._last_reads) > 0
 
 
@@ -147,7 +149,8 @@ class PostgresConnector(DatabaseConnector):
         if self._warmup:
             cursor = self._manager.start_transaction()
             # fetch estimated table cardinality
-            cursor.execute("SELECT reltuples AS approximate_row_count FROM pg_class WHERE relname = '{}'".format(self._table_name))
+            cursor.execute(
+                "SELECT reltuples AS approximate_row_count FROM pg_class WHERE relname = '{}'".format(self._table_name))
             self._avg_row_count = cursor.fetchone()[0]
             # fetch subject histograms
             (null_frac, n_distinct, selectivities, sum_freqs) = fetch_histograms(cursor, self._table_name, 'subject')
@@ -221,19 +224,23 @@ class PostgresConnector(DatabaseConnector):
                 if subject in self._subject_histograms['selectivities']:
                     selectivity *= self._subject_histograms['selectivities'][subject]
                 else:
-                    selectivity *= (1 - self._subject_histograms['sum_freqs'])/(self._subject_histograms['n_distinct'] - len(self._subject_histograms['selectivities']))
+                    selectivity *= (1 - self._subject_histograms['sum_freqs']) / (
+                                self._subject_histograms['n_distinct'] - len(self._subject_histograms['selectivities']))
             # compute the selectivity of a bounded predicate
             if predicate is not None:
                 if predicate in self._predicate_histograms['selectivities']:
                     selectivity *= self._predicate_histograms['selectivities'][predicate]
                 else:
-                    selectivity *= (1 - self._predicate_histograms['sum_freqs'])/(self._predicate_histograms['n_distinct'] - len(self._predicate_histograms['selectivities']))
+                    selectivity *= (1 - self._predicate_histograms['sum_freqs']) / (
+                                self._predicate_histograms['n_distinct'] - len(
+                            self._predicate_histograms['selectivities']))
             # compute the selectivity of a bounded object
             if obj is not None:
                 if obj in self._object_histograms['selectivities']:
                     selectivity *= self._object_histograms['selectivities'][obj]
                 else:
-                    selectivity *= (1 - self._object_histograms['sum_freqs'])/(self._object_histograms['n_distinct'] - len(self._object_histograms['selectivities']))
+                    selectivity *= (1 - self._object_histograms['sum_freqs']) / (
+                                self._object_histograms['n_distinct'] - len(self._object_histograms['selectivities']))
         except ZeroDivisionError:
             pass
         # estimate the cardinality from the estimated selectivity
@@ -282,21 +289,24 @@ class PostgresConnector(DatabaseConnector):
             start_query, start_params = get_resume_query(subject, predicate, obj, t, self._table_name)
 
         # create the iterator to yield the matching RDF triples
-        iterator = PostgresIterator(cursor, self._manager.get_connection(), start_query, start_params, self._table_name, pattern, fetch_size=self._fetch_size)
+        iterator = PostgresIterator(cursor, self._manager.get_connection(), start_query, start_params, self._table_name,
+                                    pattern, fetch_size=self._fetch_size)
         card = self._estimate_cardinality(subject, predicate, obj) if iterator.has_next() else 0
         return iterator, card
 
     def from_config(config):
         """Build a PostgresConnector from a configuration object"""
         if 'dbname' not in config or 'user' not in config or 'password' not in config:
-            raise SyntaxError('A valid configuration for a PostgreSQL connector must contains the dbname, user and password fields')
+            raise SyntaxError(
+                'A valid configuration for a PostgreSQL connector must contains the dbname, user and password fields')
 
         table_name = config['name']
         host = config['host'] if 'host' in config else ''
         port = config['port'] if 'port' in config else 5432
         fetch_size = config['fetch_size'] if 'fetch_size' in config else 5000
 
-        return PostgresConnector(table_name, config['dbname'], config['user'], config['password'], host=host, port=port, fetch_size=fetch_size)
+        return PostgresConnector(table_name, config['dbname'], config['user'], config['password'], host=host, port=port,
+                                 fetch_size=fetch_size)
 
     def insert(self, subject, predicate, obj):
         """

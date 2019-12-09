@@ -5,6 +5,7 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class SparqlEndpoint implements Runnable {
                         "" + response.getStatusCode(),
                         "1",
                         "" + elapsed,
-                        "" + resp.getBytes("UTF-8").length,
+                        "" + resp.getBytes(StandardCharsets.UTF_8).length,
                         complete,
                         timeout
                 )));

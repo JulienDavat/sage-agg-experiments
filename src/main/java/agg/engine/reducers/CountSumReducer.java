@@ -7,6 +7,7 @@ import org.apache.jena.sparql.expr.nodevalue.XSDFuncOp;
 
 /**
  * A reducer used to reconstruct COUNT or SUM aggregation
+ *
  * @author Thomas Minier
  */
 public class CountSumReducer extends UnaryReducer {

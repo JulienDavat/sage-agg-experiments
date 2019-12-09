@@ -1,10 +1,13 @@
 from __future__ import annotations
+
+import collections
+import sys
+import uuid
 from threading import Lock
 from typing import Optional
-import uuid
+
 import cachetools
-import sys
-import collections
+
 
 class SingletonMeta(type):
     """
@@ -18,6 +21,7 @@ class SingletonMeta(type):
             if not cls._instance:
                 cls._instance = super().__call__(*args, **kwargs)
         return cls._instance
+
 
 class BoundedBuffer(metaclass=SingletonMeta):
     def __init__(self):
@@ -156,4 +160,3 @@ class Cache(cachetools.Cache):
                 self.__order[key] = self.__order.pop(key)
             except KeyError:
                 self.__order[key] = None
-

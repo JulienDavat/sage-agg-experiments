@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * Statistics found in a page of results
+ *
  * @author Thomas Minier
  */
 public class SageStatistics {
@@ -44,7 +45,7 @@ public class SageStatistics {
         return getCardinality(triple.getSubject().toString(), triple.getPredicate().toString(), triple.getObject().toString());
     }
 
-    public int getCardinality (String subject, String predicate, String object) {
+    public int getCardinality(String subject, String predicate, String object) {
         String key = buildTripleKey(subject, predicate, object);
         if (cardinalities.containsKey(key)) {
             return cardinalities.get(key);

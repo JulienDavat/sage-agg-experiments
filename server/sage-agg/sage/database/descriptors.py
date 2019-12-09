@@ -1,9 +1,10 @@
 # descriptors.py
 # Author: Thomas MINIER - MIT License 2017-2018
 from abc import ABC, abstractmethod
+from math import isinf
+
 from rdflib import Graph, BNode, URIRef, Literal, Namespace
 from rdflib.namespace import DCTERMS, FOAF, RDF, RDFS, VOID, XSD
-from math import isinf
 
 HYDRA = Namespace("http://www.w3.org/ns/hydra/core#")
 SAGE = Namespace("http://sage.univ-nantes.fr/sage-voc#")
@@ -118,12 +119,16 @@ class VoidDescriptor(AbstractDescriptor):
         if isinf(self._dataset.max_results):
             self._graph.add((self._dataset_url, HYDRA["itemsPerPage"], Literal("Infinity")))
         else:
-            self._graph.add((self._dataset_url, HYDRA["itemsPerPage"], Literal(self._dataset.max_results, datatype=XSD.integer)))
+            self._graph.add(
+                (self._dataset_url, HYDRA["itemsPerPage"], Literal(self._dataset.max_results, datatype=XSD.integer)))
         # HDT statistics
         self._graph.add((self._dataset_url, VOID["triples"], Literal(self._dataset.nb_triples, datatype=XSD.integer)))
-        self._graph.add((self._dataset_url, VOID["distinctSubjects"], Literal(self._dataset._connector.nb_subjects, datatype=XSD.integer)))
-        self._graph.add((self._dataset_url, VOID["properties"], Literal(self._dataset._connector.nb_predicates, datatype=XSD.integer)))
-        self._graph.add((self._dataset_url, VOID["distinctObjects"], Literal(self._dataset._connector.nb_objects, datatype=XSD.integer)))
+        self._graph.add((self._dataset_url, VOID["distinctSubjects"],
+                         Literal(self._dataset._connector.nb_subjects, datatype=XSD.integer)))
+        self._graph.add((self._dataset_url, VOID["properties"],
+                         Literal(self._dataset._connector.nb_predicates, datatype=XSD.integer)))
+        self._graph.add((self._dataset_url, VOID["distinctObjects"],
+                         Literal(self._dataset._connector.nb_objects, datatype=XSD.integer)))
         if "license" in d_config:
             self._graph.add((self._dataset_url, DCTERMS["license"], URIRef(d_config["license"])))
         # add example queries

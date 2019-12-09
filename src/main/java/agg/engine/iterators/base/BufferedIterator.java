@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * An iterator with an internal buffer, capable of producing several solutions per cycle.
+ *
  * @author Thomas Minier
  */
 public abstract class BufferedIterator extends QueryIteratorBase {

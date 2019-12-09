@@ -24,7 +24,7 @@ public class FilterRegistry {
 
     public String getFormattedFilters(Set<String> variables) {
         List<String> filters = new LinkedList<>();
-        for(Map.Entry<Set<String>, Set<String>> entry: content.entrySet()) {
+        for (Map.Entry<Set<String>, Set<String>> entry : content.entrySet()) {
             Set<String> intersection = new HashSet<>(entry.getKey());
             intersection.retainAll(variables);
             if (!intersection.isEmpty()) {

@@ -3,6 +3,7 @@
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
 from sage.query_engine.protobuf.iterators_pb2 import SavedGroupByAgg
 
+
 class GroupByAggregator(PreemptableIterator):
     """
         A GroupByAggregator evaluates a GROUP BY clause.
@@ -70,7 +71,8 @@ class GroupByAggregator(PreemptableIterator):
         if self.bounded:
             if self.has_next():
                 # pop items until the size of the cache is less than the one provided
-                groups = self._aggregators[0]._cache.get_evicted(self._aggregators[0].get_query_id(), buffer=self._buffer_size)
+                groups = self._aggregators[0]._cache.get_evicted(self._aggregators[0].get_query_id(),
+                                                                 buffer=self._buffer_size)
             else:
                 # pop everything and return
                 groups = self._aggregators[0]._cache.get_all(self._aggregators[0].get_query_id(), buffer=0)

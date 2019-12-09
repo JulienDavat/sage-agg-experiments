@@ -9,6 +9,7 @@ import java.util.Set;
 
 /**
  * Collect all URIS from SERVICE clauses, and perform data localization on each BGP in each SERVICE clause
+ *
  * @author Thomas Minier
  */
 public class ServiceAnalyzer extends TransformBase {

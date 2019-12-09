@@ -1,5 +1,7 @@
 package agg.engine.iterators.boundjoin;
 
+import agg.engine.iterators.base.BlockBufferedIterator;
+import agg.http.SageRemoteClient;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
@@ -9,25 +11,26 @@ import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.ExecutionContext;
 import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.engine.binding.Binding;
-import agg.engine.iterators.base.BlockBufferedIterator;
-import agg.http.SageRemoteClient;
 
 import java.util.*;
 
 /**
  * An iterator which evaluates a Bound Join between an input iterator and a BGP
+ *
  * @author Thomas Minier
  */
 public class BoundJoinIterator extends BlockBufferedIterator {
-    private String graphURI;
     protected SageRemoteClient client;
-    private BasicPattern bgp;
     protected Set<Var> projection;
+    private String graphURI;
+    private BasicPattern bgp;
+
     /**
      * Constructor
-     * @param source - Input for the join
-     * @param client - HTTP client used to query the SaGe server
-     * @param bgp    - Basic Graph pattern to join with
+     *
+     * @param source     - Input for the join
+     * @param client     - HTTP client used to query the SaGe server
+     * @param bgp        - Basic Graph pattern to join with
      * @param bucketSize - Size of the bound join bucket (15 is the "default" admitted value)
      */
     public BoundJoinIterator(QueryIterator source, String graphURI, SageRemoteClient client, BasicPattern bgp, int bucketSize, ExecutionContext context, Set<Var> projection) {
@@ -40,11 +43,12 @@ public class BoundJoinIterator extends BlockBufferedIterator {
 
     /**
      * Rewrite a triple pattern using a rewriting key, i.e., append "_key" to each SPARQL variable in the triple pattern
+     *
      * @param key Rewriting key
-     * @param tp Triple pattern to rewrite
+     * @param tp  Triple pattern to rewrite
      * @return The rewritten triple pattern
      */
-    private Triple rewriteTriple (int key, Triple tp) {
+    private Triple rewriteTriple(int key, Triple tp) {
         Node subj = tp.getSubject();
         Node pred = tp.getPredicate();
         Node obj = tp.getObject();
@@ -70,9 +74,9 @@ public class BoundJoinIterator extends BlockBufferedIterator {
 
         // key used for the rewriting
         int key = 0;
-        for(Binding b: block) {
+        for (Binding b : block) {
             BasicPattern boundedBGP = new BasicPattern();
-            for (Triple t: bgp) {
+            for (Triple t : bgp) {
                 Triple boundedTriple = Substitute.substitute(t, b);
                 isContainmentQuery = (!boundedTriple.getSubject().isVariable()) && (!boundedTriple.getPredicate().isVariable()) && (!boundedTriple.getObject().isVariable());
                 // perform rewriting and register it

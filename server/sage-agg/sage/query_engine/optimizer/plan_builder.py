@@ -1,14 +1,15 @@
 # plan_builder.py
 # Author: Thomas MINIER - MIT License 2017-2018
+from functools import reduce
+
+from sage.query_engine.iterators.filter import FilterIterator
+from sage.query_engine.iterators.loader import load
+from sage.query_engine.iterators.nlj import IndexJoinIterator
 from sage.query_engine.iterators.projection import ProjectionIterator
 from sage.query_engine.iterators.scan import ScanIterator
-from sage.query_engine.iterators.nlj import IndexJoinIterator
-from sage.query_engine.iterators.filter import FilterIterator
 from sage.query_engine.iterators.union import BagUnionIterator
-from sage.query_engine.iterators.loader import load
 from sage.query_engine.iterators.utils import EmptyIterator
 from sage.query_engine.optimizer.utils import find_connected_pattern, get_vars, equality_variables
-from functools import reduce
 
 
 def build_query_plan(query, dataset, default_graph, saved_plan=None):
@@ -49,6 +50,7 @@ def build_union_plan(union, dataset, default_graph):
         if len(duo) == 1:
             return duo[0]
         return BagUnionIterator(duo[0], duo[1])
+
     sources = []
     cardinalities = []
     for bgp in union:
@@ -96,7 +98,8 @@ def build_left_plan(bgp, dataset, default_graph):
 
     # add a equality filter if the pattern has several variables that binds to the same value
     # example: ?s rdf:type ?s => Filter(Scan(?s rdf:type ?s_2), ?s == ?s_2)
-    eq_expr, new_pattern = equality_variables(pattern['triple']['subject'], pattern['triple']['predicate'], pattern['triple']['object'])
+    eq_expr, new_pattern = equality_variables(pattern['triple']['subject'], pattern['triple']['predicate'],
+                                              pattern['triple']['object'])
     if eq_expr is not None:
         # copy pattern with rewritten values
         triple = pattern['triple'].copy()

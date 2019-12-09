@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 /**
  * Execute a SPARQL DESCRIBE query and output results in stdin
+ *
  * @author Thomas Minier
  */
 public class DescribeQueryExecutor extends ConstructQueryExecutor {
@@ -38,14 +39,14 @@ public class DescribeQueryExecutor extends ConstructQueryExecutor {
 
         // build construct template
         BasicPattern bgp = new BasicPattern();
-        for(Triple t: describeTriples) {
+        for (Triple t : describeTriples) {
             bgp.add(t);
         }
         Template tmp = new Template(bgp);
         newQuery.setConstructTemplate(tmp);
 
         // build WHERE clause
-        for(Triple t: describeTriples) {
+        for (Triple t : describeTriples) {
             qBody.addTriplePattern(t);
         }
         newQuery.setQueryPattern(qBody);

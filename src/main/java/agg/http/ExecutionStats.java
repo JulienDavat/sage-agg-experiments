@@ -3,12 +3,12 @@ package agg.http;
 import org.apache.jena.ext.com.google.common.math.Stats;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * An utility class used to record statistic during query execution
+ *
  * @author Thomas Minier
  */
 public class ExecutionStats {
@@ -172,7 +172,7 @@ public class ExecutionStats {
     }
 
     public void reportLogs(String log) {
-        if(this.enableLogs) System.err.println(log);
+        if (this.enableLogs) System.err.println(log);
         this.logs.add(log);
     }
 

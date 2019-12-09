@@ -7,6 +7,7 @@ import org.apache.jena.sparql.expr.nodevalue.XSDFuncOp;
 
 /**
  * A reducer used to reconstruct AVG aggregation
+ *
  * @author Thomas Minier
  */
 public class AvgReducer extends BinaryReducer {

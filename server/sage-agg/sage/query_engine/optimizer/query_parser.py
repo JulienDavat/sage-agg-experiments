@@ -1,19 +1,21 @@
 # query_parser.py
 # Author: Thomas MINIER - MIT License 2017-2018
-from rdflib import URIRef, BNode, Variable
-from rdflib.plugins.sparql.parser import parseQuery
+import uuid
+
+from rdflib import URIRef, BNode
 from rdflib.plugins.sparql.algebra import translateQuery
-from sage.query_engine.iterators.projection import ProjectionIterator
-from sage.query_engine.iterators.union import BagUnionIterator
-from sage.query_engine.iterators.filter import FilterIterator
-from sage.query_engine.agg.groupby import GroupByAggregator
+from rdflib.plugins.sparql.parser import parseQuery
+from sage.http_server.utils import format_graph_uri
 from sage.query_engine.agg.count import CountAggregator
 from sage.query_engine.agg.count_distinct import CountDistinctAggregator
-from sage.query_engine.agg.sum import SumAggregator
+from sage.query_engine.agg.groupby import GroupByAggregator
 from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
+from sage.query_engine.agg.sum import SumAggregator
+from sage.query_engine.iterators.filter import FilterIterator
+from sage.query_engine.iterators.projection import ProjectionIterator
+from sage.query_engine.iterators.union import BagUnionIterator
 from sage.query_engine.optimizer.plan_builder import build_left_plan
-from sage.http_server.utils import format_graph_uri
-import uuid
+
 
 class UnsupportedSPARQL(Exception):
     """Thrown when a SPARQL feature is not supported by the Sage query engine"""
@@ -51,7 +53,8 @@ def fetch_graph_triples(node, current_graphs, server_url):
     elif node.name == 'BGP':
         return list(localize_triple(node.triples, current_graphs))
     else:
-        raise UnsupportedSPARQL('Unsupported SPARQL Feature: a Sage engine can only perform joins between Graphs and BGPs')
+        raise UnsupportedSPARQL(
+            'Unsupported SPARQL Feature: a Sage engine can only perform joins between Graphs and BGPs')
 
 
 def build_aggregator(aggregate, renaming_map, query_id=None, ID=None):
@@ -76,11 +79,13 @@ def parse_query(query, dataset, default_graph, server_url, optimized=False, buff
     """Parse a regular SPARQL query into a query execution plan"""
     logical_plan = translateQuery(parseQuery(query)).algebra
     cardinalities = list()
-    iterator = parse_query_node(logical_plan, dataset, [default_graph], server_url, cardinalities, optimized=optimized, buffer=buffer)
+    iterator = parse_query_node(logical_plan, dataset, [default_graph], server_url, cardinalities, optimized=optimized,
+                                buffer=buffer)
     return iterator, cardinalities
 
 
-def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, renaming_map=None, optimized=False, buffer=-1):
+def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, renaming_map=None, optimized=False,
+                     buffer=-1):
     """
         Recursively parse node in the query logical plan to build a preemptable physical query execution plan.
 
@@ -102,9 +107,11 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         if node.p.name == 'AggregateJoin' or node.p.name == 'Extend':
             # forward projection variables, as we need them for parsing an AggregateJoin
             node.p['PV'] = query_vars
-            child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized, buffer=buffer)
+            child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized,
+                                     buffer=buffer)
             return child
-        child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized, buffer=buffer)
+        child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized,
+                                 buffer=buffer)
         return ProjectionIterator(child, query_vars)
     elif node.name == 'BGP':
         # bgp_vars = node._vars
@@ -114,16 +121,21 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         cardinalities += c
         return iterator
     elif node.name == 'Union':
-        left = parse_query_node(node.p1, dataset, current_graphs, server_url, cardinalities, optimized=optimized, buffer=buffer)
-        right = parse_query_node(node.p2, dataset, current_graphs, server_url, cardinalities, optimized=optimized, buffer=buffer)
+        left = parse_query_node(node.p1, dataset, current_graphs, server_url, cardinalities, optimized=optimized,
+                                buffer=buffer)
+        right = parse_query_node(node.p2, dataset, current_graphs, server_url, cardinalities, optimized=optimized,
+                                 buffer=buffer)
         return BagUnionIterator(left, right)
     elif node.name == 'Filter':
         expression = parse_filter_expr(node.expr)
-        iterator = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized, buffer=buffer)
+        iterator = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized,
+                                    buffer=buffer)
         return FilterIterator(iterator, expression)
     elif node.name == 'Join':
         # only allow for joining BGPs from different GRAPH clauses
-        triples = fetch_graph_triples(node.p1, current_graphs, server_url) + fetch_graph_triples(node.p2, current_graphs, server_url)
+        triples = fetch_graph_triples(node.p1, current_graphs, server_url) + fetch_graph_triples(node.p2,
+                                                                                                 current_graphs,
+                                                                                                 server_url)
         iterator, query_vars, c = build_left_plan(triples, dataset, current_graphs)
         # track cardinalities of every triple pattern
         cardinalities += c
@@ -135,7 +147,8 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         while current.name == 'Extend':
             renaming[current.expr.n3()] = current.var.n3()
             current = current.p
-        return parse_query_node(current, dataset, current_graphs, server_url, cardinalities, renaming_map=renaming, optimized=optimized, buffer=buffer)
+        return parse_query_node(current, dataset, current_graphs, server_url, cardinalities, renaming_map=renaming,
+                                optimized=optimized, buffer=buffer)
     elif node.name == 'AggregateJoin':
         groupby_variables = list()
         proj_variables = list()
@@ -167,14 +180,16 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
             proj_variables.append(agg.vars.n3())
             aggregators.append(build_aggregator(agg, renaming_map, query_id=query_id))
         # build source iterator from child node
-        source = parse_query_node(node.p.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized, buffer=buffer)
+        source = parse_query_node(node.p.p, dataset, current_graphs, server_url, cardinalities, optimized=optimized,
+                                  buffer=buffer)
         # add projection to the pipeline, depending of the context
         if 'PV' in node:
             source = ProjectionIterator(source, node.PV)
         else:
             source = ProjectionIterator(source, proj_variables)
         # add GROUP BY operator (with aggregators) to the pipeline
-        source = GroupByAggregator(source, groupby_variables, aggregators=aggregators, keep_groups=keep_groups, buffer=buffer)
+        source = GroupByAggregator(source, groupby_variables, aggregators=aggregators, keep_groups=keep_groups,
+                                   buffer=buffer)
         return source
     else:
         raise UnsupportedSPARQL("Unsupported SPARQL feature: {}".format(node.name))

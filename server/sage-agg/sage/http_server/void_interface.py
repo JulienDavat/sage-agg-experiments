@@ -70,4 +70,5 @@ def void_blueprint(dataset, logger):
         except Exception as e:
             logger.error(e)
             abort(500)
+
     return v_blueprint

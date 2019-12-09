@@ -1,0 +1,10 @@
+<a> <b> """help
+help
+help
+help"""@en .
+<a> <b> <c> .
+<a> <b> "abc"^^<http://c> .
+<a> <b> "abc" .
+<a> <b> """abc""" .
+<a> <b> """abc"""@en .
+<a> <b> "ab,,,,,,,  \t\n"@en .

@@ -1,16 +1,17 @@
 # utils.py
 # Author: Thomas MINIER - MIT License 2017-2019
-from sys import exit
-from os.path import isfile
-from yaml import load
-from rdflib import Graph
-from hdt import HDTDocument
-import subprocess
-from time import time
 import re
+import subprocess
+from hdt import HDTDocument
+from os.path import isfile
+from sys import exit
+
+from rdflib import Graph
 from rdflib.util import from_n3
+from yaml import load
 
 SAGE_NTRIPLES_REGEX = re.compile('(\<.*\>) (\<.*\>) (.*) \.')
+
 
 def load_dataset(config_path, dataset_name, logger, backends=[]):
     """Load a dataset from a Sage config file"""
@@ -28,7 +29,8 @@ def load_dataset(config_path, dataset_name, logger, backends=[]):
                 kind = d['backend']
                 break
         if dataset is None:
-            logger.error("No compatible RDF dataset named '{}' declared in the configuration provided".format(dataset_name))
+            logger.error(
+                "No compatible RDF dataset named '{}' declared in the configuration provided".format(dataset_name))
             exit(1)
         return dataset, kind
     else:
@@ -55,6 +57,7 @@ def wccount(filename):
                               shell=True,
                               text=True,
                               stdout=subprocess.PIPE).stdout)
+
 
 def yield_triples(file):
     total = 0
@@ -120,9 +123,7 @@ def yield_triples(file):
     print('-> yielded {} triples'.format(total))
 
 
-
 def get_rdf_reader(file_path, format='nt'):
-
     """Get an iterator over RDF triples from a file"""
     iterator = None
     nb_triples = 0

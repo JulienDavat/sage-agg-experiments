@@ -1,5 +1,10 @@
 package agg.core.factory;
 
+import agg.core.SageDatasetBuilder;
+import agg.core.analyzer.ServiceAnalyzer;
+import agg.engine.SageOpExecutorFactory;
+import agg.http.ExecutionStats;
+import agg.model.SageGraph;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.query.ARQ;
 import org.apache.jena.query.Dataset;
@@ -8,11 +13,6 @@ import org.apache.jena.sparql.algebra.Algebra;
 import org.apache.jena.sparql.algebra.Op;
 import org.apache.jena.sparql.algebra.Transformer;
 import org.apache.jena.sparql.engine.main.QC;
-import agg.core.SageDatasetBuilder;
-import agg.core.analyzer.ServiceAnalyzer;
-import agg.engine.SageOpExecutorFactory;
-import agg.http.ExecutionStats;
-import agg.model.SageGraph;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +21,7 @@ import java.util.Set;
  * Build the execution environment for executing a SPARQL query with a Sage server
  * For a query with SERVICE clauses, this class generates the associated localized query and the
  * {@link Dataset} that holds the graphs of the federation.
+ *
  * @author Thomas Minier
  */
 public class SageAutoConfiguration implements SageConfigurationFactory {
@@ -67,7 +68,7 @@ public class SageAutoConfiguration implements SageConfigurationFactory {
         // build the federated dataset
         Graph defaultGraph = new SageGraph(defaultUrl, spy);
         SageDatasetBuilder builder = SageDatasetBuilder.create(defaultGraph);
-        for (String uri: uris) {
+        for (String uri : uris) {
             builder = builder.withSageServer(uri, spy);
         }
         federation = builder.create();

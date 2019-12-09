@@ -1,11 +1,12 @@
 package agg.engine;
 
+import agg.core.SageUtils;
+import agg.engine.iterators.boundjoin.ParallelBoundJoinIterator;
+import agg.model.SageGraph;
 import com.google.common.collect.Sets;
 import org.apache.jena.graph.Graph;
-import org.apache.jena.graph.Node;
 import org.apache.jena.query.ARQ;
 import org.apache.jena.query.Query;
-import org.apache.jena.sparql.algebra.Algebra;
 import org.apache.jena.sparql.algebra.Op;
 import org.apache.jena.sparql.algebra.OpAsQuery;
 import org.apache.jena.sparql.core.BasicPattern;
@@ -15,23 +16,23 @@ import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.engine.main.StageGenerator;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprList;
-import agg.core.SageUtils;
-import agg.engine.iterators.boundjoin.ParallelBoundJoinIterator;
-import agg.model.SageGraph;
-import org.apache.jena.sparql.graph.NodeTransform;
 import org.apache.jena.sparql.util.Symbol;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 /**
  * Provides a custom StageGenerator for evaluating SPARQL queries against a SaGe server
+ *
  * @author Thomas Minier
  */
 public class SageStageGenerator implements StageGenerator {
+    private static final int BIND_JOIN_BUCKET_SIZE = 15;
     private final ExecutorService threadPool;
     private StageGenerator above;
-    private static final int BIND_JOIN_BUCKET_SIZE = 15;
 
     private SageStageGenerator(StageGenerator above, ExecutorService threadPool) {
         this.above = above;
@@ -40,6 +41,7 @@ public class SageStageGenerator implements StageGenerator {
 
     /**
      * Factory method used to create a SageStageGenerator with the default ARQ context
+     *
      * @return A SageStageGenerator configured with the default ARQ context
      */
     public static SageStageGenerator createDefault(ExecutorService threadPool) {
@@ -78,6 +80,7 @@ public class SageStageGenerator implements StageGenerator {
         // delegate execution of the unsupported Graph to the StageGenerator above
         return above.execute(pattern, input, execCxt);
     }
+
 
     private Set<Var> getVarSetFromContext(ExecutionContext execCxt) {
         Op alg = execCxt.getContext().get(Symbol.create("http://jena.apache.org/ARQ/system#algebra"));
@@ -138,17 +141,18 @@ public class SageStageGenerator implements StageGenerator {
 
     /**
      * Find all filters that can be applied to a Basic Graph Pattern
+     *
      * @param filters - List of filters to analyze
-     * @param bgp - Basic graph pattern
+     * @param bgp     - Basic graph pattern
      * @return The list of all filters that can be applied to the Basic Graph Pattern
      */
     private List<Expr> findRelevantFilters(ExprList filters, BasicPattern bgp) {
         List<Expr> relevantFilters = new LinkedList<>();
         Set<Var> bgpVariables = SageUtils.getVariables(bgp);
-        for(Expr filter: filters.getList()) {
+        for (Expr filter : filters.getList()) {
             Set<Var> filterVariables = filter.getVarsMentioned();
             // test if filterVariables is a subset of bgpVariables, i.e., filterVariables - bgpVariables = empty set
-            if(Sets.difference(filterVariables, bgpVariables).isEmpty()) {
+            if (Sets.difference(filterVariables, bgpVariables).isEmpty()) {
                 relevantFilters.add(filter);
             }
         }

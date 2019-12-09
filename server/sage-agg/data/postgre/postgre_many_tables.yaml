@@ -4,26 +4,23 @@ public_url: http://localhost:8000
 quota: 1000
 max_results: 2000
 datasets:
--
-  name: watdiv_spo
-  description: watdiv 10M triples
-  backend: postgre
-  dbname: minier-t
-  user: minier-t
-  password: ''
--
-  name: watdiv_pos
-  description: watdiv 10M triples
-  backend: postgre
-  dbname: minier-t
-  user: minier-t
-  password: ''
-  port: 5433
--
-  name: watdiv_osp
-  description: watdiv 10M triples
-  backend: postgre
-  dbname: minier-t
-  user: minier-t
-  password: ''
-  port: 5434
+  - name: watdiv_spo
+    description: watdiv 10M triples
+    backend: postgre
+    dbname: minier-t
+    user: minier-t
+    password: ''
+  - name: watdiv_pos
+    description: watdiv 10M triples
+    backend: postgre
+    dbname: minier-t
+    user: minier-t
+    password: ''
+    port: 5433
+  - name: watdiv_osp
+    description: watdiv 10M triples
+    backend: postgre
+    dbname: minier-t
+    user: minier-t
+    password: ''
+    port: 5434

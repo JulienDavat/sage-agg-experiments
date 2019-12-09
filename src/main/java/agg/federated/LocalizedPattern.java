@@ -1,5 +1,6 @@
 package agg.federated;
 
+import agg.core.SageUtils;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.sparql.algebra.Op;
@@ -7,13 +8,13 @@ import org.apache.jena.sparql.algebra.op.OpBGP;
 import org.apache.jena.sparql.algebra.op.OpService;
 import org.apache.jena.sparql.core.BasicPattern;
 import org.apache.jena.sparql.core.Var;
-import agg.core.SageUtils;
 
 import java.util.Objects;
 import java.util.Set;
 
 /**
  * A Triple pattern localized with a RDF graph URI.
+ *
  * @author Thomas Minier
  */
 class LocalizedPattern implements Comparable<LocalizedPattern> {
@@ -41,6 +42,7 @@ class LocalizedPattern implements Comparable<LocalizedPattern> {
 
     /**
      * Get all SPARQL variables in the pattern
+     *
      * @return All SPARQL variables in the pattern
      */
     public Set<Var> getVariables() {
@@ -49,6 +51,7 @@ class LocalizedPattern implements Comparable<LocalizedPattern> {
 
     /**
      * Transform the localized pattern into a SPARQL logical node
+     *
      * @return The equivalent SPARQL logical node
      */
     public Op toOp() {

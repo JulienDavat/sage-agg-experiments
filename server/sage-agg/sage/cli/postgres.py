@@ -1,14 +1,15 @@
 # coding: utf8
 # postgres.py
 # Author: Thomas MINIER - MIT License 2017-2019
-import sage.cli.postgres_utils as p_utils
-from sage.cli.utils import load_dataset, get_rdf_reader, __n3_to_str
-import click
-import psycopg2
-from psycopg2.extras import execute_values
-import coloredlogs
 import logging
 from time import time
+
+import click
+import coloredlogs
+import psycopg2
+import sage.cli.postgres_utils as p_utils
+from psycopg2.extras import execute_values
+from sage.cli.utils import load_dataset, get_rdf_reader
 
 
 def bucketify(iterable, bucket_size):
@@ -68,7 +69,8 @@ def connect_postgres(dataset):
 @click.command()
 @click.argument("config")
 @click.argument("dataset_name")
-@click.option('--index/--no-index', default=True, help="Enable/disable indexing of SQL tables. The indexes can be created separately using the command sage-postgre-index")
+@click.option('--index/--no-index', default=True,
+              help="Enable/disable indexing of SQL tables. The indexes can be created separately using the command sage-postgre-index")
 def init_postgres(config, dataset_name, index):
     """
         Initialize the RDF dataset DATASET_NAME with a PostgreSQL/PostgreSQL-MVCC backend, described in the configuration file CONFIG.
@@ -173,7 +175,8 @@ def index_postgres(config, dataset_name):
 @click.argument("config")
 @click.argument("dataset_name")
 @click.option("-f", "--format", type=click.Choice(["nt", "ttl", "hdt"]),
-              default="nt", show_default=True, help="Format of the input file. Supported: nt (N-triples), ttl (Turtle) and hdt (HDT).")
+              default="nt", show_default=True,
+              help="Format of the input file. Supported: nt (N-triples), ttl (Turtle) and hdt (HDT).")
 @click.option("-b", "--block_size", type=int, default=500, show_default=True,
               help="Block size used for the bulk loading")
 @click.option("-c", "--commit_threshold", type=int, default=500000, show_default=True,
@@ -221,7 +224,7 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
     # insert rdf triples
     start = time()
     to_commit = 0
-    inserted=0
+    inserted = 0
     # insert by bucket (and show a progress bar)
     with click.progressbar(length=nb_triples,
                            label="Inserting RDF triples 0/{}, encoding={}".format(nb_triples, encoding)) as bar:
@@ -240,6 +243,7 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
                 # logger.info("All changes were successfully committed.")
                 to_commit = 0
             return inserted, to_commit
+
         if format == 'hdt':
             for bucket in bucketify_bytes(iterator, block_size, encoding=encoding, throw=throw):
                 inserted, to_commit = do_it(inserted, to_commit, bucket)

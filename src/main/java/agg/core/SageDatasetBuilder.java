@@ -1,15 +1,16 @@
 package agg.core;
 
+import agg.http.ExecutionStats;
+import agg.model.SageGraph;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.sparql.core.DatasetImpl;
-import agg.http.ExecutionStats;
-import agg.model.SageGraph;
 
 /**
  * Builder used to create a new Dataset of Sage servers
+ *
  * @author Thomas Minier
  */
 public class SageDatasetBuilder {
@@ -25,6 +26,7 @@ public class SageDatasetBuilder {
 
     /**
      * Create a new SageDatasetBuilder with a default RDF Graph
+     *
      * @param defaultGraph - The RDF graph used as a the default graph
      * @return A SageDatasetBuilder ready to be configured
      */
@@ -34,6 +36,7 @@ public class SageDatasetBuilder {
 
     /**
      * Create a new SageDatasetBuilder with a default Model
+     *
      * @param defaultModel - The Model used as a the default model
      * @return A SageDatasetBuilder ready to be configured
      */
@@ -43,6 +46,7 @@ public class SageDatasetBuilder {
 
     /**
      * Create the federated dataset
+     *
      * @return A Dataset that contains all the dataset of the federation as named remote graphs
      */
     public Dataset create() {
@@ -51,6 +55,7 @@ public class SageDatasetBuilder {
 
     /**
      * Register a Sage server in the federation
+     *
      * @param url - URL of the Sage server. It will also be used as its reference URI.
      * @return The SageDatasetBuilder, for chaining
      */
@@ -62,7 +67,8 @@ public class SageDatasetBuilder {
 
     /**
      * Register a named model in the federation
-     * @param uri - The name of the model to add
+     *
+     * @param uri   - The name of the model to add
      * @param model - Model to add
      * @return The SageDatasetBuilder, for chaining
      */
@@ -73,7 +79,8 @@ public class SageDatasetBuilder {
 
     /**
      * Register a named graph in the federation
-     * @param uri - The name of the graph to add
+     *
+     * @param uri   - The name of the graph to add
      * @param graph - Graph to add
      * @return The SageDatasetBuilder, for chaining
      */

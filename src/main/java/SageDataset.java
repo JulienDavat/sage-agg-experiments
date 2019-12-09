@@ -1,4 +1,7 @@
+import agg.core.factory.SageAutoConfiguration;
+import agg.core.factory.SageConfigurationFactory;
 import agg.engine.SageOpExecutor;
+import agg.http.ExecutionStats;
 import agg.http.SageDefaultClient;
 import jena.ConstructQueryExecutor;
 import jena.QueryExecutor;
@@ -8,9 +11,6 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import agg.core.factory.SageAutoConfiguration;
-import agg.core.factory.SageConfigurationFactory;
-import agg.http.ExecutionStats;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import picocli.CommandLine;
@@ -51,7 +51,7 @@ public class SageDataset implements Runnable {
 
     @CommandLine.Option(names = {"--optimized"}, description = "Enable the aggregation optimization")
     public Boolean optimized = false;
-    
+
     private String format = "xml";
     private URL voidUrl = null;
 
@@ -254,7 +254,8 @@ public class SageDataset implements Runnable {
             double duration = spy.getExecutionTime();
             int nbQueries = spy.getNbCallsRead();
             double transferSize = spy.getTotalTransferSize();
-            if (time) System.err.println(MessageFormat.format("[" + label + "] SPARQL query executed in {0}s with {1} HTTP requests with {2} Bytes received", duration, nbQueries, transferSize));
+            if (time)
+                System.err.println(MessageFormat.format("[" + label + "] SPARQL query executed in {0}s with {1} HTTP requests with {2} Bytes received", duration, nbQueries, transferSize));
             spyOut.println(String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
                     duration, spy.getNbCallsRead(), spy.getNbCallsWrite(),
                     spy.getMeanHTTPTimesRead(), spy.getMeanHTTPTimesWrite(),

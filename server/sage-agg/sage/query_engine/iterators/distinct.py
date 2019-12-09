@@ -1,8 +1,8 @@
 # distinct.py
 # Author: Thomas MINIER - MIT License 2017-2018
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
-from sage.query_engine.protobuf.iterators_pb2 import SavedDistinctIterator
 from sage.query_engine.iterators.utils import IteratorExhausted
+from sage.query_engine.protobuf.iterators_pb2 import SavedDistinctIterator
 
 
 def hash_bindings(bindings):

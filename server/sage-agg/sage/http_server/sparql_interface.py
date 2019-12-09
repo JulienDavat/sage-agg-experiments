@@ -1,17 +1,18 @@
 # bgp_interface.py
 # Author: Thomas MINIER - MIT License 2017-2018
-from flask import Blueprint, request, Response, render_template, abort
-from sage.query_engine.sage_engine import SageEngine
-from sage.query_engine.agg.groupby import GroupByAggregator
-from sage.query_engine.optimizer.plan_builder import build_query_plan
-from sage.query_engine.optimizer.query_parser import parse_query
-from sage.query_engine.iterators.loader import load
-from sage.http_server.schema import QueryRequest, SageSparqlQuery
-from sage.http_server.utils import format_graph_uri, encode_saved_plan, decode_saved_plan, secure_url, format_marshmallow_errors, sage_http_error
-from sage.database.descriptors import VoidDescriptor
-import sage.http_server.responses as responses
 from json import dumps
 from time import time
+
+import sage.http_server.responses as responses
+from flask import Blueprint, request, Response, render_template, abort
+from sage.database.descriptors import VoidDescriptor
+from sage.http_server.schema import QueryRequest, SageSparqlQuery
+from sage.http_server.utils import format_graph_uri, encode_saved_plan, decode_saved_plan, secure_url, \
+    format_marshmallow_errors, sage_http_error
+from sage.query_engine.iterators.loader import load
+from sage.query_engine.optimizer.plan_builder import build_query_plan
+from sage.query_engine.optimizer.query_parser import parse_query
+from sage.query_engine.sage_engine import SageEngine
 
 
 def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=False, buffer=-1):
@@ -53,13 +54,16 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
 
         # send response
         if mimetype == "application/sparql-results+json":
-            return Response(responses.w3c_json_streaming(bindings, next_page, stats, url), content_type='application/json')
+            return Response(responses.w3c_json_streaming(bindings, next_page, stats, url),
+                            content_type='application/json')
         if mimetype == "application/xml" or mimetype == "application/sparql-results+xml":
             return Response(responses.w3c_xml(bindings, next_page, stats), content_type="application/xml")
         if mimetype == "application/json":
-            return Response(responses.raw_json_streaming(bindings, next_page, stats, url), content_type='application/json')
+            return Response(responses.raw_json_streaming(bindings, next_page, stats, url),
+                            content_type='application/json')
         # otherwise, return the HTML version
-        return render_template("sage_page.html", query=query, default_graph_uri=default_graph_uri, bindings=bindings, next_page=next_page, stats=stats)
+        return render_template("sage_page.html", query=query, default_graph_uri=default_graph_uri, bindings=bindings,
+                               next_page=next_page, stats=stats)
     except Exception as e:
         # abort all ongoing transactions (if required)
         # then forward the exception to the main loop
@@ -79,7 +83,7 @@ def sparql_blueprint(dataset, logger):
             "application/sparql-results+json", "application/sparql-results+xml",
             "text/html"
         ])
-        #try:
+        # try:
         url = secure_url(request.base_url)
         # parse arguments
         if request.method == "GET":
@@ -90,7 +94,8 @@ def sparql_blueprint(dataset, logger):
             buffer_size = request.args.get("buffer") or -1
             # ensure that both the query and default-graph-uri params are set
             if (query is None or default_graph_uri is None) and (next_link is None or default_graph_uri is None):
-                return sage_http_error("Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
+                return sage_http_error(
+                    "Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
         elif request.method == "POST" and request.is_json:
             # POST query
             post_query, err = SageSparqlQuery().load(request.get_json())
@@ -103,9 +108,11 @@ def sparql_blueprint(dataset, logger):
             optimized = post_query['optimized'] if 'optimized' in post_query else False
             buffer_size = post_query['buffer'] if 'buffer' in post_query else -1
         else:
-            return sage_http_error("Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
+            return sage_http_error(
+                "Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
         # execute query
-        return execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=optimized, buffer=buffer_size)
+        return execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=optimized,
+                             buffer=buffer_size)
         # except Exception as e:
         #     logger.error(e)
         #     abort(500)
@@ -136,7 +143,8 @@ def sparql_blueprint(dataset, logger):
                     "xml": VoidDescriptor(url, graph).describe("xml")
                 }
                 queries = [q for q in graph.example_queries if q["publish"]]
-                return render_template("website/sage_dataset.html", dataset_info=dinfo, void_desc=void_desc, to_publish=to_publish, queries=queries)
+                return render_template("website/sage_dataset.html", dataset_info=dinfo, void_desc=void_desc,
+                                       to_publish=to_publish, queries=queries)
 
             engine = SageEngine()
             post_query, err = QueryRequest().load(request.get_json())
@@ -168,15 +176,19 @@ def sparql_blueprint(dataset, logger):
             stats = {"cardinalities": cardinalities, "import": loading_time, "export": exportTime}
 
             if mimetype == "application/sparql-results+json":
-                res = Response(responses.w3c_json_streaming(bindings, next_page, stats, url), content_type='application/json')
+                res = Response(responses.w3c_json_streaming(bindings, next_page, stats, url),
+                               content_type='application/json')
             if mimetype == "application/xml" or mimetype == "application/sparql-results+xml":
                 res = Response(responses.w3c_xml(bindings, next_page, stats), content_type="application/xml")
             else:
-                res = Response(responses.raw_json_streaming(bindings, next_page, stats, url), content_type='application/json')
+                res = Response(responses.raw_json_streaming(bindings, next_page, stats, url),
+                               content_type='application/json')
             # set deprecation warning in headers
-            res.headers.add("Warning", "199 SaGe/2.0 \"You are using a deprecated API. Consider uppgrading to the SaGe SPARQL query API. See http://sage.univ-nantes.fr/documentation fore more details.\"")
+            res.headers.add("Warning",
+                            "199 SaGe/2.0 \"You are using a deprecated API. Consider uppgrading to the SaGe SPARQL query API. See http://sage.univ-nantes.fr/documentation fore more details.\"")
             return res
         except Exception as e:
             logger.error(e)
             abort(500)
+
     return s_blueprint

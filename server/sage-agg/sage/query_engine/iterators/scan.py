@@ -1,9 +1,9 @@
 # scan.py
 # Author: Thomas MINIER - MIT License 2017-2018
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
+from sage.query_engine.iterators.utils import IteratorExhausted
 from sage.query_engine.iterators.utils import vars_positions, selection
 from sage.query_engine.protobuf.iterators_pb2 import TriplePattern, SavedScanIterator
-from sage.query_engine.iterators.utils import IteratorExhausted
 
 
 class ScanIterator(PreemptableIterator):
@@ -26,7 +26,8 @@ class ScanIterator(PreemptableIterator):
         return self._cardinality
 
     def __repr__(self):
-        return "<ScanIterator { %s %s %s }>" % (self._triple['subject'], self._triple['predicate'], self._triple['object'])
+        return "<ScanIterator { %s %s %s }>" % (
+        self._triple['subject'], self._triple['predicate'], self._triple['object'])
 
     def serialized_name(self):
         return "scan"

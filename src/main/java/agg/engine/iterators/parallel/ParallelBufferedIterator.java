@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 /**
  * An abstraction of a buffered iterator capable of producing bindings in parallel.
  * A thread pool is responsible for executing tasks that fills up the iterator internal buffer.
+ *
  * @author Thomas Minier
  */
 public abstract class ParallelBufferedIterator extends QueryIteratorBase {
@@ -19,6 +20,7 @@ public abstract class ParallelBufferedIterator extends QueryIteratorBase {
 
     /**
      * Constructor
+     *
      * @param threadPool - Thread pool used to execute tasks
      */
     public ParallelBufferedIterator(ExecutorService threadPool) {
@@ -29,6 +31,7 @@ public abstract class ParallelBufferedIterator extends QueryIteratorBase {
 
     /**
      * Get the thread pool used by the iterator
+     *
      * @return The thread pool used by the iterator
      */
     protected ExecutorService getThreadPool() {
@@ -37,6 +40,7 @@ public abstract class ParallelBufferedIterator extends QueryIteratorBase {
 
     /**
      * Get the iterator's internal buffer (used to store new bindings)
+     *
      * @return The iterator's internal buffer
      */
     protected BlockingDeque<Binding> getSharedBuffer() {
@@ -60,6 +64,7 @@ public abstract class ParallelBufferedIterator extends QueryIteratorBase {
 
     /**
      * Test if all tasks have been completed
+     *
      * @return True if all tasks have been completed, False otherwise
      */
     protected abstract boolean allTasksCompleted();

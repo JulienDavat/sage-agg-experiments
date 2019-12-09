@@ -1,8 +1,9 @@
 # count.py
 # Author: Thomas MINIER - MIT License 2017-2019
-from sage.query_engine.agg.partial_agg import PartialAggregator
-from sage.query_engine.agg.bb import BoundedBuffer
 import xxhash
+from sage.query_engine.agg.bb import BoundedBuffer
+from sage.query_engine.agg.partial_agg import PartialAggregator
+
 
 class CountDistinctAggregator(PartialAggregator):
     """A CountDistinctAggregator evaluates a COUNT distinct aggregation"""
@@ -56,7 +57,6 @@ class CountDistinctAggregator(PartialAggregator):
                     print("update error:", err)
                     exit(1)
                     raise err
-
 
     def done(self, group_key):
         """Return the group for the distinct aggregation given the group key"""

@@ -16,6 +16,7 @@ import java.util.Set;
 /**
  * Implements an OptJoin, an optimized algorithm for OPTIONAL processing by a Sage Smart client.
  * see details in "SaGe: Web Preemption for Public SPARQL Query Services" in Proceedings of the 2019 World Wide Web Conference (WWW'19)
+ *
  * @author Thomas Minier
  */
 public class OptJoin extends QueryIteratorBase {
@@ -29,7 +30,8 @@ public class OptJoin extends QueryIteratorBase {
 
     /**
      * Constructor, for an OptJoin(P_1 OPT P_2)
-     * @param source - Source iterator, which evaluates (P_1 JOIN P_2) UNION P_1
+     *
+     * @param source        - Source iterator, which evaluates (P_1 JOIN P_2) UNION P_1
      * @param leftVariables - SPARQL variables of P_1
      * @param joinVariables - SPARQL variables of (P_1 JOIN P_2)
      */
@@ -45,12 +47,13 @@ public class OptJoin extends QueryIteratorBase {
 
     /**
      * Perform a projection over a set of mappings, according to the set of variables of P_1
+     *
      * @param original - Set of mappings to transform
      * @return Projected set of mappings
      */
     private Binding projection(Binding original) {
         BindingHashMap bindings = new BindingHashMap();
-        for(Var variable: leftVariables) {
+        for (Var variable : leftVariables) {
             if (original.contains(variable)) {
                 bindings.add(variable, original.get(variable));
             }
@@ -63,7 +66,7 @@ public class OptJoin extends QueryIteratorBase {
      * by computing P_1 - (P_1 JOIN P_2)
      */
     private void buildOptionalResults() {
-        for(Binding binding: unionView) {
+        for (Binding binding : unionView) {
             unmatchedResults.remove(projection(binding));
         }
     }
@@ -86,7 +89,7 @@ public class OptJoin extends QueryIteratorBase {
     protected boolean hasNextBinding() {
         if (source.hasNext()) {
             // try to produce a set of mappings from the source iterator
-            while(source.hasNext() && toServe.isEmpty()) {
+            while (source.hasNext() && toServe.isEmpty()) {
                 pullFromSource();
             }
         }

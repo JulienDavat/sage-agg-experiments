@@ -1,14 +1,17 @@
 package agg.cli;
 
-import agg.engine.SageOpExecutor;
-import agg.http.SageDefaultClient;
-import com.google.common.collect.Lists;
-import org.apache.jena.query.*;
 import agg.core.factory.SageAutoConfiguration;
 import agg.core.factory.SageConfigurationFactory;
 import agg.core.factory.SageFederatedConfiguration;
+import agg.engine.SageOpExecutor;
 import agg.engine.update.UpdateExecutor;
 import agg.http.ExecutionStats;
+import agg.http.SageDefaultClient;
+import com.google.common.collect.Lists;
+import org.apache.jena.query.ARQ;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
 import org.slf4j.Logger;
 import picocli.CommandLine;
 
@@ -24,6 +27,7 @@ import java.util.concurrent.Callable;
 
 /**
  * Main class for the Sage command-line interface
+ *
  * @author Thomas Minier
  */
 @CommandLine.Command(description = "Execute a SPARQL query with the SaGe Smart client",
@@ -33,32 +37,42 @@ public class CLI implements Callable<Void> {
     @CommandLine.Parameters(arity = "1..*", paramLabel = "URL", description = "URL(s) of SaGe server(s) to query. If several URls are provided, the query will be executed as a Federated query.")
     public String[] urls;
 
-    @CommandLine.Option(names = { "-q", "--query" }, description = "SPARQL query to execute (passed in command-line)")
+    @CommandLine.Option(names = {"-q", "--query"}, description = "SPARQL query to execute (passed in command-line)")
     public String query = null;
 
-    @CommandLine.Option(names = { "-f", "--file" }, description = "File containing a SPARQL query to execute")
+    @CommandLine.Option(names = {"-f", "--file"}, description = "File containing a SPARQL query to execute")
     public String file = null;
 
-    @CommandLine.Option(names = { "--format" }, description = "Results format (Result set: raw, XML, JSON, CSV, TSV; Graph: RDF serialization)")
+    @CommandLine.Option(names = {"--format"}, description = "Results format (Result set: raw, XML, JSON, CSV, TSV; Graph: RDF serialization)")
     public String format = "xml";
 
-    @CommandLine.Option(names = { "-m", "--measure" }, description = "Measure query execution stats and append it to a file")
+    @CommandLine.Option(names = {"-m", "--measure"}, description = "Measure query execution stats and append it to a file")
     public String measure = null;
 
-    @CommandLine.Option(names = { "--update" }, description = "Execute the input query as a SPARQL UPDATE query")
+    @CommandLine.Option(names = {"--update"}, description = "Execute the input query as a SPARQL UPDATE query")
     public boolean update = false;
 
-    @CommandLine.Option(names = { "--bucket-size" }, description = "Bucket size for SPARQL UPDATE query evaluation")
+    @CommandLine.Option(names = {"--bucket-size"}, description = "Bucket size for SPARQL UPDATE query evaluation")
     public int bucketSize = 100;
 
-    @CommandLine.Option(names = { "--time" }, description = "Display the the query execution time at the end")
+    @CommandLine.Option(names = {"--time"}, description = "Display the the query execution time at the end")
     public boolean time = false;
 
-    @CommandLine.Option(names = { "--optimized" }, description = "Enable the aggregation optimization")
+    @CommandLine.Option(names = {"--optimized"}, description = "Enable the aggregation optimization")
     public boolean optimized = false;
 
-    @CommandLine.Option(names = { "--buffer" }, description = "Set the buffer size (in bytes) for the server")
+    @CommandLine.Option(names = {"--buffer"}, description = "Set the buffer size (in bytes) for the server")
     public int disk = 0;
+
+    public static void setAggregationOptimization(boolean opt, int opt_disk) {
+        SageOpExecutor.optimized = opt;
+        SageDefaultClient.optimized = opt;
+        SageDefaultClient.buffer = opt_disk;
+    }
+
+    public static void main(String[] args) {
+        new CommandLine(new CLI()).execute(args);
+    }
 
     @Override
     public Void call() throws Exception {
@@ -89,7 +103,7 @@ public class CLI implements Callable<Void> {
         Dataset federation;
         SageConfigurationFactory factory;
         ExecutionStats spy = new ExecutionStats();
-        if(this.time) {
+        if (this.time) {
             spy.setLogs(true);
         }
 
@@ -171,15 +185,5 @@ public class CLI implements Callable<Void> {
         federation.close();
         factory.close();
         return null;
-    }
-
-    public static void setAggregationOptimization(boolean opt, int opt_disk) {
-        SageOpExecutor.optimized = opt;
-        SageDefaultClient.optimized = opt;
-        SageDefaultClient.buffer = opt_disk;
-    }
-
-    public static void main(String[] args) {
-        new CommandLine(new CLI()).execute(args);
     }
 }

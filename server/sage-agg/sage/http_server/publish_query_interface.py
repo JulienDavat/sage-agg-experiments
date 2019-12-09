@@ -1,7 +1,8 @@
 # publish_query_interface.py
 # Author: Thomas MINIER - MIT License 2017-2018
-from flask import Blueprint, render_template, abort, url_for
 from json import dumps
+
+from flask import Blueprint, render_template, abort, url_for
 
 
 def publish_query_blueprint(dataset, logger):
@@ -20,7 +21,9 @@ def publish_query_blueprint(dataset, logger):
             if query is None or not query['publish']:
                 abort(404)
             # compute json-ld description of the query as a dataset
-            query_url = url_for("sparql-interface.sparql_index", query=query['value'].replace("\n", " "), _external=True) + "&default-graph-uri=" + url_for('sparql-interface.sparql_index', _external=True) + '/' + graph_name
+            query_url = url_for("sparql-interface.sparql_index", query=query['value'].replace("\n", " "),
+                                _external=True) + "&default-graph-uri=" + url_for('sparql-interface.sparql_index',
+                                                                                  _external=True) + '/' + graph_name
             jsonld_description = {
                 "@context": "http://schema.org/",
                 "@type": "Dataset",
@@ -37,24 +40,26 @@ def publish_query_blueprint(dataset, logger):
                     }
                 ],
                 "creator": {
-                     "@type": "Organization",
-                     "url": "https://sites.google.com/site/gddlina",
-                     "name": "Distributed Data Management team (LS2N, University of Nantes)",
-                     "alternateName": "GDD Team",
-                     "description": "GDD is a research group of LS2N, University of Nantes. GDD is working in federated distributed systems following 3 research directions: 1) federated data structures and consistency, 2) collaborative data sharing in federations, and 3) security and usage control in federations.",
-                     "memberOf": {
+                    "@type": "Organization",
+                    "url": "https://sites.google.com/site/gddlina",
+                    "name": "Distributed Data Management team (LS2N, University of Nantes)",
+                    "alternateName": "GDD Team",
+                    "description": "GDD is a research group of LS2N, University of Nantes. GDD is working in federated distributed systems following 3 research directions: 1) federated data structures and consistency, 2) collaborative data sharing in federations, and 3) security and usage control in federations.",
+                    "memberOf": {
                         "@type": "Organization",
                         "url": "https://www.ls2n.fr/?lang=en",
                         "name": "Laboratoire des Sciences du Numerique de Nantes",
                         "alternateName": "LS2N",
                         "logo": "https://www.ls2n.fr/wp-content/themes/dk-resp-ls2n/images/logo_LS2N_bf.jpg"
-                     }
-                  }
+                    }
+                }
             }
             if "keywords" in query:
                 jsonld_description["keywords"] = query["keywords"]
-            return render_template('query.html', query=query, graph_name=graph_name, description=dumps(jsonld_description, indent=2), query_url=query_url)
+            return render_template('query.html', query=query, graph_name=graph_name,
+                                   description=dumps(jsonld_description, indent=2), query_url=query_url)
         except Exception as e:
             logger.error(e)
             abort(500)
+
     return pq_blueprint

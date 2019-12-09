@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Factory used to create a {@link SageOpExecutor}
+ *
  * @author Thomas Minier
  */
 public class SageOpExecutorFactory implements OpExecutorFactory {

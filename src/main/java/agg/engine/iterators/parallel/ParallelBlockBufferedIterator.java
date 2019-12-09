@@ -14,21 +14,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * A parallel version of {@link agg.engine.iterators.base.BlockBufferedIterator},
  * which can process several blocks in parallel using a thread pool.
+ *
  * @author Thomas Minier
  */
 public abstract class ParallelBlockBufferedIterator extends QueryIteratorBase {
-    protected QueryIterator source;
+    // Maximum number of blocks processed in parallel
+    private static final int MAX_RUNNING_BLOCK_THREADS = 5;
     private final ExecutorService threadPool;
     private final BlockingDeque<Binding> sharedBuffer;
     private final AtomicInteger activeThreads;
+    protected QueryIterator source;
     private int bucketSize;
     private boolean hasStarted;
-    // Maximum number of blocks processed in parallel
-    private static final int MAX_RUNNING_BLOCK_THREADS = 5;
 
     /**
      * Constructor
-     * @param source - Iterator's source
+     *
+     * @param source     - Iterator's source
      * @param threadPool - Thread pool used to execute tasks
      * @param bucketSize - Size of the blocks
      */
@@ -43,9 +45,10 @@ public abstract class ParallelBlockBufferedIterator extends QueryIteratorBase {
 
     /**
      * Create a task used to process a block of solution mappings.
+     *
      * @param bindings - Block of solution mappings to process
-     * @param output - Buffer where new results should be pushed
-     * @param counter - A counter to decrement when the task has completed
+     * @param output   - Buffer where new results should be pushed
+     * @param counter  - A counter to decrement when the task has completed
      * @return The task used to process the block of solution mappings
      */
     protected abstract Runnable createTransformerTask(List<Binding> bindings, BlockingDeque<Binding> output, AtomicInteger counter);
@@ -69,6 +72,7 @@ public abstract class ParallelBlockBufferedIterator extends QueryIteratorBase {
 
     /**
      * Test if all possible tasks have been complete
+     *
      * @return True if all possible tasks have been complete, False otherwise
      */
     private boolean allTasksCompleted() {

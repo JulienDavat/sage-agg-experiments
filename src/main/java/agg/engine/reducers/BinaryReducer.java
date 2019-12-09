@@ -7,6 +7,7 @@ import org.apache.jena.sparql.expr.NodeValue;
 
 /**
  * A base class for implementing aggregation reducers that combine two unary reducers
+ *
  * @author Thomas Minier
  */
 public abstract class BinaryReducer implements AggregationReducer {
@@ -23,23 +24,26 @@ public abstract class BinaryReducer implements AggregationReducer {
 
     /**
      * Build the first reducer
+     *
      * @param variable - Variable on which the first reducer operates
-     * @param context - execution context
+     * @param context  - execution context
      * @return The first reducer
      */
     abstract AggregationReducer firstReducer(Var variable, ExecutionContext context);
 
     /**
      * Build the second reducer
+     *
      * @param variable - Variable on which the second reducer operates
-     * @param context - execution context
+     * @param context  - execution context
      * @return The second reducer
      */
     abstract AggregationReducer secondReducer(Var variable, ExecutionContext context);
 
     /**
      * Combine the final values of both reducers
-     * @param first - Final value of the first reducer
+     *
+     * @param first  - Final value of the first reducer
      * @param second - Final value of the second reducer
      * @return Combined final value
      */

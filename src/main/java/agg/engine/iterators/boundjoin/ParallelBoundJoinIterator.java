@@ -1,5 +1,8 @@
 package agg.engine.iterators.boundjoin;
 
+import agg.engine.iterators.parallel.ExhaustIteratorTask;
+import agg.engine.iterators.parallel.ParallelBlockBufferedIterator;
+import agg.http.SageRemoteClient;
 import org.apache.jena.atlas.io.IndentedWriter;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
@@ -10,9 +13,6 @@ import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.serializer.SerializationContext;
-import agg.engine.iterators.parallel.ExhaustIteratorTask;
-import agg.engine.iterators.parallel.ParallelBlockBufferedIterator;
-import agg.http.SageRemoteClient;
 
 import java.util.*;
 import java.util.concurrent.BlockingDeque;
@@ -21,19 +21,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Like a {@link BoundJoinIterator}, but process multiples blocks of mappings in parallel.
+ *
  * @author Thomas Minier
  */
 public class ParallelBoundJoinIterator extends ParallelBlockBufferedIterator {
-    private String graphURI;
     protected SageRemoteClient client;
-    private BasicPattern bgp;
     protected Set<Var> projection;
+    private String graphURI;
+    private BasicPattern bgp;
 
     /**
      * Constructor
-     * @param source - Input for the join
-     * @param client - HTTP client used to query the SaGe server
-     * @param bgp    - Basic Graph pattern to join with
+     *
+     * @param source     - Input for the join
+     * @param client     - HTTP client used to query the SaGe server
+     * @param bgp        - Basic Graph pattern to join with
      * @param threadPool - Thread pool used to execute tasks
      * @param bucketSize - Size of the bound join bucket (15 is the "default" admitted value)
      */
@@ -47,11 +49,12 @@ public class ParallelBoundJoinIterator extends ParallelBlockBufferedIterator {
 
     /**
      * Rewrite a triple pattern using a rewriting key, i.e., append "_key" to each SPARQL variable in the triple pattern
+     *
      * @param key Rewriting key
-     * @param tp Triple pattern to rewrite
+     * @param tp  Triple pattern to rewrite
      * @return The rewritten triple pattern
      */
-    private Triple rewriteTriple (int key, Triple tp) {
+    private Triple rewriteTriple(int key, Triple tp) {
         Node subj = tp.getSubject();
         Node pred = tp.getPredicate();
         Node obj = tp.getObject();
@@ -77,9 +80,9 @@ public class ParallelBoundJoinIterator extends ParallelBlockBufferedIterator {
 
         // key used for the rewriting
         int key = 0;
-        for(Binding b: block) {
+        for (Binding b : block) {
             BasicPattern boundedBGP = new BasicPattern();
-            for (Triple t: bgp) {
+            for (Triple t : bgp) {
                 Triple boundedTriple = Substitute.substitute(t, b);
                 isContainmentQuery = (!boundedTriple.getSubject().isVariable()) && (!boundedTriple.getPredicate().isVariable()) && (!boundedTriple.getObject().isVariable());
                 // perform rewriting and register it

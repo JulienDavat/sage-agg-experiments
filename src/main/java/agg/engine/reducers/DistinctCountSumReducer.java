@@ -4,7 +4,6 @@ import agg.http.data.BindingsDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.ExecutionContext;
 import org.apache.jena.sparql.engine.binding.Binding;
@@ -12,10 +11,6 @@ import org.apache.jena.sparql.engine.binding.BindingHashMap;
 import org.apache.jena.sparql.expr.ExprLib;
 import org.apache.jena.sparql.expr.NodeValue;
 import org.apache.jena.sparql.expr.nodevalue.XSDFuncOp;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;
@@ -23,15 +18,16 @@ import java.util.Set;
 
 /**
  * A reducer used to reconstruct COUNT or SUM aggregation
+ *
  * @author Thomas Minier
  */
 public class DistinctCountSumReducer extends UnaryReducer {
 
+    public Set<Binding> map = new LinkedHashSet<>();
+
     public DistinctCountSumReducer(Var variable, ExecutionContext context) {
         super(variable, context);
     }
-
-    public Set<Binding> map = new LinkedHashSet<>();
 
     @Override
     NodeValue bottom() {
@@ -72,7 +68,7 @@ public class DistinctCountSumReducer extends UnaryReducer {
                             }
                         });
                         // now we have a binding,
-                        if(!map.contains(elt)){
+                        if (!map.contains(elt)) {
                             // System.err.println(elt);
                             this._accumulate(elt);
                         }

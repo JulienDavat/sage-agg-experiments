@@ -4,14 +4,12 @@ public_url: http://localhost:8000
 quota: 75
 max_results: 2000
 backends:
--
-  name: hbase
-  path: sage_hbase.connector
-  connector: HBaseConnector
-  required: [ "thrift_host" ]
+  - name: hbase
+    path: sage_hbase.connector
+    connector: HBaseConnector
+    required: [ "thrift_host" ]
 datasets:
--
-  name: rdf
-  description: BSBM 1K products
-  backend: hbase
-  thrift_host: localhost
+  - name: rdf
+    description: BSBM 1K products
+    backend: hbase
+    thrift_host: localhost

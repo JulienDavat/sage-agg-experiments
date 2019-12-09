@@ -1,9 +1,10 @@
 # datasets.py
 # Author: Thomas MINIER - MIT License 2017-2018
-from yaml import load
-from sage.database.import_manager import import_backend, hdt_backend, postgres_backend
 from math import inf
 from urllib.parse import quote_plus
+
+from sage.database.import_manager import import_backend, hdt_backend, postgres_backend
+from yaml import load
 
 
 def load_config(config_file="config.yaml"):
@@ -38,7 +39,8 @@ def load_config(config_file="config.yaml"):
     if 'backends' in config and len(config['backends']) > 0:
         for b in config['backends']:
             if 'name' not in b or 'path' not in b or 'connector' not in b or 'required' not in b:
-                raise SyntaxError('Invalid backend declared. Each custom backend must be declared with properties "name", "path", "connector" and "required"')
+                raise SyntaxError(
+                    'Invalid backend declared. Each custom backend must be declared with properties "name", "path", "connector" and "required"')
             backends[b['name']] = import_backend(b['name'], b['path'], b['connector'], b['required'])
     # set page size, i.e. the number of triples per page
     quota = config['quota'] if 'quota' in config else 75

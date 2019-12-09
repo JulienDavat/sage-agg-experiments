@@ -1,7 +1,8 @@
 # partial_agg.py
 # Author: Thomas MINIER - MIT License 2017-2019
-from abc import ABC, abstractmethod
 import uuid
+from abc import ABC, abstractmethod
+
 
 class PartialAggregator(ABC):
     """An abstract class for implementing Partial Aggregators"""
@@ -55,4 +56,3 @@ class PartialAggregator(ABC):
         """should only be called by aggregator using disk"""
         if hasattr(self, '_index'):
             self._index.close()
-

@@ -40,7 +40,7 @@ public class OpDatahub implements Op {
 
     @Override
     public boolean equalTo(Op other, NodeIsomorphismMap labelMap) {
-        if(! (other instanceof OpDatahub) ) {
+        if (!(other instanceof OpDatahub)) {
             return false;
         }
         OpDatahub otherOp = (OpDatahub) other;
@@ -60,7 +60,7 @@ public class OpDatahub implements Op {
     @Override
     public String toString(PrefixMapping pmap) {
         String out = "OpDatahub(" + url + ", [\n";
-        for (Map.Entry<String, BasicPattern> graph: graphs.entrySet()) {
+        for (Map.Entry<String, BasicPattern> graph : graphs.entrySet()) {
             out += "graph=<" + graph.getKey() + "> {" + graph.getValue().toString() + "\n";
         }
         out += "]";

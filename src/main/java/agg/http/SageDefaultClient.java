@@ -1,5 +1,12 @@
 package agg.http;
 
+import agg.engine.update.base.UpdateQuery;
+import agg.http.cache.QueryCache;
+import agg.http.cache.SimpleCache;
+import agg.http.data.SageQueryBuilder;
+import agg.http.data.SageResponse;
+import agg.http.results.QueryResults;
+import agg.http.results.UpdateResults;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,13 +22,6 @@ import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.core.VarExprList;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprAggregator;
-import agg.engine.update.base.UpdateQuery;
-import agg.http.cache.QueryCache;
-import agg.http.cache.SimpleCache;
-import agg.http.data.SageQueryBuilder;
-import agg.http.data.SageResponse;
-import agg.http.results.QueryResults;
-import agg.http.results.UpdateResults;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -34,15 +34,10 @@ import java.util.concurrent.Executors;
 /**
  * Allows evaluation of SPARQL queries against a SaGe server.
  * For now, only BGP and UNION queries are supported.
+ *
  * @author Thomas Minier
  */
 public class SageDefaultClient implements SageRemoteClient {
-    private String serverURL;
-    private ExecutorService threadPool;
-    private ObjectMapper mapper;
-    private HttpRequestFactory requestFactory;
-    private ExecutionStats spy;
-    private QueryCache cache = new SimpleCache(100);
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
     private static final String HTTP_JSON_CONTENT_TYPE = "application/json";
@@ -50,61 +45,16 @@ public class SageDefaultClient implements SageRemoteClient {
     public static boolean optimized = false;
     // enable this when you want to use the optimized aggregator on disk enable both
     public static int buffer = 0;
-
-    private class JSONPayload {
-        private String query;
-        private String defaultGraph;
-        private String next = null;
-        private Boolean optimized = false;
-        private int buffer = 0;
-
-        public JSONPayload(String defaultGraph, String query, Boolean optimized, int _buffer) {
-            this.query = query;
-            this.defaultGraph = defaultGraph;
-            this.optimized = optimized;
-            this.buffer = _buffer;
-        }
-
-        public JSONPayload(String defaultGraph, String query, String next, Boolean optimized, int _buffer) {
-            this.query = query;
-            this.defaultGraph = defaultGraph;
-            this.next = next;
-            this.optimized = optimized;
-            this.buffer = _buffer;
-        }
-
-        public Boolean getOptimized() { return this.optimized; }
-        public void setOptimized(boolean opt) { this.optimized = opt; }
-        public int getBuffer() { return this.buffer; }
-        public void setBuffer(int opt) { this.buffer = opt; }
-
-        public String getQuery() {
-            return query;
-        }
-
-        public void setQuery(String query) {
-            this.query = query;
-        }
-
-        public String getDefaultGraph() {
-            return defaultGraph;
-        }
-
-        public void setDefaultGraph(String defaultGraph) {
-            this.defaultGraph = defaultGraph;
-        }
-
-        public String getNext() {
-            return next;
-        }
-
-        public void setNext(String next) {
-            this.next = next;
-        }
-    }
+    private String serverURL;
+    private ExecutorService threadPool;
+    private ObjectMapper mapper;
+    private HttpRequestFactory requestFactory;
+    private ExecutionStats spy;
+    private QueryCache cache = new SimpleCache(100);
 
     /**
      * Constructor
+     *
      * @param serverURL - URL of the SaGe server SPARQL service, e.g.,
      */
     public SageDefaultClient(String serverURL) {
@@ -123,6 +73,7 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Constructor
+     *
      * @param serverURL - URL of the SaGe server
      */
     public SageDefaultClient(String serverURL, ExecutionStats spy) {
@@ -143,6 +94,7 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Get the URL of the remote sage server
+     *
      * @return The URL of the remote sage server
      */
     public String getServerURL() {
@@ -165,9 +117,10 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Send a SPARQL query to the SaGe server
-     * @param query - SPARQL query to send
+     *
+     * @param query    - SPARQL query to send
      * @param graphURI - URI of the default graph
-     * @param next - Optional link used to resume query evaluation
+     * @param next     - Optional link used to resume query evaluation
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
     private QueryResults sendQuery(String graphURI, String query, Optional<String> next, boolean isRead) {
@@ -178,7 +131,7 @@ public class SageDefaultClient implements SageRemoteClient {
         }
         // build POST query
         GenericUrl url = new GenericUrl(serverURL);
-        String payload = buildJSONPayload(graphURI, query, next, this.optimized, this.buffer);
+        String payload = buildJSONPayload(graphURI, query, next, optimized, buffer);
         HttpContent postContent = new ByteArrayContent(HTTP_JSON_CONTENT_TYPE, payload.getBytes());
         double startTime = System.nanoTime();
         try {
@@ -204,8 +157,9 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Evaluate a Basic Graph Pattern against a SaGe server, without a next link
+     *
      * @param graphURI - Default Graph URI
-     * @param bgp - BGP to evaluate
+     * @param bgp      - BGP to evaluate
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
     public QueryResults query(String graphURI, BasicPattern bgp, Set<Var> projection) {
@@ -214,9 +168,10 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Evaluate a Basic Graph Pattern against a SaGe server, with a next link
+     *
      * @param graphURI - Default Graph URI
-     * @param bgp - BGP to evaluate
-     * @param next - Optional link used to resume query evaluation
+     * @param bgp      - BGP to evaluate
+     * @param next     - Optional link used to resume query evaluation
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
     public QueryResults query(String graphURI, BasicPattern bgp, Optional<String> next, Set<Var> projection) {
@@ -226,9 +181,10 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Evaluate a Basic Graph Pattern with a GROUP BY against a SaGe server, without a next link
-     * @param graphURI - Default Graph URI
-     * @param bgp - BGP to evaluate
-     * @param variables - GROUP BY variables
+     *
+     * @param graphURI     - Default Graph URI
+     * @param bgp          - BGP to evaluate
+     * @param variables    - GROUP BY variables
      * @param aggregations - SPARQL aggregations (may be empty)
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
@@ -238,23 +194,25 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Evaluate a Basic Graph Pattern with a GROUP BY against a SaGe server, with a next link
-     * @param graphURI - Default Graph URI
-     * @param bgp - BGP to evaluate
-     * @param variables - GROUP BY variables
+     *
+     * @param graphURI     - Default Graph URI
+     * @param bgp          - BGP to evaluate
+     * @param variables    - GROUP BY variables
      * @param aggregations - SPARQL aggregations (may be empty)
-     * @param next - Optional link used to resume query evaluation
+     * @param next         - Optional link used to resume query evaluation
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
-    public QueryResults queryGroupBy(String graphURI, BasicPattern bgp, List<Var> variables, List<ExprAggregator> aggregations, VarExprList extensions,  Optional<String> next) {
+    public QueryResults queryGroupBy(String graphURI, BasicPattern bgp, List<Var> variables, List<ExprAggregator> aggregations, VarExprList extensions, Optional<String> next) {
         String query = SageQueryBuilder.buildBGPGroupByQuery(bgp, variables, aggregations, extensions);
-        return sendQuery(graphURI, query, next,true);
+        return sendQuery(graphURI, query, next, true);
     }
 
     /**
      * Evaluate a Basic Graph Pattern with filter against a SaGe server
+     *
      * @param graphURI - Default Graph URI
-     * @param bgp - BGP to evaluate
-     * @param filters - Filter expression
+     * @param bgp      - BGP to evaluate
+     * @param filters  - Filter expression
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
     public QueryResults query(String graphURI, BasicPattern bgp, List<Expr> filters, Set<Var> projection) {
@@ -263,10 +221,11 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Evaluate a Basic Graph Pattern with filter against a SaGe server
+     *
      * @param graphURI - Default Graph URI
-     * @param bgp - BGP to evaluate
-     * @param filters - Filter expressions
-     * @param next - Optional link used to resume query evaluation
+     * @param bgp      - BGP to evaluate
+     * @param filters  - Filter expressions
+     * @param next     - Optional link used to resume query evaluation
      * @return Query results. If the next link is null, then the BGP has been completely evaluated.
      */
     public QueryResults query(String graphURI, BasicPattern bgp, List<Expr> filters, Optional<String> next, Set<Var> projection) {
@@ -276,6 +235,7 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Evaluate an Union of Basic Graph Patterns against a SaGe server, with a next link
+     *
      * @param graphURI - Default Graph URI
      * @param patterns - List of BGPs to evaluate
      * @return Query results. If the next link is null, then the Union has been completely evaluated.
@@ -286,9 +246,10 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Evaluate an Union of Basic Graph Patterns against a SaGe server, with a next link
+     *
      * @param graphURI - Default Graph URI
      * @param patterns - List of BGPs to evaluate
-     * @param next - Optional link used to resume query evaluation
+     * @param next     - Optional link used to resume query evaluation
      * @return Query results. If the next link is null, then the Union has been completely evaluated.
      */
     public QueryResults query(String graphURI, List<BasicPattern> patterns, Optional<String> next, Set<Var> projection) {
@@ -298,8 +259,9 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Evaluate a set Graph clauses, each one wrapping a Basic Graph Patterns, against a SaGe server.
+     *
      * @param graphURI - Default Graph URI
-     * @param graphs - Graphs clauses to evaluates, i..e, tuples (graph uri, basic graph pattern)
+     * @param graphs   - Graphs clauses to evaluates, i..e, tuples (graph uri, basic graph pattern)
      * @return Query results. If the next link is null, then the Union has been completely evaluated.
      */
     public QueryResults query(String graphURI, Map<String, BasicPattern> graphs, Set<Var> projection) {
@@ -308,9 +270,10 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Evaluate a set Graph clauses, each one wrapping a Basic Graph Patterns, against a SaGe server, with a next link.
+     *
      * @param graphURI - Default Graph URI
-     * @param graphs - Graphs clauses to evaluates, i..e, tuples (graph uri, basic graph pattern)
-     * @param next - Optional link used to resume query evaluation
+     * @param graphs   - Graphs clauses to evaluates, i..e, tuples (graph uri, basic graph pattern)
+     * @param next     - Optional link used to resume query evaluation
      * @return Query results. If the next link is null, then the Union has been completely evaluated.
      */
     public QueryResults query(String graphURI, Map<String, BasicPattern> graphs, Optional<String> next, Set<Var> projection) {
@@ -320,8 +283,9 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Evaluate a SPARQL UPDATE query using a {@link UpdateQuery} object
+     *
      * @param graphURI - Default Graph URI
-     * @param query - Query to execute
+     * @param query    - Query to execute
      * @return Query results, containing the RDF quads that were processed by the server
      */
     public UpdateResults update(String graphURI, String query) {
@@ -342,6 +306,7 @@ public class SageDefaultClient implements SageRemoteClient {
 
     /**
      * Decode an HTTP response from a SaGe server
+     *
      * @param response - The HTTP response to decode
      * @return A decoded response
      * @throws IOException
@@ -354,7 +319,8 @@ public class SageDefaultClient implements SageRemoteClient {
         if (statusCode != 200) {
             throw new IOException("Unexpected error when executing HTTP request: " + responseContent);
         }
-        SageResponse sageResponse = mapper.readValue(responseContent, new TypeReference<SageResponse>(){});
+        SageResponse sageResponse = mapper.readValue(responseContent, new TypeReference<SageResponse>() {
+        });
         if (isRead) {
             spy.reportOverheadRead(sageResponse.stats.getResumeTime(), sageResponse.stats.getSuspendTime());
         } else {
@@ -372,12 +338,75 @@ public class SageDefaultClient implements SageRemoteClient {
             planSize = sageResponse.next.getBytes().length;
             spy.reportPlanSize(planSize);
         }
-        spy.reportLogs("[" + dateFormat.format(date) +  "]" +
+        spy.reportLogs("[" + dateFormat.format(date) + "]" +
                 " | size(bytes): (" + responseContent.getBytes().length + ", " + planSize + ")" +
                 " | resume(ms): " + sageResponse.stats.getResumeTime() +
                 " | suspend(ms): " + sageResponse.stats.getSuspendTime() +
                 " | decoding(ms): " + decodingTimeEnd
         );
         return new QueryResults(sageResponse.bindings, sageResponse.next, sageResponse.stats);
+    }
+
+    private class JSONPayload {
+        private String query;
+        private String defaultGraph;
+        private String next = null;
+        private Boolean optimized = false;
+        private int buffer = 0;
+
+        public JSONPayload(String defaultGraph, String query, Boolean optimized, int _buffer) {
+            this.query = query;
+            this.defaultGraph = defaultGraph;
+            this.optimized = optimized;
+            this.buffer = _buffer;
+        }
+
+        public JSONPayload(String defaultGraph, String query, String next, Boolean optimized, int _buffer) {
+            this.query = query;
+            this.defaultGraph = defaultGraph;
+            this.next = next;
+            this.optimized = optimized;
+            this.buffer = _buffer;
+        }
+
+        public Boolean getOptimized() {
+            return this.optimized;
+        }
+
+        public void setOptimized(boolean opt) {
+            this.optimized = opt;
+        }
+
+        public int getBuffer() {
+            return this.buffer;
+        }
+
+        public void setBuffer(int opt) {
+            this.buffer = opt;
+        }
+
+        public String getQuery() {
+            return query;
+        }
+
+        public void setQuery(String query) {
+            this.query = query;
+        }
+
+        public String getDefaultGraph() {
+            return defaultGraph;
+        }
+
+        public void setDefaultGraph(String defaultGraph) {
+            this.defaultGraph = defaultGraph;
+        }
+
+        public String getNext() {
+            return next;
+        }
+
+        public void setNext(String next) {
+            this.next = next;
+        }
     }
 }

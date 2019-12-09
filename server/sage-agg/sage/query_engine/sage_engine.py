@@ -1,14 +1,15 @@
 # sage_engine.py
 # Author: Thomas MINIER - MIT License 2017-2018
-from asyncio import Queue, get_event_loop, wait_for, sleep, set_event_loop_policy, new_event_loop, set_event_loop, get_running_loop
+from asyncio import Queue, wait_for, sleep, set_event_loop_policy, new_event_loop, set_event_loop, get_running_loop
 from asyncio import TimeoutError as asyncTimeoutError
+from math import inf
+
 import uvloop
 from sage.query_engine.iterators.utils import IteratorExhausted
 from sage.query_engine.protobuf.iterators_pb2 import RootTree
-from math import inf
 
 set_event_loop_policy(uvloop.EventLoopPolicy())
-from time import time
+
 
 class TooManyResults(Exception):
     """
@@ -16,6 +17,7 @@ class TooManyResults(Exception):
         has been exceeded
     """
     pass
+
 
 async def executor(plan, queue, limit, optimized, optimized_disk):
     """Executor used to evaluated a plan under a time quota"""
@@ -86,7 +88,7 @@ class SageEngine(object):
             # backward compatibility
             # if optimized and not optimized_disk:
 
-            #print('Generating results....')
+            # print('Generating results....')
             if optimized:
                 # fetch partial aggregate if the query is an aggreation query
                 if plan.is_aggregator():
@@ -96,7 +98,7 @@ class SageEngine(object):
             # collect results from classic query
             while not queue.empty():
                 results.append(queue.get_nowait())
-            #print('Returning response ({}) ...'.format(time() - start))
+            # print('Returning response ({}) ...'.format(time() - start))
         # save plan
         # print('final results:', results)
         saved_plan = plan.save()

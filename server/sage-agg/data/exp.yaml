@@ -2,18 +2,15 @@ name: SaGe Test server
 maintainer: Thomas Minier <thomas.minier@univ-nantes.fr>
 quota: 75
 datasets:
--
-  name: bsbm1M
-  description: BSBM 1M triples
-  backend: hdt-file
-  file: /opt/data/bsbm1M.hdt
--
-  name: bsbm1k
-  description: BSBM 1k triples
-  backend: hdt-file
-  file: /opt/data/bsbm1k.hdt
--
-  name: watdiv
-  description: watdiv 10M triples
-  backend: hdt-file
-  file: /opt/data/watdiv.10M.hdt
+  - name: bsbm1M
+    description: BSBM 1M triples
+    backend: hdt-file
+    file: /opt/data/bsbm1M.hdt
+  - name: bsbm1k
+    description: BSBM 1k triples
+    backend: hdt-file
+    file: /opt/data/bsbm1k.hdt
+  - name: watdiv
+    description: watdiv 10M triples
+    backend: hdt-file
+    file: /opt/data/watdiv.10M.hdt

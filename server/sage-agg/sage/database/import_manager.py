@@ -33,6 +33,7 @@ def postgres_backend():
 
 def import_backend(name, module_path, class_name, required_params):
     """Load a new backend from the config file"""
+
     # factory used to build new connector
     def __factory(params):
         # load module dynamically
@@ -43,6 +44,8 @@ def import_backend(name, module_path, class_name, required_params):
         # check that all required params are present
         for key in required_params:
             if key not in params:
-                raise SyntaxError('Missing required parameters for backend {}. Expected to see {}'.format(name, required_params))
+                raise SyntaxError(
+                    'Missing required parameters for backend {}. Expected to see {}'.format(name, required_params))
         return connector.from_config(params)
+
     return __factory

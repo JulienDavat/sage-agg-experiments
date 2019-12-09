@@ -5,6 +5,7 @@ import org.apache.jena.query.Query;
 
 /**
  * Abstract query execution logic
+ *
  * @author Thomas Minier
  */
 public interface QueryExecutor {

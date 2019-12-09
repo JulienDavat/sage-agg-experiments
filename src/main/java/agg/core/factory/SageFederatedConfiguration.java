@@ -1,22 +1,23 @@
 package agg.core.factory;
 
+import agg.core.SageDatasetBuilder;
+import agg.engine.SageOpExecutorFactory;
+import agg.federated.SourceSelection;
+import agg.http.ExecutionStats;
+import agg.model.SageGraph;
 import org.apache.jena.query.ARQ;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.sparql.algebra.Op;
 import org.apache.jena.sparql.algebra.OpAsQuery;
 import org.apache.jena.sparql.engine.main.QC;
-import agg.core.SageDatasetBuilder;
-import agg.engine.SageOpExecutorFactory;
-import agg.federated.SourceSelection;
-import agg.http.ExecutionStats;
-import agg.model.SageGraph;
 
 import java.util.List;
 
 /**
  * Build the execution environment for executing a federated SPARQL query over a set of sources,
  * with a phase of source selection beforehand.
+ *
  * @author Thomas Minier
  */
 public class SageFederatedConfiguration implements SageConfigurationFactory {
@@ -29,7 +30,8 @@ public class SageFederatedConfiguration implements SageConfigurationFactory {
 
     /**
      * Constructor
-     * @param urls - Set of sources
+     *
+     * @param urls  - Set of sources
      * @param query - SPARQL query
      */
     public SageFederatedConfiguration(List<String> urls, Query query) {
@@ -41,9 +43,10 @@ public class SageFederatedConfiguration implements SageConfigurationFactory {
 
     /**
      * Constructor
-     * @param urls - Set of sources
+     *
+     * @param urls  - Set of sources
      * @param query - SPARQL query
-     * @param spy - Spy used to record execution statistics
+     * @param spy   - Spy used to record execution statistics
      */
     public SageFederatedConfiguration(List<String> urls, Query query, ExecutionStats spy) {
         defaultUrl = urls.get(0);
@@ -68,7 +71,7 @@ public class SageFederatedConfiguration implements SageConfigurationFactory {
         SageGraph defaultGraph = new SageGraph(defaultUrl, spy);
 
         SageDatasetBuilder builder = SageDatasetBuilder.create(defaultGraph);
-        for (String graphURI: urls) {
+        for (String graphURI : urls) {
             builder = builder.withSageServer(graphURI, spy);
         }
         federation = builder.create();
@@ -76,7 +79,7 @@ public class SageFederatedConfiguration implements SageConfigurationFactory {
         // configure the source selection
         SourceSelection sourceSelection = new SourceSelection();
         sourceSelection.registerSource(defaultUrl, defaultGraph.getClient());
-        for (String graphURI: urls) {
+        for (String graphURI : urls) {
             SageGraph namedGraph = (SageGraph) federation.getNamedModel(graphURI).getGraph();
             sourceSelection.registerSource(graphURI, namedGraph.getClient());
         }

@@ -1,15 +1,16 @@
 package agg.http.results;
 
-import org.apache.jena.sparql.engine.binding.Binding;
 import agg.http.data.QuerySolutions;
 import agg.http.data.SageStatistics;
 import agg.http.data.SolutionGroup;
+import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Results from the execution of a SPARQL query
+ *
  * @author Thomas Minier
  */
 public class QueryResults implements SageQueryResults {

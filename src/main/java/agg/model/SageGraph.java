@@ -1,5 +1,11 @@
 package agg.model;
 
+import agg.engine.iterators.SageBGPIterator;
+import agg.engine.iterators.SageFilterBGPIterator;
+import agg.engine.iterators.SageUnionIterator;
+import agg.http.ExecutionStats;
+import agg.http.SageDefaultClient;
+import agg.http.SageRemoteClient;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.graph.impl.GraphBase;
@@ -10,12 +16,6 @@ import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.util.iterator.WrappedIterator;
-import agg.engine.iterators.SageBGPIterator;
-import agg.engine.iterators.SageFilterBGPIterator;
-import agg.engine.iterators.SageUnionIterator;
-import agg.http.ExecutionStats;
-import agg.http.SageDefaultClient;
-import agg.http.SageRemoteClient;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,6 +23,7 @@ import java.util.Set;
 
 /**
  * Represents a remote RDF graph hosted by a Sage server
+ *
  * @author Thomas Minier
  */
 public class SageGraph extends GraphBase {
@@ -31,6 +32,7 @@ public class SageGraph extends GraphBase {
 
     /**
      * Constructor
+     *
      * @param url - URL of the dataset/graph
      */
     public SageGraph(String url) {
@@ -44,6 +46,7 @@ public class SageGraph extends GraphBase {
 
     /**
      * Constructor
+     *
      * @param url - URL of the SaGe server
      */
     public SageGraph(String url, ExecutionStats spy) {
@@ -57,6 +60,7 @@ public class SageGraph extends GraphBase {
 
     /**
      * Get the URL of the remote sage server
+     *
      * @return The URL of the remote sage server
      */
     public String getGraphURI() {
@@ -65,6 +69,7 @@ public class SageGraph extends GraphBase {
 
     /**
      * Get the HTTP client used to access the remote Sage server
+     *
      * @return The HTTP client used to access the remote Sage server
      */
     public SageRemoteClient getClient() {
@@ -104,6 +109,7 @@ public class SageGraph extends GraphBase {
 
     /**
      * Evaluate a Basic Graph Pattern using the SaGe server
+     *
      * @param bgp - BGP to evaluate
      * @return An iterator over solution bindings for the BGP
      */
@@ -113,7 +119,8 @@ public class SageGraph extends GraphBase {
 
     /**
      * Evaluate a Basic Graph Pattern with a list of filters using the SaGe server
-     * @param bgp - BGP to evaluate
+     *
+     * @param bgp     - BGP to evaluate
      * @param filters - List of filters
      * @return An iterator over solution bindings for the BGP + the filters
      */
@@ -126,6 +133,7 @@ public class SageGraph extends GraphBase {
 
     /**
      * Evaluate an Union of BGPs using the SaGe server
+     *
      * @param patterns - Union to evaluate
      * @return An iterator over solution bindings for the Union
      */

@@ -1,7 +1,8 @@
 # count.py
 # Author: Thomas MINIER - MIT License 2017-2019
-from sage.query_engine.agg.partial_agg import PartialAggregator
 from sage.query_engine.agg.index_disk_rocksdb import IndexRocksdb
+from sage.query_engine.agg.partial_agg import PartialAggregator
+
 
 class CountDiskAggregator(PartialAggregator):
     """A CountDiskAggregator evaluates a COUNT aggregation"""
@@ -44,7 +45,6 @@ class CountDiskAggregator(PartialAggregator):
 
     def remove_group_key(self, group_key):
         self._index.remove_group_key_for_query(query_id=self.get_query_id(), group_key=group_key)
-
 
     def get_type(self):
         """Return the name of the aggregator (used for serialization)"""

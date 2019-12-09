@@ -1,7 +1,14 @@
 from __future__ import annotations
+
+import json
+import rocksdb
+import shutil
+import time
 from threading import Lock
 from typing import Optional
-import rocksdb, json, xxhash, shutil, time
+
+import xxhash
+
 
 class SingletonMeta(type):
     """
@@ -25,6 +32,7 @@ class IndexRocksdb(metaclass=SingletonMeta):
     => The cache grows without limit even with nothing inside.
     => A solution could be to erase the db each time a query is finished.
     """
+
     def __init__(self):
         super(IndexRocksdb, self).__init__()
         self._seed = 0
@@ -134,7 +142,7 @@ class IndexRocksdb(metaclass=SingletonMeta):
         key = bytes("{}_{}".format(
             query_id,
             xxhash.xxh64_hexdigest(group_key)
-        ), encoding = 'utf-8')
+        ), encoding='utf-8')
         self.db.put(key, bytes(json.dumps(value), encoding='utf-8'))
 
     def has(self, query_id=None, group_key=None):
@@ -151,7 +159,7 @@ class IndexRocksdb(metaclass=SingletonMeta):
         key = bytes("{}_{}".format(
             query_id,
             xxhash.xxh64_hexdigest(group_key)
-        ), encoding = 'utf-8')
+        ), encoding='utf-8')
         (check, val) = self.db.key_may_exist(key=key, fetch=True)
         if check:
             # bloom filter possible false positive, we need to check if is in the database

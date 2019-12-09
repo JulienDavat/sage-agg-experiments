@@ -60,7 +60,7 @@ public class FilterFormatter implements ExprVisitor {
                 stack.push('(' + stack.pop() + " != " + stack.pop() + ')');
                 break;
             default:
-                stack.push('('  + funName +'(' + stack.pop() + ',' + stack.pop() + "))");
+                stack.push('(' + funName + '(' + stack.pop() + ',' + stack.pop() + "))");
                 break;
         }
 

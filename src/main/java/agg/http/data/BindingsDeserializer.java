@@ -22,14 +22,66 @@ import java.util.regex.Pattern;
 
 /**
  * Deserialize bindings from JSON to Jena format
+ *
  * @author Thomas Minier
  */
 public class BindingsDeserializer extends JsonDeserializer<QuerySolutions> {
     private final static Pattern TYPE_PATTERN = Pattern.compile("\"(.*)\"(\\^\\^)(.+)");
     private final static Pattern LANG_PATTERN = Pattern.compile("\"(.*)\"(@)(.+)");
 
+    /**
+     * Parse a RDF node from String format to a Jena compatible format
+     *
+     * @param node RDF node in string format
+     * @return RDF node in a Jena compatible format
+     */
+    public static Node parseNode(String node) {
+        Node value = null;
+        try {
+            String literal;
+            try {
+                // Literal case
+                if (node.startsWith("\"")) {
+                    literal = node.trim();
+                    Matcher langMatcher = LANG_PATTERN.matcher(literal);
+                    Matcher typeMatcher = TYPE_PATTERN.matcher(literal);
+                    if (typeMatcher.matches()) {
+                        if (typeMatcher.group(3).startsWith("<")) {
+                            String type = typeMatcher.group(3);
+                            RDFDatatype datatype = TypeMapper.getInstance().getTypeByName(type.substring(1, type.length() - 1));
+                            if (datatype == null) {
+                                RDFDatatype r = new BaseDatatype(type);
+                                value = NodeFactory.createLiteral(typeMatcher.group(1), r);
+                            } else {
+                                value = NodeFactory.createLiteral(typeMatcher.group(1), datatype);
+                            }
+                        } else {
+                            RDFDatatype datatype = TypeMapper.getInstance().getTypeByName(typeMatcher.group(3));
+                            value = NodeFactory.createLiteral(typeMatcher.group(1), datatype);
+                        }
+                    } else if (langMatcher.matches()) {
+                        value = NodeFactory.createLiteral(langMatcher.group(1), langMatcher.group(3));
+                    } else if (literal.startsWith("\"") && literal.endsWith("\"")) {
+                        value = NodeFactory.createLiteral(literal.substring(1, literal.length() - 1));
+                    } else {
+                        value = NodeFactory.createLiteral(literal);
+                    }
+                } else {
+                    value = NodeFactory.createURI(node);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
+            }
+        } catch (Exception e) {
+            // TODO: for now we skip parsing errors, maybe need to do something cleaner
+            System.err.println("Error when parsing node: " + node);
+        }
+        return value;
+    }
+
     @Override
-    public QuerySolutions deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public QuerySolutions deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         QuerySolutions res = new QuerySolutions();
         ArrayNode node = p.getCodec().readTree(p);
         // for each set of bindings
@@ -52,7 +104,7 @@ public class BindingsDeserializer extends JsonDeserializer<QuerySolutions> {
                     });
                 } else {
                     // otherwise it's a regular binding
-                    if (jsonNode.get(s).isArray()){
+                    if (jsonNode.get(s).isArray()) {
                         // trick is here, see DistinctCountSumReducer behavior
                         bindings.add(Var.alloc(s.substring(1)), NodeFactory.createLiteral(jsonNode.get(s).toString()));
                     } else {
@@ -76,55 +128,5 @@ public class BindingsDeserializer extends JsonDeserializer<QuerySolutions> {
             }
         });
         return res;
-    }
-
-    /**
-     * Parse a RDF node from String format to a Jena compatible format
-     * @param node RDF node in string format
-     * @return RDF node in a Jena compatible format
-     */
-    public static Node parseNode(String node) {
-        Node value = null;
-        try {
-            String literal;
-            try {
-                // Literal case
-                if (node.startsWith("\""))  {
-                    literal = node.trim();
-                    Matcher langMatcher = LANG_PATTERN.matcher(literal);
-                    Matcher typeMatcher = TYPE_PATTERN.matcher(literal);
-                    if (typeMatcher.matches()) {
-                        if (typeMatcher.group(3).startsWith("<")) {
-                            String type = typeMatcher.group(3);
-                            RDFDatatype datatype = TypeMapper.getInstance().getTypeByName(type.substring(1, type.length() - 1));
-                            if(datatype == null) {
-                                RDFDatatype r = new BaseDatatype(type);
-                                value = NodeFactory.createLiteral(typeMatcher.group(1), r);
-                            } else {
-                                value = NodeFactory.createLiteral(typeMatcher.group(1), datatype);
-                            }
-                        } else {
-                            RDFDatatype datatype = TypeMapper.getInstance().getTypeByName(typeMatcher.group(3));
-                            value = NodeFactory.createLiteral(typeMatcher.group(1), datatype);
-                        }
-                    } else if (langMatcher.matches()) {
-                        value = NodeFactory.createLiteral(langMatcher.group(1), langMatcher.group(3));
-                    } else if (literal.startsWith("\"") && literal.endsWith("\"")){
-                        value = NodeFactory.createLiteral(literal.substring(1, literal.length() - 1));
-                    } else {
-                        value = NodeFactory.createLiteral(literal);
-                    }
-                } else {
-                    value = NodeFactory.createURI(node);
-                }
-            } catch(Exception e) {
-                e.printStackTrace();
-                throw e;
-            }
-        } catch(Exception e) {
-            // TODO: for now we skip parsing errors, maybe need to do something cleaner
-            System.err.println("Error when parsing node: " + node);
-        }
-        return value;
     }
 }

@@ -20,7 +20,7 @@ public class ReducerFactory {
         suppliers = new HashMap<>();
         this.context = context;
 
-        for(ExprAggregator exprAgg: aggregations) {
+        for (ExprAggregator exprAgg : aggregations) {
             // search for the correct variable
             extensions.getExprs().forEach((var, expr) -> {
                 if (exprAgg.getVar().equals(expr.asVar())) {

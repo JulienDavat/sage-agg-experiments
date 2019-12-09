@@ -1,6 +1,7 @@
 package agg.engine.update.queries;
 
 
+import agg.engine.update.base.UpdateQuery;
 import org.apache.jena.query.*;
 import org.apache.jena.sparql.algebra.Algebra;
 import org.apache.jena.sparql.algebra.Op;
@@ -9,15 +10,15 @@ import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.sparql.core.Substitute;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.modify.request.UpdateModify;
-import agg.engine.update.base.UpdateQuery;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Execute a DELETE/INSERT query
- * @see {@href https://www.w3.org/TR/2013/REC-sparql11-update-20130321/#deleteInsert}
+ *
  * @author Thomas Minier
+ * @see {@href https://www.w3.org/TR/2013/REC-sparql11-update-20130321/#deleteInsert}
  */
 public class DeleteInsertQuery implements UpdateQuery {
     private ResultSet source;
@@ -32,10 +33,11 @@ public class DeleteInsertQuery implements UpdateQuery {
 
     /**
      * Constructor
-     * @param execution - Source of solution bindings from the evaluation of the WHERE clause
+     *
+     * @param execution       - Source of solution bindings from the evaluation of the WHERE clause
      * @param deleteTemplates - Delete templates, i.e., RDF quads with SPARQL variables
      * @param insertTemplates - Insert templates, i.e., RDF quads with SPARQL variables
-     * @param bucketSize - Bucket size, i.e., how many RDF triples are sent by query
+     * @param bucketSize      - Bucket size, i.e., how many RDF triples are sent by query
      */
     private DeleteInsertQuery(QueryExecution execution, List<Quad> deleteTemplates, List<Quad> insertTemplates, int bucketSize) {
         this.source = execution.execSelect();
@@ -51,8 +53,9 @@ public class DeleteInsertQuery implements UpdateQuery {
 
     /**
      * Build an {@link DeleteInsertQuery} from a logical query node
-     * @param update - Logical query node
-     * @param dataset - RDF dataset used to evaluate the query
+     *
+     * @param update     - Logical query node
+     * @param dataset    - RDF dataset used to evaluate the query
      * @param bucketSize - Bucket size, i.e., how many RDF triples are sent by query
      * @return An new {@link DeleteInsertQuery}
      */
@@ -76,14 +79,15 @@ public class DeleteInsertQuery implements UpdateQuery {
     /**
      * Instantiate a list of templates (RDF quads) using a set of solution bindings.
      * Exclude quads that where not all variables were substituted.
+     *
      * @param templates - Templates, i.e., RDF quads with SPARQL variables
-     * @param bindings - List of sets of solution bindings
+     * @param bindings  - List of sets of solution bindings
      * @return The list of instantiated RDF quads
      */
     private List<Quad> buildTemplates(List<Quad> templates, List<Binding> bindings) {
         List<Quad> results = new LinkedList<>();
-        for(Binding binding: bindings) {
-            for(Quad template: templates) {
+        for (Binding binding : bindings) {
+            for (Quad template : templates) {
                 Quad newQuad = Substitute.substitute(template, binding);
                 // assert that all variables in the new quad were substituted
                 if ((!newQuad.getSubject().isVariable()) && (!newQuad.getPredicate().isVariable()) && (!newQuad.getObject().isVariable())) {
@@ -96,6 +100,7 @@ public class DeleteInsertQuery implements UpdateQuery {
 
     /**
      * Build the next SPARQL UPDATE query to execute
+     *
      * @return A SPARQL UPDATE query, i.e., either an INSERT DATA or DELETE DATA query
      */
     @Override
@@ -113,13 +118,14 @@ public class DeleteInsertQuery implements UpdateQuery {
 
     /**
      * Test if the query has more RDF triples to process
+     *
      * @return True the query has more RDF triples to process, False otherwise
      */
     @Override
     public boolean hasNextQuery() {
         if (warmup) {
             // execute update pattern
-            while(source.hasNext()) {
+            while (source.hasNext()) {
                 results.add(source.nextBinding());
             }
             if (!results.isEmpty()) {
@@ -141,6 +147,7 @@ public class DeleteInsertQuery implements UpdateQuery {
 
     /**
      * Indicate that a list of quads has been processed by the server
+     *
      * @param quads - List of quads
      */
     public void markAsCompleted(List<Quad> quads) {

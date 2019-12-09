@@ -1,11 +1,13 @@
 # start_server.py
 # Author: Thomas MINIER - MIT License 2017-2019
-import click
 import importlib.util
 from os.path import isfile
-from sage.http_server.server import sage_app
+
+import click
 from gunicorn.app.base import BaseApplication
 from gunicorn.six import iteritems
+from sage.http_server.server import sage_app
+
 
 class StandaloneApplication(BaseApplication):
     def __init__(self, app, options=None):
@@ -27,8 +29,10 @@ class StandaloneApplication(BaseApplication):
 @click.argument("config")
 @click.option("-p", "--port", type=int, default=8000, show_default=True, help="The port to bind")
 @click.option("-w", "--workers", type=int, default=4, show_default=True, help="he number of server workers")
-@click.option("--log-level", type=click.Choice(["debug", "info", "warning", "error"]), default="info", show_default=True, help="The granularity of log outputs")
-@click.option("--gunicorn-config", type=str, show_default=True, help="Define the Gunicorn config file to be used, it will overide port and worker options")
+@click.option("--log-level", type=click.Choice(["debug", "info", "warning", "error"]), default="info",
+              show_default=True, help="The granularity of log outputs")
+@click.option("--gunicorn-config", type=str, show_default=True,
+              help="Define the Gunicorn config file to be used, it will overide port and worker options")
 def start_sage_server(config, port, workers, log_level, gunicorn_config):
     """Launch the Sage server using the CONFIG configuration file"""
     # check if config file exists

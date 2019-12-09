@@ -8,6 +8,7 @@ import org.apache.jena.sparql.serializer.SerializationContext;
 
 /**
  * Utility iterator: makes the union of two other iterators
+ *
  * @author Thomas Minier
  */
 public class UnionIterator extends QueryIteratorBase {

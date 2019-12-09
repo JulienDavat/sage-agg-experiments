@@ -1,14 +1,15 @@
 # server.py
 # Author: Thomas MINIER - MIT License 2017-2018
+import datetime
+import logging
+
 from flask import Flask, Response, render_template
 from flask_cors import CORS
 from sage.database.datasets import Dataset
-from sage.http_server.sparql_interface import sparql_blueprint
-from sage.http_server.void_interface import void_blueprint
 from sage.http_server.publish_query_interface import publish_query_blueprint
+from sage.http_server.sparql_interface import sparql_blueprint
 from sage.http_server.utils import generate_sitemap
-import datetime
-import logging
+from sage.http_server.void_interface import void_blueprint
 
 
 def sage_app(config_file):

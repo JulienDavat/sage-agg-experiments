@@ -1,5 +1,6 @@
 package agg.federated;
 
+import agg.core.SageUtils;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.sparql.algebra.Op;
@@ -7,13 +8,16 @@ import org.apache.jena.sparql.algebra.op.OpBGP;
 import org.apache.jena.sparql.algebra.op.OpService;
 import org.apache.jena.sparql.core.BasicPattern;
 import org.apache.jena.sparql.core.Var;
-import agg.core.SageUtils;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * An exclusive group, as defined in FedX research article.
  * It represents a set of triple pattern that can be evaluated at the same source (a RDF Graph URI).
+ *
  * @author Thomas Minier
  */
 public class ExclusiveGroup {
@@ -47,6 +51,7 @@ public class ExclusiveGroup {
 
     /**
      * Add a localized triple pattern to the exclusive group
+     *
      * @param pattern - Triple pattern to add
      */
     public void addPattern(LocalizedPattern pattern) {
@@ -55,6 +60,7 @@ public class ExclusiveGroup {
 
     /**
      * Get the number of triple patterns in the exclusive group
+     *
      * @return The number of triple patterns in the exclusive group
      */
     public int size() {
@@ -63,6 +69,7 @@ public class ExclusiveGroup {
 
     /**
      * Test if the exclusive group is empty, i.e., it does not contains any triple patterns
+     *
      * @return True if the exclusive group is empty, False otherwise
      */
     public boolean isEmpty() {
@@ -71,11 +78,12 @@ public class ExclusiveGroup {
 
     /**
      * Get all SPARQL variables from all triple patterns in the group
+     *
      * @return All SPARQL variables from all triple patterns in the group
      */
     public Set<Var> getVariables() {
         Set<Var> res = new HashSet<>();
-        for(Triple pattern: bgp.getList()) {
+        for (Triple pattern : bgp.getList()) {
             res.addAll(SageUtils.getVariables(pattern));
         }
         return res;
@@ -83,6 +91,7 @@ public class ExclusiveGroup {
 
     /**
      * Transform the exclusive group into a SPARQL logical node
+     *
      * @return The equivalent SPARQL logical node
      */
     public Op toOp() {

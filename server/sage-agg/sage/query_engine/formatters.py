@@ -41,6 +41,7 @@ def binding_to_json(binding):
 
 def sparql_xml(bindings_list):
     """Formats a set of bindings into SPARQL results in JSON formats."""
+
     def convert_binding(b, root):
         result_node = ElementTree.SubElement(root, "result")
         for variable, value in b.items():

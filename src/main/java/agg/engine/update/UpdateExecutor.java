@@ -1,5 +1,11 @@
 package agg.engine.update;
 
+import agg.engine.update.base.UpdateQuery;
+import agg.engine.update.queries.DeleteInsertQuery;
+import agg.engine.update.queries.DeleteQuery;
+import agg.engine.update.queries.InsertQuery;
+import agg.http.results.UpdateResults;
+import agg.model.SageGraph;
 import org.apache.jena.query.ARQ;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.sparql.modify.request.UpdateDataDelete;
@@ -8,12 +14,6 @@ import org.apache.jena.sparql.modify.request.UpdateModify;
 import org.apache.jena.update.Update;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
-import agg.engine.update.base.UpdateQuery;
-import agg.engine.update.queries.DeleteInsertQuery;
-import agg.engine.update.queries.DeleteQuery;
-import agg.engine.update.queries.InsertQuery;
-import agg.http.results.UpdateResults;
-import agg.model.SageGraph;
 import org.slf4j.Logger;
 
 import java.util.LinkedList;
@@ -22,8 +22,9 @@ import java.util.List;
 /**
  * Executes SPARQL UPDATE queries.
  * Transparently supports SPARQL INSERT DATA, DELETE DATA and DELETE/INSERT queries.
- * @see {@href https://www.w3.org/TR/2013/REC-sparql11-update-20130321/}
+ *
  * @author Thomas Minier
+ * @see {@href https://www.w3.org/TR/2013/REC-sparql11-update-20130321/}
  */
 public class UpdateExecutor {
     private String defaultGraphURI;
@@ -34,11 +35,12 @@ public class UpdateExecutor {
 
     /**
      * Constructor
+     *
      * @param defaultGraphURI - URI of the default RDF Graph
-     * @param dataset - RDF dataset
-     * @param bucketSize - Bucket size, i.e., how many RDF triples to process are sent by query
+     * @param dataset         - RDF dataset
+     * @param bucketSize      - Bucket size, i.e., how many RDF triples to process are sent by query
      */
-    public UpdateExecutor(String defaultGraphURI,  Dataset dataset, int bucketSize) {
+    public UpdateExecutor(String defaultGraphURI, Dataset dataset, int bucketSize) {
         this.defaultGraphURI = defaultGraphURI;
         this.dataset = dataset;
         // get default graph
@@ -49,6 +51,7 @@ public class UpdateExecutor {
 
     /**
      * Execute a SPARQL UPDATE query
+     *
      * @param query - SPARQL UPDATE query
      */
     public boolean execute(String query) {
@@ -57,8 +60,8 @@ public class UpdateExecutor {
         // parse query and get all update operations in the plan
         UpdateRequest plan = UpdateFactory.create(query);
 
-        for(Update op: plan.getOperations()) {
-            if(op instanceof UpdateDataInsert) {
+        for (Update op : plan.getOperations()) {
+            if (op instanceof UpdateDataInsert) {
                 UpdateDataInsert insert = (UpdateDataInsert) op;
                 updates.add(new InsertQuery(insert.getQuads(), bucketSize));
             } else if (op instanceof UpdateDataDelete) {
@@ -70,8 +73,8 @@ public class UpdateExecutor {
             }
         }
         // execute each update operation
-        for(UpdateQuery update: updates) {
-            if(!executeOne(update)) {
+        for (UpdateQuery update : updates) {
+            if (!executeOne(update)) {
                 return false;
             }
         }
@@ -80,6 +83,7 @@ public class UpdateExecutor {
 
     /**
      * Execute an operation in a SPARQL update query
+     *
      * @param update - Operation to execute
      * @return True if the execution was successfull, False otherwise
      */

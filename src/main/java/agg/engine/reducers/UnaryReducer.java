@@ -10,6 +10,7 @@ import org.apache.jena.sparql.expr.NodeValue;
 
 /**
  * A base class for implementing aggregation reducers that operate on a single variable
+ *
  * @author Thomas Minier
  */
 public abstract class UnaryReducer implements AggregationReducer {
@@ -27,6 +28,7 @@ public abstract class UnaryReducer implements AggregationReducer {
 
     /**
      * Get the initial value for the reducer
+     *
      * @return
      */
     abstract NodeValue bottom();
@@ -34,6 +36,7 @@ public abstract class UnaryReducer implements AggregationReducer {
     /**
      * Merge two values into a new one.
      * This operation must be commutative, associative and idempotent.
+     *
      * @param x - Left value
      * @param y - Right value
      * @return Merged value
@@ -42,6 +45,7 @@ public abstract class UnaryReducer implements AggregationReducer {
 
     /**
      * Reduce the value into the final aggregation result
+     *
      * @param v - Value to reduce
      * @return Final aggregation result
      */

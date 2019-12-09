@@ -1,9 +1,10 @@
 # hdt_file_connector.py
 # Author: Thomas MINIER - MIT License 2017-2018
+import os.path
 from hdt import HDTDocument
+
 from sage.database.db_connector import DatabaseConnector
 from sage.database.db_iterator import DBIterator
-import os.path
 
 
 class HDTIterator(DBIterator):

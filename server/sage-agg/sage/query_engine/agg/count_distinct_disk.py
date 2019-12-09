@@ -1,7 +1,7 @@
 # count.py
 # Author: Arnaud GRALL - MIT License 2017-2019
-from sage.query_engine.agg.partial_agg import PartialAggregator
 from sage.query_engine.agg.index_disk_rocksdb import IndexRocksdb
+from sage.query_engine.agg.partial_agg import PartialAggregator
 
 
 class CDAError(Exception):
@@ -27,11 +27,13 @@ class CountDistinctDiskAggregator(PartialAggregator):
             e = bindings[self._variable]
             # enable the count or not
             count = True
-            if self._index.has_bindings(query_id=self.get_query_id(), aggregator_id=self.get_id(), group_key=group_key, bindings=e):
+            if self._index.has_bindings(query_id=self.get_query_id(), aggregator_id=self.get_id(), group_key=group_key,
+                                        bindings=e):
                 count = False
             else:
                 # store the binding
-                self._index.set_bindings(query_id=self.get_query_id(), aggregator_id=self.get_id(), group_key=group_key, bindings=e)
+                self._index.set_bindings(query_id=self.get_query_id(), aggregator_id=self.get_id(), group_key=group_key,
+                                         bindings=e)
 
             exist = self._index.has(self._query_id, group_key)
             if not exist[0] or (exist[0] and exist[1] is None):

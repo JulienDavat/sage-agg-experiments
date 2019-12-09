@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * A BufferedIterator that process block of mappings instead of single mappings.
+ *
  * @author Thomas Minier
  */
 public abstract class BlockBufferedIterator extends QueryIteratorBase {

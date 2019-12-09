@@ -1,5 +1,6 @@
 package agg.engine.iterators;
 
+import agg.model.SageGraph;
 import org.apache.jena.atlas.io.IndentedWriter;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.sparql.core.BasicPattern;
@@ -10,12 +11,12 @@ import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.iterator.QueryIterRepeatApply;
 import org.apache.jena.sparql.serializer.SerializationContext;
-import agg.model.SageGraph;
 
 import java.util.Set;
 
 /**
  * Perform a Nested Loop Join between a source of bindings and a Basic Graph patterns. BGPs are evaluated using a SageServer.
+ *
  * @author Thomas Minier
  */
 public class SageBGPJoinIterator extends QueryIterRepeatApply {
@@ -34,7 +35,7 @@ public class SageBGPJoinIterator extends QueryIterRepeatApply {
     @Override
     protected QueryIterator nextStage(Binding binding) {
         BasicPattern boundBGP = new BasicPattern();
-        for (Triple t: bgp) {
+        for (Triple t : bgp) {
             boundBGP.add(Substitute.substitute(t, binding));
         }
         return graph.basicGraphPatternFind(boundBGP, projection);

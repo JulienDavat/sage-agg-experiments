@@ -1,5 +1,6 @@
 package agg.engine.iterators.optional;
 
+import agg.engine.iterators.base.BindingSpy;
 import org.apache.jena.atlas.io.IndentedWriter;
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.algebra.Op;
@@ -12,7 +13,6 @@ import org.apache.jena.sparql.engine.iterator.QueryIterNullIterator;
 import org.apache.jena.sparql.engine.iterator.QueryIteratorBase;
 import org.apache.jena.sparql.engine.main.QC;
 import org.apache.jena.sparql.serializer.SerializationContext;
-import agg.engine.iterators.base.BindingSpy;
 
 import java.util.Deque;
 import java.util.Iterator;
@@ -24,6 +24,7 @@ import java.util.LinkedList;
  * 2) Evaluates the OPTIONAL clause with each input binding.
  * 3) If an input binding has results with the left-join, remove it from the local buffer.
  * 4) When all input bindings have been evaluated, forward all bindings that didn't yield results using the buffer
+ *
  * @author Thomas Minier
  */
 public class OptionalIterator extends QueryIteratorBase {
@@ -33,6 +34,7 @@ public class OptionalIterator extends QueryIteratorBase {
 
     /**
      * Constructor
+     *
      * @param executionContext - Query execution context
      */
     private OptionalIterator(ExecutionContext executionContext) {
@@ -43,8 +45,9 @@ public class OptionalIterator extends QueryIteratorBase {
 
     /**
      * Create a new OptionalIterator to evaluate a left-join between an input iterator and a group pattern.
-     * @param input - Input iterator
-     * @param optionalClause - SPARQL group pattern from the OPTIONAL clause
+     *
+     * @param input            - Input iterator
+     * @param optionalClause   - SPARQL group pattern from the OPTIONAL clause
      * @param executionContext - Query execution context
      * @return An OptionalIterator used to evaluates the left-join
      */
@@ -65,6 +68,7 @@ public class OptionalIterator extends QueryIteratorBase {
 
     /**
      * Set the input iterator (private, used by {@link OptionalIterator#create(QueryIterator, Op, ExecutionContext)}).
+     *
      * @param input - The new input iterator
      */
     private void setInputIterator(QueryIterator input) {
@@ -73,6 +77,7 @@ public class OptionalIterator extends QueryIteratorBase {
 
     /**
      * Add bindings into the internal buffer
+     *
      * @param binding - Bindings to add
      */
     private void addBinding(Binding binding) {
@@ -81,13 +86,14 @@ public class OptionalIterator extends QueryIteratorBase {
 
     /**
      * Check if one set of bindings is the subset of another one.
-     * @param left - Reference set of binding
+     *
+     * @param left  - Reference set of binding
      * @param right - Set of bindings to tests with
      * @return True if left is a subset of right, False otherwise
      */
     private boolean subsetOf(Binding left, Binding right) {
         Iterator<Var> leftVars = left.vars();
-        while(leftVars.hasNext()) {
+        while (leftVars.hasNext()) {
             Var currentVar = leftVars.next();
             Node associatedNode = left.get(currentVar);
             if (!right.contains(currentVar) || !associatedNode.equals(right.get(currentVar))) {
@@ -107,7 +113,7 @@ public class OptionalIterator extends QueryIteratorBase {
         if (internalIterator.hasNext()) {
             Binding results = internalIterator.next();
             // remove the iterator from the one seen before
-            for(Binding b: seenBefore) {
+            for (Binding b : seenBefore) {
                 if (subsetOf(b, results)) {
                     seenBefore.remove(b);
                     break;

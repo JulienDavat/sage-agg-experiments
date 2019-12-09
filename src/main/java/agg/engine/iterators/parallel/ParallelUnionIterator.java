@@ -9,12 +9,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * An iterator that performs (in parallel) the union of the results of two iterators.
+ *
  * @author Thomas Minier
  */
 public class ParallelUnionIterator extends ParallelBufferedIterator {
+    private final AtomicInteger activeThreadsCounter;
     private QueryIterator left;
     private QueryIterator right;
-    private final AtomicInteger activeThreadsCounter;
 
     public ParallelUnionIterator(ExecutorService threadPool, QueryIterator left, QueryIterator right) {
         super(threadPool);

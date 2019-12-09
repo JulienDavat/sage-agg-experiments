@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Base class to implement UPDATE queries
+ *
  * @author Thomas Minier
  */
 public abstract class UpdateQueryBase implements UpdateQuery {
@@ -15,7 +16,8 @@ public abstract class UpdateQueryBase implements UpdateQuery {
 
     /**
      * Constructor
-     * @param quads - List of RDF Quads to process
+     *
+     * @param quads      - List of RDF Quads to process
      * @param bucketSize - Bucket size, i.e., how many RDF triples are sent by query
      */
     public UpdateQueryBase(List<Quad> quads, int bucketSize) {
@@ -26,6 +28,7 @@ public abstract class UpdateQueryBase implements UpdateQuery {
 
     /**
      * Build a SPARQL UPDATE query from a bucket of quads
+     *
      * @param quads - Bucket of quads
      * @return The corresponding SPARQL UPDATE query
      */
@@ -33,6 +36,7 @@ public abstract class UpdateQueryBase implements UpdateQuery {
 
     /**
      * Delete a RDF quad from the query internal buffer
+     *
      * @param quad - Quad to delete
      */
     public void delete(Quad quad) {
@@ -41,6 +45,7 @@ public abstract class UpdateQueryBase implements UpdateQuery {
 
     /**
      * Delete a list of RDF quads from the query internal buffer
+     *
      * @param quads - List of quads to delete
      */
     public void deleteAll(List<Quad> quads) {
@@ -49,6 +54,7 @@ public abstract class UpdateQueryBase implements UpdateQuery {
 
     /**
      * Build the next SPARQL UPDATE query to execute
+     *
      * @return A SPARQL UPDATE query, i.e., either an INSERT DATA or DELETE DATA query
      */
     @Override
@@ -63,6 +69,7 @@ public abstract class UpdateQueryBase implements UpdateQuery {
 
     /**
      * Test if the query has more RDF triples to process
+     *
      * @return True the query has more RDF triples to process, False otherwise
      */
     @Override
@@ -72,6 +79,7 @@ public abstract class UpdateQueryBase implements UpdateQuery {
 
     /**
      * Indicate that a list of quads has been processed by the server
+     *
      * @param quads - List of quads
      */
     @Override

@@ -59,6 +59,7 @@ def get_postgres_create_table(table_name, enable_mvcc=False):
 
 def get_postgres_create_indexes(table_name, enable_mvcc=False):
     """Format all postgre CREATE INDEXE with the name of a SQL table"""
+
     def __mapper(fn):
         return fn.format(table_name, table_name)
 

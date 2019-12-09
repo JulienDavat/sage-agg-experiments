@@ -10,6 +10,7 @@ import org.apache.jena.riot.RDFFormat;
 
 /**
  * Execute a SPARQL CONSTRUCT query and output results in stdin
+ *
  * @author Thomas Minier
  */
 public class ConstructQueryExecutor implements QueryExecutor {

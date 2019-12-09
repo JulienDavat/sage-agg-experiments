@@ -19,11 +19,13 @@ import java.util.stream.Collectors;
 
 /**
  * Builder used to create SPARQL queries that can be send to a SaGe server
+ *
  * @author Thomas Minier
  */
 public class SageQueryBuilder {
 
-    private SageQueryBuilder() {}
+    private SageQueryBuilder() {
+    }
 
     private static String serializeQuery(Op root) {
         return OpAsQuery.asQuery(root).serialize();
@@ -31,6 +33,7 @@ public class SageQueryBuilder {
 
     /**
      * Build a SPARQL query from a Basic graph pattern
+     *
      * @param bgp - Basic Graph pattern
      * @return Generated SPARQL query
      */
@@ -40,7 +43,8 @@ public class SageQueryBuilder {
 
     /**
      * Build a SPARQL query from a Basic graph pattern
-     * @param bgp - Basic Graph pattern
+     *
+     * @param bgp     - Basic Graph pattern
      * @param filters - List of SPARQL filters
      * @return Generated SPARQL query
      */
@@ -50,8 +54,9 @@ public class SageQueryBuilder {
 
     /**
      * Build a SPARQL query from a Basic graph pattern and a list of SPARQL filters
-     * @param bgp - Basic Graph pattern
-     * @param filters - List of SPARQL filters
+     *
+     * @param bgp       - Basic Graph pattern
+     * @param filters   - List of SPARQL filters
      * @param variables - list of projection variables
      * @return Generated SPARQL query
      */
@@ -61,7 +66,7 @@ public class SageQueryBuilder {
         // query root: the basic graph pattern itself
         Op op = new OpBGP(bgp);
         // apply SPARQL filters
-        for(Expr filter: filters) {
+        for (Expr filter : filters) {
             op = OpFilter.filter(filter, op);
         }
         // apply projection
@@ -71,7 +76,8 @@ public class SageQueryBuilder {
 
     /**
      * Build a SPARQL query from a Basic graph pattern and a list of SPARQL filters
-     * @param bgp - Basic Graph pattern
+     *
+     * @param bgp       - Basic Graph pattern
      * @param variables - GROUP BY variables
      * @return Generated SPARQL query
      */
@@ -80,7 +86,7 @@ public class SageQueryBuilder {
         Op op = new OpBGP(bgp);
         // add group by
         VarExprList list = new VarExprList();
-        for(Var v: variables) {
+        for (Var v : variables) {
             list.add(v);
         }
         op = new OpGroup(op, list, aggregations);
@@ -94,6 +100,7 @@ public class SageQueryBuilder {
 
     /**
      * Build a SPARQL query from a set of Basic graph patterns
+     *
      * @param union - set of Basic Graph patterns
      * @return Generated SPARQL query
      */
@@ -115,12 +122,13 @@ public class SageQueryBuilder {
 
     /**
      * Build a SPARQL query from a set of Graph clauses
+     *
      * @param graphs - Set of GRAPH clauses, i.e., tuples of (graph uri, basic graph pattern)
      * @return Generated SPARQL query
      */
     public static String buildGraphQuery(Map<String, BasicPattern> graphs, Set<Var> projection) {
         Op op = null;
-        for(Map.Entry<String, BasicPattern> entry: graphs.entrySet()) {
+        for (Map.Entry<String, BasicPattern> entry : graphs.entrySet()) {
             Op opBGP = new OpBGP(entry.getValue());
             Op opGraph = new OpGraph(NodeFactory.createURI(entry.getKey()), opBGP);
             if (op == null) {

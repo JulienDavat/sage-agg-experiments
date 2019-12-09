@@ -1,7 +1,7 @@
 # utils.py
 # Author: Thomas MINIER - MIT License 2017-2019
-from re import compile
 from math import ceil
+from re import compile
 
 regex = compile('"(.*)"\\^\\^(.+)')
 

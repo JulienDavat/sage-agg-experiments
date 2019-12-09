@@ -1,7 +1,10 @@
 package agg.engine.iterators.agg;
 
+import agg.engine.reducers.AggregationReducer;
 import agg.engine.reducers.GroupByReducer;
 import agg.http.data.SolutionGroup;
+import agg.http.results.QueryResults;
+import agg.model.SageGraph;
 import org.apache.jena.atlas.iterator.IteratorDelayedInitialization;
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.core.BasicPattern;
@@ -12,9 +15,6 @@ import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.binding.BindingHashMap;
 import org.apache.jena.sparql.engine.iterator.QueryIterPlainWrapper;
 import org.apache.jena.sparql.expr.ExprAggregator;
-import agg.engine.reducers.AggregationReducer;
-import agg.http.results.QueryResults;
-import agg.model.SageGraph;
 
 import java.util.*;
 
@@ -28,7 +28,7 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
 
     public static Binding genKey(List<Var> variables, Binding bindings) {
         BindingHashMap b = new BindingHashMap();
-        for(Var v: variables) {
+        for (Var v : variables) {
             if (bindings.contains(v)) {
                 b.add(v, bindings.get(v));
             } else {
@@ -58,7 +58,7 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
                     while (hasNext) {
                         results = graph.getClient().queryGroupBy(graph.getGraphURI(), bgp, variables, aggregations, extensions, nextLink);
                         // regroup all bindings by key
-                        for(Binding b: results.getBindings()) {
+                        for (Binding b : results.getBindings()) {
                             Binding key = genKey(variables, b);
                             if (key != null) {
                                 if (!solutions.containsKey(key)) {
@@ -74,7 +74,7 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
                         nextLink = results.getNext();
                         hasNext = results.hasNext();
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     exit(1);
                 }
@@ -90,12 +90,12 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
                         entry.forEachBindings(b -> {
                             reducers.forEach((v, red) -> red.accumulate(b));
                         });
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         exit(1);
                     }
                     // build final results
-                    for(Map.Entry<Var, AggregationReducer> reducer: reducers.entrySet()) {
+                    for (Map.Entry<Var, AggregationReducer> reducer : reducers.entrySet()) {
                         Node value = reducer.getValue().getFinalValue().asNode();
                         ((BindingHashMap) res).add(reducer.getKey(), value);
                     }
@@ -113,16 +113,16 @@ public class SageGroupByIterator extends QueryIterPlainWrapper {
                     Map<Var, AggregationReducer> reducers = factory.build();
                     try {
                         // accumulate values into the reducers
-                        for(Binding b: entry.getValue()) {
+                        for (Binding b : entry.getValue()) {
                             // System.err.println(b);
                             reducers.forEach((v, reducer) -> reducer.accumulate(b));
                         }
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         exit(1);
                     }
                     // build final results
-                    for(Map.Entry<Var, AggregationReducer> reducer: reducers.entrySet()) {
+                    for (Map.Entry<Var, AggregationReducer> reducer : reducers.entrySet()) {
                         Node value = reducer.getValue().getFinalValue().asNode();
                         ((BindingHashMap) res).add(reducer.getKey(), value);
                     }

@@ -1,9 +1,12 @@
 # groupby.py
 # Author: Thomas MINIER - MIT License 2017-2019
+import os
+import subprocess
+
+from sage.query_engine.agg.index_disk_rocksdb import IndexRocksdb
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
 from sage.query_engine.protobuf.iterators_pb2 import SavedGroupByAgg
-from sage.query_engine.agg.index_disk_rocksdb import IndexRocksdb
-import subprocess, os
+
 
 class GroupByAggregator(PreemptableIterator):
     """
@@ -123,7 +126,7 @@ class GroupByAggregator(PreemptableIterator):
             if self._optimized and self._optimized_disk:
                 # Phase 2: produce aggregations results
                 if not self.has_next():
-                   return None
+                    return None
                 else:
                     # all aggregator will have the same behavior
                     # just get the first group_key available

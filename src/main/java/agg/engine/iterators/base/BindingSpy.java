@@ -6,17 +6,11 @@ import org.apache.jena.sparql.engine.iterator.QueryIterConvert;
 /**
  * A spy, used to execute a callback over all bindings emitted by a {@link org.apache.jena.sparql.engine.QueryIterator}.
  * By default, the callback is set to nothing and must be enable with {@link BindingSpy#setCallback(Callback)}.
+ *
  * @author Thomas Minier
  */
 public class BindingSpy implements QueryIterConvert.Converter {
     private Callback callback;
-
-    /**
-     * Internal interface, which specify the callback used by the iterator
-     */
-    public static interface Callback {
-        public void execute(Binding obj);
-    }
 
     public BindingSpy() {
         callback = null;
@@ -24,6 +18,7 @@ public class BindingSpy implements QueryIterConvert.Converter {
 
     /**
      * Set the callback
+     *
      * @param callback - Callback
      */
     public void setCallback(Callback callback) {
@@ -36,5 +31,12 @@ public class BindingSpy implements QueryIterConvert.Converter {
             callback.execute(obj);
         }
         return obj;
+    }
+
+    /**
+     * Internal interface, which specify the callback used by the iterator
+     */
+    public interface Callback {
+        void execute(Binding obj);
     }
 }

@@ -10,6 +10,7 @@ import java.io.IOException;
 
 /**
  * Jackson deserializer for the JSON statistics found in a page of results
+ *
  * @author Thomas Minier
  */
 public class SageStatisticsDeserializer extends JsonDeserializer<SageStatistics> {
@@ -22,7 +23,7 @@ public class SageStatisticsDeserializer extends JsonDeserializer<SageStatistics>
         // ensure that the "cardinalities" field is an array
         if (node.get("cardinalities").isArray()) {
             ArrayNode cardsNode = (ArrayNode) node.get("cardinalities");
-            for(JsonNode cardNode: cardsNode) {
+            for (JsonNode cardNode : cardsNode) {
                 JsonNode tripleNode = cardNode.get("triple");
                 sageStatistics.addTripleCardinality(
                         tripleNode.get("subject").asText(),

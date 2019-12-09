@@ -1,8 +1,9 @@
 # transaction_manager.py
 # Author: Thomas MINIER - MIT License 2017-2019
 from os import getpid
+
 import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_SERIALIZABLE, ISOLATION_LEVEL_READ_COMMITTED
+from psycopg2.extensions import ISOLATION_LEVEL_READ_COMMITTED
 
 
 class TransactionManager:
@@ -26,13 +27,17 @@ class TransactionManager:
     def get_connection(self):
         """Get the connection of a given processs"""
         pid = getpid()
+        if self._connections[pid].closed:
+            del self._connections[pid]
+            self.open_connection()
         return self._connections[pid]
 
     def open_connection(self):
         """Open a new connection for a given process"""
         pid = getpid()
         if pid not in self._connections:
-            self._connections[pid] = psycopg2.connect(dbname=self._dbname, user=self._user, password=self._password, host=self._host, port=self._port)
+            self._connections[pid] = psycopg2.connect(dbname=self._dbname, user=self._user, password=self._password,
+                                                      host=self._host, port=self._port)
             # disable autocommit & set isolation level
             self._connections[pid].autocommit = False
             self._connections[pid].isolation_level = ISOLATION_LEVEL_READ_COMMITTED

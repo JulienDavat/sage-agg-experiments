@@ -1,11 +1,11 @@
 package agg.engine.iterators;
 
-import org.apache.jena.sparql.core.BasicPattern;
-import org.apache.jena.sparql.core.Var;
-import org.apache.jena.sparql.expr.Expr;
 import agg.engine.iterators.base.SageQueryIterator;
 import agg.http.SageRemoteClient;
 import agg.http.results.QueryResults;
+import org.apache.jena.sparql.core.BasicPattern;
+import org.apache.jena.sparql.core.Var;
+import org.apache.jena.sparql.expr.Expr;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +13,7 @@ import java.util.Set;
 
 /**
  * Like a {@link SageBGPIterator}, but also apply a set of filters on the BGP
+ *
  * @author Thomas Minier
  */
 public class SageFilterBGPIterator extends SageQueryIterator {

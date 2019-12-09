@@ -1,38 +1,40 @@
 package agg.http.results;
 
+import agg.http.data.SageStatistics;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.Binding;
-import agg.http.data.SageStatistics;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Results of evaluating a SPARQL INSERT DATA or DELETE DATA against a Sage server
+ *
  * @author Thomas Minier
  */
 public class UpdateResults implements SageQueryResults {
-    private List<Quad> processedQuads;
-    private SageStatistics stats;
-    private String error;
-    private boolean hasError;
     private static final Var SUBJECT_VARIABLE = Var.alloc("s");
     private static final Var PREDICATE_VARIABLE = Var.alloc("p");
     private static final Var OBJECT_VARIABLE = Var.alloc("o");
     private static final Var GRAPH_VARIABLE = Var.alloc("graph");
+    private List<Quad> processedQuads;
+    private SageStatistics stats;
+    private String error;
+    private boolean hasError;
 
     /**
      * Constructor
+     *
      * @param defaultGraphURI - URI of the default RDF graph
-     * @param bindings - Bindings received from the server after the query evaluation
-     * @param stats - Statistics related to the query evaluation
+     * @param bindings        - Bindings received from the server after the query evaluation
+     * @param stats           - Statistics related to the query evaluation
      */
     public UpdateResults(String defaultGraphURI, List<Binding> bindings, SageStatistics stats) {
         processedQuads = new LinkedList<>();
-        for(Binding binding: bindings) {
+        for (Binding binding : bindings) {
             if (binding.contains(SUBJECT_VARIABLE) && binding.contains(PREDICATE_VARIABLE)
                     && binding.contains(OBJECT_VARIABLE) && binding.contains(GRAPH_VARIABLE)) {
                 // replace the URI of the default RDF graph by the constant used by Apache Jena

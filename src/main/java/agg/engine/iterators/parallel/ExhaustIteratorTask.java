@@ -8,12 +8,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A Tasks that read all results from an iterators and insert them into a shared buffer.
+ *
  * @author Thomas Minier
  */
 public class ExhaustIteratorTask implements Runnable {
-    private QueryIterator source;
     private final BlockingDeque<Binding> buffer;
     private final AtomicInteger activeThreadsCounter;
+    private QueryIterator source;
 
     public ExhaustIteratorTask(QueryIterator source, BlockingDeque<Binding> buffer, AtomicInteger activeThreadsCounter) {
         this.source = source;

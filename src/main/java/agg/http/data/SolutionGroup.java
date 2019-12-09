@@ -46,7 +46,7 @@ public class SolutionGroup {
     }
 
     public void forEachKey(BiConsumer<Var, Node> consumer) {
-        for(Map.Entry<Var, Node> entry: keys.entrySet()) {
+        for (Map.Entry<Var, Node> entry : keys.entrySet()) {
             consumer.accept(entry.getKey(), entry.getValue());
         }
     }

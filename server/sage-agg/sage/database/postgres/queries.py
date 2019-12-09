@@ -51,25 +51,32 @@ def get_resume_query(subj, pred, obj, last_read, table_name, fetch_size=500, sym
     if kind == 'spo':
         return None, None
     elif kind == '???':
-        query += "WHERE (subject, predicate, md5(object)) {} (%s, %s, md5(%s)) ORDER BY subject, predicate, md5(object)".format(symbol)
+        query += "WHERE (subject, predicate, md5(object)) {} (%s, %s, md5(%s)) ORDER BY subject, predicate, md5(object)".format(
+            symbol)
         params = (last_s, last_p, last_o)
     elif kind == 's??':
-        query += "WHERE subject = %s AND (predicate, md5(object)) {} (%s, md5(%s)) ORDER BY subject, predicate, md5(object)".format(symbol)
+        query += "WHERE subject = %s AND (predicate, md5(object)) {} (%s, md5(%s)) ORDER BY subject, predicate, md5(object)".format(
+            symbol)
         params = (last_s, last_p, last_o)
     elif kind == 'sp?':
-        query += "WHERE subject = %s AND predicate = %s AND (md5(object)) {} (md5(%s)) ORDER BY subject, predicate, md5(object)".format(symbol)
+        query += "WHERE subject = %s AND predicate = %s AND (md5(object)) {} (md5(%s)) ORDER BY subject, predicate, md5(object)".format(
+            symbol)
         params = (last_s, last_p, last_o)
     elif kind == '?p?':
-        query += "WHERE predicate = %s AND (md5(object), subject) {} (md5(%s), %s) ORDER BY predicate, md5(object), subject".format(symbol)
+        query += "WHERE predicate = %s AND (md5(object), subject) {} (md5(%s), %s) ORDER BY predicate, md5(object), subject".format(
+            symbol)
         params = (last_p, last_o, last_s)
     elif kind == '?po':
-        query += "WHERE predicate = %s AND md5(object) = md5(%s) AND (subject) {} (%s) ORDER BY predicate, md5(object), subject".format(symbol)
+        query += "WHERE predicate = %s AND md5(object) = md5(%s) AND (subject) {} (%s) ORDER BY predicate, md5(object), subject".format(
+            symbol)
         params = (last_p, last_o, last_s)
     elif kind == 's?o':
-        query += "WHERE subject = %s AND md5(object) = md5(%s) AND (predicate) {} (%s) ORDER BY md5(object), subject, predicate".format(symbol)
+        query += "WHERE subject = %s AND md5(object) = md5(%s) AND (predicate) {} (%s) ORDER BY md5(object), subject, predicate".format(
+            symbol)
         params = (last_s, last_o, last_p)
     elif kind == '??o':
-        query += "WHERE md5(object) = md5(%s) AND (subject, predicate) {} (%s, %s) ORDER BY md5(object), subject, predicate".format(symbol)
+        query += "WHERE md5(object) = md5(%s) AND (subject, predicate) {} (%s, %s) ORDER BY md5(object), subject, predicate".format(
+            symbol)
         params = (last_o, last_s, last_p)
     else:
         raise Exception("Unkown pattern type: {}".format(kind))
@@ -78,12 +85,14 @@ def get_resume_query(subj, pred, obj, last_read, table_name, fetch_size=500, sym
 
 def get_insert_query(table_name):
     """Build a SQL query to insert a RDF triple into a PostgreSQL dataset"""
-    return "INSERT INTO {} (subject,predicate,object) VALUES (%s,%s,%s) ON CONFLICT (subject,predicate,object) DO NOTHING".format(table_name)
+    return "INSERT INTO {} (subject,predicate,object) VALUES (%s,%s,%s) ON CONFLICT (subject,predicate,object) DO NOTHING".format(
+        table_name)
 
 
 def get_insert_many_query(table_name):
     """Build a SQL query to insert a RDF triple into a PostgreSQL dataset"""
-    return "INSERT INTO {} (subject,predicate,object) VALUES %s ON CONFLICT (subject,predicate,object) DO NOTHING".format(table_name)
+    return "INSERT INTO {} (subject,predicate,object) VALUES %s ON CONFLICT (subject,predicate,object) DO NOTHING".format(
+        table_name)
 
 
 def get_delete_query(table_name):

@@ -1,5 +1,8 @@
 package agg.federated;
 
+import agg.federated.strategy.AskStrategy;
+import agg.federated.strategy.SourceSelectionStrategy;
+import agg.http.SageRemoteClient;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimaps;
@@ -16,15 +19,13 @@ import org.apache.jena.sparql.algebra.op.OpJoin;
 import org.apache.jena.sparql.algebra.op.OpUnion;
 import org.apache.jena.sparql.core.BasicPattern;
 import org.apache.jena.sparql.core.Var;
-import agg.federated.strategy.AskStrategy;
-import agg.federated.strategy.SourceSelectionStrategy;
-import agg.http.SageRemoteClient;
 
 import java.util.*;
 
 /**
  * Performs an source selection and a query decomposition to turn a SPARQL query into a federated SPARQL query.
  * This class also applies the "exclusive groups" and "join distribution over unions" optimizations.
+ *
  * @author Thomas Minier
  */
 public class SourceSelection extends TransformBase {
@@ -41,6 +42,7 @@ public class SourceSelection extends TransformBase {
 
     /**
      * Constructor with parametric source selection strategy
+     *
      * @param selectionStrategy - The source selection strategy to use
      */
     public SourceSelection(SourceSelectionStrategy selectionStrategy) {
@@ -50,7 +52,8 @@ public class SourceSelection extends TransformBase {
 
     /**
      * Register a source, i.e., a RDF graph, in the federation
-     * @param graphURI - Graph URI
+     *
+     * @param graphURI   - Graph URI
      * @param httpClient - HTTP client used to access the graph
      */
     public void registerSource(String graphURI, SageRemoteClient httpClient) {
@@ -63,13 +66,14 @@ public class SourceSelection extends TransformBase {
      * Close all open connections with the remote graphs
      */
     public void close() {
-        for(Map.Entry<String, SageRemoteClient> source: httpClients.entrySet()) {
+        for (Map.Entry<String, SageRemoteClient> source : httpClients.entrySet()) {
             source.getValue().close();
         }
     }
 
     /**
      * Perform source selection and query decomposition of a SPARQL query, using the current registered sources.
+     *
      * @param query - SPARQL query to localize, in string format
      * @return Localized federated SPARQL query
      */
@@ -79,6 +83,7 @@ public class SourceSelection extends TransformBase {
 
     /**
      * Perform source selection and query decomposition of a SPARQL query, using the current registered sources.
+     *
      * @param query - SPARQL query to localize, in Apache Jena internal representation
      * @return Localized federated SPARQL query
      */
@@ -92,9 +97,9 @@ public class SourceSelection extends TransformBase {
         List<Set<LocalizedPattern>> localizedPatterns = new LinkedList<>();
 
         // perform localization for each triple pattern and each source
-        for(Triple pattern: opBGP.getPattern().getList()) {
+        for (Triple pattern : opBGP.getPattern().getList()) {
             Set<LocalizedPattern> relevantSources = new HashSet<>();
-            for(Map.Entry<String, SageRemoteClient> source: httpClients.entrySet()) {
+            for (Map.Entry<String, SageRemoteClient> source : httpClients.entrySet()) {
                 String graphURL = source.getKey();
                 int cardinality = selectionStrategy.getCardinality(pattern, graphURL, source.getValue());
                 if (cardinality > 0) {
@@ -111,7 +116,7 @@ public class SourceSelection extends TransformBase {
         List<Op> allJoins = new LinkedList<>();
 
         // apply join distribution (P1 UNION P2) JOIN P3 => (P1 JOIN P3) UNION (P2 JOIN P3)
-        for(List<LocalizedPattern> joinGroup: Sets.cartesianProduct(localizedPatterns)) {
+        for (List<LocalizedPattern> joinGroup : Sets.cartesianProduct(localizedPatterns)) {
             // group patterns by source
             ImmutableListMultimap<String, LocalizedPattern> mapping = Multimaps.index(joinGroup, LocalizedPattern::getSource);
 
@@ -119,7 +124,7 @@ public class SourceSelection extends TransformBase {
             List<LocalizedPattern> others = new LinkedList<>();
 
             // generate exclusive groups for this group pattern
-            for(String source: mapping.keySet()) {
+            for (String source : mapping.keySet()) {
                 ImmutableList<LocalizedPattern> group = mapping.get(source);
 
                 // skip group of size 1, as they cannot create an exclusive group (by definition)
@@ -129,20 +134,20 @@ public class SourceSelection extends TransformBase {
                     ExclusiveGroup eg = new ExclusiveGroup(source);
                     // check that each pattern can be joined with at least one other pattern in the group
                     // TODO Do we need a double for loop to check for cartesian-free exclusive groups?
-                    for(int i = 0; i < group.size(); i++) {
+                    for (int i = 0; i < group.size(); i++) {
                         LocalizedPattern pattern = group.get(i);
                         Set<Var> patternVars = pattern.getVariables();
                         boolean isValid = false;
-                        for(int j = 0; j < group.size(); j++) {
+                        for (int j = 0; j < group.size(); j++) {
                             // avoid comparison of the pattern with itself
                             if (i != j) {
                                 Set<Var> otherVars = group.get(j).getVariables();
                                 // tp_1 can be joined with tp_2 iff vars(tp_1) intersection vars(tp_2) != empty set
-                                isValid = isValid || (! Sets.intersection(patternVars, otherVars).isEmpty());
+                                isValid = isValid || (!Sets.intersection(patternVars, otherVars).isEmpty());
                             }
                         }
                         // if the triple can be joined without cartesian product, put it in the exclusive group
-                        if(isValid) {
+                        if (isValid) {
                             eg.addPattern(pattern);
                         } else {
                             // otherwise, exclude it from the exclusive group
@@ -165,7 +170,7 @@ public class SourceSelection extends TransformBase {
                 opJoin = exclusiveGroups.get(0).toOp();
                 exclusiveGroups.remove(0);
             }
-            for(ExclusiveGroup eg: exclusiveGroups) {
+            for (ExclusiveGroup eg : exclusiveGroups) {
                 opJoin = OpJoin.create(opJoin, eg.toOp());
             }
             // then, add all remaining patterns
@@ -173,7 +178,7 @@ public class SourceSelection extends TransformBase {
                 opJoin = others.get(0).toOp();
                 others.remove(0);
             }
-            for(LocalizedPattern pattern: others) {
+            for (LocalizedPattern pattern : others) {
                 opJoin = OpJoin.create(opJoin, pattern.toOp());
             }
 
@@ -182,7 +187,7 @@ public class SourceSelection extends TransformBase {
 
         // build the top-level union
         Op opUnion = allJoins.get(0);
-        for(int ind = 1; ind < allJoins.size(); ind++) {
+        for (int ind = 1; ind < allJoins.size(); ind++) {
             opUnion = new OpUnion(opUnion, allJoins.get(ind));
         }
         return opUnion;

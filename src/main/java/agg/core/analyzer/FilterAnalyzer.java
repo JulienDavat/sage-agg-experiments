@@ -6,11 +6,12 @@ import org.apache.jena.sparql.algebra.TransformBase;
 import org.apache.jena.sparql.algebra.op.OpFilter;
 import org.apache.jena.sparql.expr.ExprList;
 
-import java.util.*;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Collect all filter expressions from a query and aggregate them by variable
+ *
  * @author Thomas Minier
  */
 public class FilterAnalyzer extends TransformBase {
