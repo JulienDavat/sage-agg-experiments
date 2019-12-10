@@ -3,6 +3,7 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
+import os
 
 parser = argparse.ArgumentParser(description='Plot an experiment, please provide a folder where results are located eg: output/second')
 parser.add_argument('-dir', action='store', help='root dir of results, eg: output/')
@@ -17,7 +18,7 @@ if args.dir is None or args.o is None:
 print("Output: ", args.o)
 
 normal = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-normal_wo_distinct = [1,19,20,21,22,6,23,24,25,26,11,27,28,29,30,31]
+normal_wo_distinct = [1,19,20,21,22,6,23,24,25,26,11,27,28,14,30,31]
 
 def process(toProcess = []):
     datasets = ['bsbm10', 'bsbm100', 'bsbm1k']
@@ -34,57 +35,33 @@ def process(toProcess = []):
     tpf = []
     queries = dict()
 
+    traffic_unit = 1000 * 1000 # 1000 = kb
+
     print(toProcess)
     for d in datasets:
-        with open(virtuoso_dir + 'average-{}.csv'.format(d), 'r') as f:
-            rows = csv.reader(f, delimiter=',')
-            total_http_requests = 0
-            total_traffic = 0
-            total_execution_time = 0
-            r = 1
-            for row in rows:
-                if r not in toProcess:
-                    pass
-                else:
-                    total_http_requests += float(row[1])
-                    total_execution_time += float(row[2])
-                    total_traffic += float(row[3])
-                    if r not in queries:
-                        queries[r] = dict()
-                    if "virtuoso" not in queries[r]:
-                        queries[r]["virtuoso"] = []
-                    queries[r]["virtuoso"].append([float(row[1]), float(row[2]), float(row[3])])
-                r += 1
-            virtuoso.append([total_http_requests, total_execution_time, total_traffic])
-
-        with open(sage_dir + 'average-{}-normal.csv'.format(d), 'r') as f:
-            rows = csv.reader(f, delimiter=',')
-            total_http_requests = 0
-            total_traffic = 0
-            total_execution_time = 0
-            r = 1
-            for row in rows:
-                if r not in toProcess:
-                    pass
-                else:
-                    total_http_requests += float(row[1])
-                    total_execution_time += float(row[0]) * 1000
-                    t = float(row[2]) - 36 * (float(row[1]) - 1)
-                    total_traffic += t
-                    if r not in queries:
-                        queries[r] = dict()
-                    if "sage" not in queries[r]:
-                        queries[r]["sage"] = dict()
-                    if "normal" not in queries[r]["sage"]:
-                        queries[r]["sage"]["normal"] = []
-                    queries[r]["sage"]["normal"].append([float(row[1]), float(row[0]) * 1000, t])
-                r += 1
-            if "normal" not in sage:
-                sage["normal"] = []
-            sage["normal"].append([total_http_requests, total_execution_time, total_traffic])
-
-        for b in buffer_size:
-            with open(sage_dir + 'average-{}-b-{}.csv'.format(d, b), 'r') as f:
+        if os.path.exists(virtuoso_dir + 'average-{}.csv'.format(d)):
+            with open(virtuoso_dir + 'average-{}.csv'.format(d), 'r') as f:
+                rows = csv.reader(f, delimiter=',')
+                total_http_requests = 0
+                total_traffic = 0
+                total_execution_time = 0
+                r = 1
+                for row in rows:
+                    if r not in toProcess:
+                        pass
+                    else:
+                        total_http_requests += float(row[1])
+                        total_execution_time += float(row[2])
+                        total_traffic += float(row[3]) / traffic_unit
+                        if r not in queries:
+                            queries[r] = dict()
+                        if "virtuoso" not in queries[r]:
+                            queries[r]["virtuoso"] = []
+                        queries[r]["virtuoso"].append([float(row[1]), float(row[2]), float(row[3]) / traffic_unit])
+                    r += 1
+                virtuoso.append([total_http_requests, total_execution_time, total_traffic])
+        if os.path.exists(sage_dir + 'average-{}-normal.csv'.format(d)):
+            with open(sage_dir + 'average-{}-normal.csv'.format(d), 'r') as f:
                 rows = csv.reader(f, delimiter=',')
                 total_http_requests = 0
                 total_traffic = 0
@@ -97,40 +74,68 @@ def process(toProcess = []):
                         total_http_requests += float(row[1])
                         total_execution_time += float(row[0]) * 1000
                         t = float(row[2]) - 36 * (float(row[1]) - 1)
-                        total_traffic += t
+                        total_traffic += t / traffic_unit
                         if r not in queries:
                             queries[r] = dict()
                         if "sage" not in queries[r]:
                             queries[r]["sage"] = dict()
-                        if b not in queries[r]["sage"]:
-                            queries[r]["sage"][b] = []
-                        queries[r]["sage"][b].append([float(row[1]), float(row[0]) * 1000, t])
+                        if "normal" not in queries[r]["sage"]:
+                            queries[r]["sage"]["normal"] = []
+                        queries[r]["sage"]["normal"].append([float(row[1]), float(row[0]) * 1000, t / traffic_unit])
                     r += 1
-                if b not in sage:
-                    sage[b] = []
-                sage[b].append([total_http_requests, total_execution_time, total_traffic])
+                if "normal" not in sage:
+                    sage["normal"] = []
+                sage["normal"].append([total_http_requests, total_execution_time, total_traffic])
 
-        with open(tpf_dir + 'average-{}.csv'.format(d), 'r') as f:
-            rows = csv.reader(f, delimiter=',')
-            total_http_requests = 0
-            total_traffic = 0
-            total_execution_time = 0
-            r = 1
-            for row in rows:
-                if r not in toProcess:
-                    pass
-                else:
-                    total_http_requests += float(row[2])
-                    total_execution_time += float(row[1]) * 1000
-                    total_traffic += float(row[3])
-                    if r not in queries:
-                        queries[r] = dict()
-                    if "tpf" not in queries[r]:
-                        queries[r]["tpf"] = []
-                    queries[r]["tpf"].append([float(row[2]), float(row[1]) * 1000, float(row[3])])
-                r += 1
+        for b in buffer_size:
+            if os.path.exists(sage_dir + 'average-{}-b-{}.csv'.format(d, b)):
+                with open(sage_dir + 'average-{}-b-{}.csv'.format(d, b), 'r') as f:
+                    rows = csv.reader(f, delimiter=',')
+                    total_http_requests = 0
+                    total_traffic = 0
+                    total_execution_time = 0
+                    r = 1
+                    for row in rows:
+                        if r not in toProcess:
+                            pass
+                        else:
+                            total_http_requests += float(row[1])
+                            total_execution_time += float(row[0]) * 1000
+                            t = float(row[2]) - 36 * (float(row[1]) - 1)
+                            total_traffic += t / traffic_unit
+                            if r not in queries:
+                                queries[r] = dict()
+                            if "sage" not in queries[r]:
+                                queries[r]["sage"] = dict()
+                            if b not in queries[r]["sage"]:
+                                queries[r]["sage"][b] = []
+                            queries[r]["sage"][b].append([float(row[1]), float(row[0]) * 1000, t / traffic_unit])
+                        r += 1
+                    if b not in sage:
+                        sage[b] = []
+                    sage[b].append([total_http_requests, total_execution_time, total_traffic])
+        if os.path.exists(tpf_dir + 'average-{}.csv'.format(d)):
+            with open(tpf_dir + 'average-{}.csv'.format(d), 'r') as f:
+                rows = csv.reader(f, delimiter=',')
+                total_http_requests = 0
+                total_traffic = 0
+                total_execution_time = 0
+                r = 1
+                for row in rows:
+                    if r not in toProcess:
+                        pass
+                    else:
+                        total_http_requests += float(row[2])
+                        total_execution_time += float(row[1]) * 1000
+                        total_traffic += float(row[3]) / traffic_unit
+                        if r not in queries:
+                            queries[r] = dict()
+                        if "tpf" not in queries[r]:
+                            queries[r]["tpf"] = []
+                        queries[r]["tpf"].append([float(row[2]), float(row[1]) * 1000, float(row[3]) / traffic_unit])
+                    r += 1
 
-            tpf.append([total_http_requests, total_execution_time, total_traffic])
+                tpf.append([total_http_requests, total_execution_time, total_traffic])
     return {
         "datasets": datasets,
         "datasets_labels": datasets_labels,
@@ -165,7 +170,8 @@ def final(log=False):
         "linestyle": "dashed",
         "markersize": 8
     }
-    x = np.arange(len(datasets))
+    x = np.arange(3)
+    lol = np.arange(len(datasets))
 
     markers = {
         "virtuoso": "+",
@@ -182,7 +188,7 @@ def final(log=False):
     axes[0][0].plot(x, list(map(lambda e: e[0], tpf)), label="tpf", **options, marker=markers["tpf"])
     axes[0][0].set_xticks(x)
     axes[0][0].set_xticklabels(datasets_labels)
-    axes[0][0].set_ylabel("Http requests")
+    axes[0][0].set_ylabel("HTTP Requests")
     axes[0][0].set_yscale('log')
 
     axes[1][0].plot(x, list(map(lambda e: e[1], virtuoso)), label="virtuoso", **options, marker=markers["virtuoso"])
@@ -191,7 +197,7 @@ def final(log=False):
     axes[1][0].plot(x, list(map(lambda e: e[1], tpf)), label="tpf", **options, marker=markers["tpf"])
     axes[1][0].set_xticks(x)
     axes[1][0].set_xticklabels(datasets_labels)
-    axes[1][0].set_ylabel("Execution time (s)")
+    axes[1][0].set_ylabel("Execution Time (s)")
     axes[1][0].set_yscale('log')
 
     axes[2][0].plot(x, list(map(lambda e: e[2], virtuoso)), label="virtuoso", **options, marker=markers["virtuoso"])
@@ -200,7 +206,7 @@ def final(log=False):
     axes[2][0].plot(x, list(map(lambda e: e[2], tpf)), label="tpf", **options, marker=markers["tpf"])
     axes[2][0].set_xticks(x)
     axes[2][0].set_xticklabels(datasets_labels)
-    axes[2][0].set_ylabel("Traffic (bytes)")
+    axes[2][0].set_ylabel("Traffic (MBytes)")
     axes[2][0].set_yscale('log')
 
     ######### RIGHT SIDE ###########
@@ -227,7 +233,7 @@ def final(log=False):
     axes[1][1].set_xticks(x)
     axes[1][1].set_xticklabels(datasets_labels)
     axes[1][1].set_yscale('log')
-    axes[2][1].yaxis.set_tick_params(which='both', labelbottom=True)
+    axes[1][1].yaxis.set_tick_params(which='both', labelbottom=True)
 
     axes[2][1].plot(x, list(map(lambda e: e[2], virtuoso)), label="virtuoso", **options, marker=markers["virtuoso"])
     axes[2][1].plot(x, list(map(lambda e: e[2], sage["normal"])), label="sage", **options, marker=markers["sage"])
@@ -238,7 +244,7 @@ def final(log=False):
     axes[2][1].set_yscale('log')
     axes[2][1].yaxis.set_tick_params(which='both', labelbottom=True)
 
-    plt.legend(loc="lower center")
+    plt.figlegend(('virtuoso', 'sage', 'sage-agg', 'tpf'), loc="upper center", shadow=True, ncol=4, bbox_to_anchor=(0.5, 0.94))
     plt.savefig(fname=args.o + 'final.png', quality=100, format='png', dpi=100)
     plt.close()
 
