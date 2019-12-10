@@ -24,7 +24,7 @@ sage3_pid="$!"
 echo "Sleeping 5 seconds to start correctly sage servers"
 sleep 5
 
-MAIN_FOLDER="$CUR/../../output/bsbm1k
+MAIN_FOLDER="$CUR/../../output/bsbm1k"
 
 mkdir -m "$MAIN_FOLDER"
 mkdir -p "$MAIN_FOLDER/150" "$MAIN_FOLDER/1500" "$MAIN_FOLDER/15000"
