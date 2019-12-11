@@ -2,7 +2,7 @@ name: SaGe Experiment server
 maintainer: Grall Arnaud
 public_url: http://localhost:8000
 quota: 1500
-max_results: 999999999
+max_results: 50000
 datasets:
   - name: bsbm1k
     description: BSBM 1K products using Postgres backend
