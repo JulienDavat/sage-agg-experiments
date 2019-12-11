@@ -17,8 +17,8 @@ if args.dir is None or args.o is None:
 
 print("Output: ", args.o)
 
-normal = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-normal_wo_distinct = [1,19,20,21,22,6,23,24,25,26,11,27,28,14,30,31]
+normal = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
+normal_wo_distinct = [1,19,20,21,22,6,23,24,25,26,11,27,28,14,30,31, 17, 18]
 
 def process(toProcess = []):
     datasets = ['bsbm10', 'bsbm100', 'bsbm1k']
@@ -248,26 +248,45 @@ def final(log=False):
     plt.savefig(fname=args.o + 'final.png', quality=100, format='png', dpi=100)
     plt.close()
 
-final(log=True)
 
-
-def process_quotas():
+def process_quotas(toProcess = [], traffic_unit = 1):
     quotas = ["150", "1500", "15000"]
     dataset = "bsbm1k"
-    buffer_size = [0, 100000]
-    buffer_size_strings = ["0", "100Kb"]
+    buffer_size = [0]
+    buffer_size_strings = ["0"]
 
-    sage_dir = args.dir + "/sage/"
+    main_dir = args.dir + "/bsbm1k"
 
     virtuoso = []
     sage = dict()
-    tpf = []
     queries = dict()
-    toProcess = list(range(1, 32))
+
+    traffic_unit = 1
+
+    if os.path.exists(main_dir + '/virtuoso/average-{}.csv'.format('bsbm1k')):
+        with open(main_dir + '/virtuoso/average-{}.csv'.format('bsbm1k'), 'r') as f:
+            rows = csv.reader(f, delimiter=',')
+            total_http_requests = 0
+            total_traffic = 0
+            total_execution_time = 0
+            r = 1
+            for row in rows:
+                if r not in toProcess:
+                    pass
+                else:
+                    total_http_requests += float(row[1])
+                    total_execution_time += float(row[2])
+                    total_traffic += float(row[3]) / traffic_unit
+                    if r not in queries:
+                        queries[r] = dict()
+                    if "virtuoso" not in queries[r]:
+                        queries[r]["virtuoso"] = []
+                    queries[r]["virtuoso"].append([float(row[1]), float(row[2]), float(row[3]) / traffic_unit])
+                r += 1
+            virtuoso.append([total_http_requests, total_execution_time, total_traffic])
 
     for quota in quotas:
-
-        with open(args.dir + '/' + quota + '/average-{}-normal.csv'.format(dataset), 'r') as f:
+        with open(main_dir + '/' + quota + '/average-{}-normal.csv'.format(dataset), 'r') as f:
             rows = csv.reader(f, delimiter=',')
             total_http_requests = 0
             total_traffic = 0
@@ -280,21 +299,21 @@ def process_quotas():
                     total_http_requests += float(row[1])
                     total_execution_time += float(row[0]) * 1000
                     t = float(row[2]) - 36 * (float(row[1]) - 1)
-                    total_traffic += t
+                    total_traffic += t / traffic_unit
                     if r not in queries:
                         queries[r] = dict()
                     if "sage" not in queries[r]:
                         queries[r]["sage"] = dict()
                     if "normal" not in queries[r]["sage"]:
                         queries[r]["sage"]["normal"] = []
-                    queries[r]["sage"]["normal"].append([float(row[1]), float(row[0]) * 1000, t])
+                    queries[r]["sage"]["normal"].append([float(row[1]), float(row[0]) * 1000, t / traffic_unit])
                 r += 1
             if "normal" not in sage:
                 sage["normal"] = []
             sage["normal"].append([total_http_requests, total_execution_time, total_traffic])
 
         for b in buffer_size:
-            with open(args.dir + '/' + quota + '/average-{}-b-{}.csv'.format(dataset, b), 'r') as f:
+            with open(main_dir + '/' + quota + '/average-{}-b-{}.csv'.format(dataset, b), 'r') as f:
                 rows = csv.reader(f, delimiter=',')
                 total_http_requests = 0
                 total_traffic = 0
@@ -307,14 +326,14 @@ def process_quotas():
                         total_http_requests += float(row[1])
                         total_execution_time += float(row[0]) * 1000
                         t = float(row[2]) - 36 * (float(row[1]) - 1)
-                        total_traffic += t
+                        total_traffic += t / traffic_unit
                         if r not in queries:
                             queries[r] = dict()
                         if "sage" not in queries[r]:
                             queries[r]["sage"] = dict()
                         if b not in queries[r]["sage"]:
                             queries[r]["sage"][b] = []
-                        queries[r]["sage"][b].append([float(row[1]), float(row[0]) * 1000, t])
+                        queries[r]["sage"][b].append([float(row[1]), float(row[0]) * 1000, t / traffic_unit])
                     r += 1
                 if b not in sage:
                     sage[b] = []
@@ -323,37 +342,50 @@ def process_quotas():
         "dataset": dataset,
         "buffer_size": buffer_size,
         "buffer_size_strings": buffer_size_strings,
+        "virtuoso": virtuoso,
         "sage": sage,
         "queries": queries
     }
 
-def plot_quotas(log=True, val = {}):
-    dataset = val["dataset"]
-    sage = val["sage"]
-    fig, axes = plt.subplots(figsize=(14, 10), nrows=3, ncols=1, sharex=True)
+def plot_quotas(log=True):
+    traffic_unit = 1
+
+    # ======== RIGHT SIDE ============
+
+    fig, axes = plt.subplots(figsize=(12, 8), nrows=2, ncols=2)
+    print(axes)
     options = {
         "linestyle": "dashed",
         "marker": 'o',
         "markersize": 8
     }
 
-    x = np.arange(len(sage))
+    x = np.arange(3)
     keys = ["150", "1500", "15000"]
+
+    val = process_quotas(toProcess=[1,19,20,21,22,6,23,24,25,26,11,27,28,14,29,30, 17, 18], traffic_unit=traffic_unit)
+    sage = val["sage"]
+    virtuoso = val["virtuoso"]
     http = {
+        "virtuoso": [],
         "normal": [],
         0: [],
-        100000: []
     }
     et = {
+        "virtuoso": [],
         "normal": [],
         0: [],
-        100000: []
     }
     traffic = {
+        "virtuoso": [],
         "normal": [],
         0: [],
-        100000: []
     }
+
+    for h in virtuoso:
+        http["virtuoso"].append(h[0])
+        et["virtuoso"].append(h[1])
+        traffic["virtuoso"].append(h[2])
     for h in sage["normal"]:
         http["normal"].append(h[0])
         et["normal"].append(h[1])
@@ -362,35 +394,83 @@ def plot_quotas(log=True, val = {}):
         http[0].append(h[0])
         et[0].append(h[1])
         traffic[0].append(h[2])
-    for h in sage[100000]:
-        http[100000].append(h[0])
-        et[100000].append(h[1])
-        traffic[100000].append(h[2])
-    plt.subplot(131)
-    plt.plot(x, http["normal"], label="sage")
-    plt.plot(x, http[0], label="sage-b-0")
-    plt.plot(x, http[100000], label="sage-b-100KB")
-    plt.xticks(x, labels=keys)
-    plt.xlabel("Http requests for different Quotas (ms)")
-    scale(log)
-    plt.subplot(132)
-    plt.plot(x, et["normal"], label="sage")
-    plt.plot(x, et[0], label="sage-b-0")
-    plt.plot(x, et[100000], label="sage-b-100KB")
-    plt.xticks(x, labels=keys)
-    plt.xlabel("Execution times in (ms) for different Quotas (ms)")
-    scale(log)
-    plt.subplot(133)
-    plt.plot(x, traffic["normal"], label="sage")
-    plt.plot(x, traffic[0], label="sage-b-0")
-    plt.plot(x, traffic[100000], label="sage-b-100KB")
-    plt.xticks(x, labels=keys)
-    plt.xlabel("Traffic (in bytes) for different quotas (ms)")
-    scale(log)
-    plt.legend()
+
+    print(et["virtuoso"], traffic['virtuoso'])
+    ax = axes[0][0]
+    ax.axhline(y=et["virtuoso"], label="virtuoso")
+    #ax.plot(x, et["normal"], label="sage", color='red')
+    ax.plot(x, et[0], label="sage-b-0", color='green')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels=keys)
+    ax.set_ylabel("Execution times in (ms)")
+    ax.set_yscale('log')
+
+    ax = axes[1][0]
+    ax.axhline(y=traffic["virtuoso"], label="virtuoso")
+    #ax.plot(x, traffic["normal"], label="sage", color='red')
+    ax.plot(x, traffic[0], label="sage-b-0", color='green')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels=keys)
+    ax.set_ylabel("Traffic (in KBytes)")
+    ax.set_yscale('log')
+
+
+    val = process_quotas(toProcess=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18], traffic_unit=traffic_unit)
+    sage = val["sage"]
+    virtuoso = val["virtuoso"]
+    http = {
+        "virtuoso": [],
+        "normal": [],
+        0: [],
+    }
+    et = {
+        "virtuoso": [],
+        "normal": [],
+        0: [],
+    }
+    traffic = {
+        "virtuoso": [],
+        "normal": [],
+        0: [],
+    }
+
+    for h in virtuoso:
+        http["virtuoso"].append(h[0])
+        et["virtuoso"].append(h[1])
+        traffic["virtuoso"].append(h[2])
+    for h in sage["normal"]:
+        http["normal"].append(h[0])
+        et["normal"].append(h[1])
+        traffic["normal"].append(h[2])
+    for h in sage[0]:
+        http[0].append(h[0])
+        et[0].append(h[1])
+        traffic[0].append(h[2])
+
+    print(et["virtuoso"], traffic['virtuoso'])
+    ax = axes[0][1]
+    ax.axhline(y=et["virtuoso"], label="virtuoso")
+    ax.plot(x, et["normal"], label="sage", color='red')
+    ax.plot(x, et[0], label="sage-b-0", color='green')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels=keys)
+    ax.set_ylabel("Execution times in (ms)")
+    ax.set_yscale('log')
+
+    ax = axes[1][1]
+    ax.axhline(y=traffic["virtuoso"], label="virtuoso")
+    ax.plot(x, traffic["normal"], label="sage", color='red')
+    ax.plot(x, traffic[0], label="sage-b-0", color='green')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels=keys)
+    ax.set_ylabel("Traffic (in KBytes)")
+    ax.set_yscale('log')
+
+    plt.figlegend(('virtuoso', 'sage', 'sage-agg'), loc="upper center", shadow=True, ncol=3, bbox_to_anchor=(0.5, 0.94))
+
     plt.savefig(fname=args.o + 'quotas.png', quality=100, format='png', dpi=100)
     plt.close()
 
 
-
-# plot_quotas()
+# final(log=True)
+plot_quotas()
