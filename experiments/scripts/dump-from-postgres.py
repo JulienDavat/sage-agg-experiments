@@ -3,17 +3,6 @@ import psycopg2
 from time import time
 import os
 
-dbname = 'grall-a'
-user = 'grall-a'
-password = ''
-host = 'localhost'
-port = 5432
-table_name = 'dbpedia351'
-
-
-
-
-
 parser = argparse.ArgumentParser(description='Dump of postresql table where columns are: subject,predicate,object')
 parser.add_argument('-connect', action='store', help='Information to connect to database where the table is stored')
 parser.add_argument('-table', action='store', help='The name of the table to dump')
@@ -23,7 +12,7 @@ args = parser.parse_args()
 
 page_size = float(args.page_size)
 print('Fetch size:', page_size)
-connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+connection = psycopg2.connect(args.connect)
 query = "SELECT * FROM {};".format(args.table)
 cursor = connection.cursor("mycursor")
 cursor.execute(query, None)
