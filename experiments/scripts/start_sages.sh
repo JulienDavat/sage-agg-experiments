@@ -26,12 +26,9 @@ sleep 5
 
 MAIN_FOLDER="$CUR/../../output/bsbm1k"
 
-mkdir -m "$MAIN_FOLDER"
+mkdir -p "$MAIN_FOLDER"
 mkdir -p "$MAIN_FOLDER/150" "$MAIN_FOLDER/1500" "$MAIN_FOLDER/15000"
 mkdir -p "$MAIN_FOLDER/virtuoso"
-
-
-
 
 QUERIES="$CUR/../../data/queries/to_run.txt"
 DATASETS="bsbm1k"
