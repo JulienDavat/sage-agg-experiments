@@ -11,7 +11,7 @@ datasets:
     user: grall-a
     password: ''
     host: localhost
-    port: 5433
+    port: 7121
   - name: bsbm100
     description: BSBM 100 products using Postgres backend
     backend: postgres
@@ -19,7 +19,7 @@ datasets:
     user: grall-a
     password: ''
     host: localhost
-    port: 5433
+    port: 7121
   - name: bsbm10
     description: BSBM 10 products using Postgres backend
     backend: postgres
@@ -27,7 +27,7 @@ datasets:
     user: grall-a
     password: ''
     host: localhost
-    port: 5433
+    port: 7121
   - name: dbpedia351
     description: Dbpedia 3.5.1 using Postgres backend
     backend: postgres
@@ -35,4 +35,4 @@ datasets:
     user: grall-a
     password: ''
     host: localhost
-    port: 5433
+    port: 7121

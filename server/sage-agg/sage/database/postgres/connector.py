@@ -225,22 +225,22 @@ class PostgresConnector(DatabaseConnector):
                     selectivity *= self._subject_histograms['selectivities'][subject]
                 else:
                     selectivity *= (1 - self._subject_histograms['sum_freqs']) / (
-                                self._subject_histograms['n_distinct'] - len(self._subject_histograms['selectivities']))
+                            self._subject_histograms['n_distinct'] - len(self._subject_histograms['selectivities']))
             # compute the selectivity of a bounded predicate
             if predicate is not None:
                 if predicate in self._predicate_histograms['selectivities']:
                     selectivity *= self._predicate_histograms['selectivities'][predicate]
                 else:
                     selectivity *= (1 - self._predicate_histograms['sum_freqs']) / (
-                                self._predicate_histograms['n_distinct'] - len(
-                            self._predicate_histograms['selectivities']))
+                            self._predicate_histograms['n_distinct'] - len(
+                        self._predicate_histograms['selectivities']))
             # compute the selectivity of a bounded object
             if obj is not None:
                 if obj in self._object_histograms['selectivities']:
                     selectivity *= self._object_histograms['selectivities'][obj]
                 else:
                     selectivity *= (1 - self._object_histograms['sum_freqs']) / (
-                                self._object_histograms['n_distinct'] - len(self._object_histograms['selectivities']))
+                            self._object_histograms['n_distinct'] - len(self._object_histograms['selectivities']))
         except ZeroDivisionError:
             pass
         # estimate the cardinality from the estimated selectivity

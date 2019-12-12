@@ -46,7 +46,7 @@ services:
       - 7122:5432 # postgres port
     volumes:
       - "./postgres:/data"
-    command: postgres -c listen_addresses='*' -c enable_bitmapscan=0 -c enable_seqscan=0 -c work_mem=50MB -c effective_cache_size=2000MB -c shared_buffers=2000MB -c max_parallel_workers_per_gather=0
+    command: postgres -c listen_addresses='*' -c enable_bitmapscan=0 -c enable_seqscan=0 -c work_mem=50MB -c -c shared_buffers=128MB -c max_parallel_workers_per_gather=0
   sage-agg:
     container_name: sage-agg
     links:

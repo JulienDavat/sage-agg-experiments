@@ -34,7 +34,8 @@ class IndexJoinIterator(PreemptableIterator):
 
     def __repr__(self):
         return "<IndexJoinIterator (%s JOIN {%s %s %s})>" % (
-        str(self._source), self._innerTriple['subject'], self._innerTriple['predicate'], self._innerTriple['object'])
+            str(self._source), self._innerTriple['subject'], self._innerTriple['predicate'],
+            self._innerTriple['object'])
 
     def serialized_name(self):
         return "join"

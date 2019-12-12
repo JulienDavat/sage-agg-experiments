@@ -27,7 +27,7 @@ class ScanIterator(PreemptableIterator):
 
     def __repr__(self):
         return "<ScanIterator { %s %s %s }>" % (
-        self._triple['subject'], self._triple['predicate'], self._triple['object'])
+            self._triple['subject'], self._triple['predicate'], self._triple['object'])
 
     def serialized_name(self):
         return "scan"
