@@ -196,6 +196,10 @@ class Dataset(object):
     def maintainer(self):
         return self._config["maintainer"] if "maintainer" in self._config else None
 
+    @property
+    def is_approximation_enabled(self):
+        return self._config['enable_approximation']
+
     def describe(self, url):
         """Gives a generator over dataset descriptions"""
         for name, dataset in self._datasets.items():

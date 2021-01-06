@@ -2,7 +2,7 @@
 # Author: Thomas MINIER - MIT License 2017-2019
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
 from sage.query_engine.protobuf.iterators_pb2 import SavedGroupByAgg
-
+import xxhash
 
 class GroupByAggregator(PreemptableIterator):
     """
@@ -85,6 +85,7 @@ class GroupByAggregator(PreemptableIterator):
         for key, values in groups.items():
             elt = dict()
             # recopy keys
+            elt['?__group_key'] = xxhash.xxh64_hexdigest(key)
             if len(self._grouping_variables) == 0:
                 elt["?__default_group"] = self._default_key
             else:

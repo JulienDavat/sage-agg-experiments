@@ -8,8 +8,7 @@ from xml.etree import ElementTree
 
 from flask import Response, url_for
 
-saved_plans = dict()
-
+from sage.query_engine.protobuf.iterators_pb2 import RootTree
 
 def sort_qparams(v):
     """Sort query params as subject, predicate, object, page, as the current ldf-client require about this particular order..."""
@@ -47,26 +46,49 @@ def format_marshmallow_errors(errors):
     return dumps(errors, indent=2)
 
 
-def encode_saved_plan(savedPlan):
+# def encode_saved_plan(savedPlan):
+#     if savedPlan is None:
+#         return None
+#     bytes = savedPlan.SerializeToString()
+#     sp = b64encode(bytes).decode('utf-8')
+#     if sp not in saved_plans:
+#         # genereate uuid
+#         id = str(uuid.uuid4())
+#         saved_plans[id] = sp
+#         return id
+#     raise Exception("must not throw, report")
+
+
+# def decode_saved_plan(bytes):
+#     if bytes in saved_plans:
+#         copy = b64decode(saved_plans[bytes])
+#         del saved_plans[bytes]
+#         return copy if bytes is not None else None
+#     else:
+#         raise Exception("must not throw, report")
+
+
+def encode_saved_plan(savedPlan: RootTree) -> str:
+    """Encode a Protobuf-based saved plan into string format.
+
+    Argument: A saved plan, encoded as a Protobuf message.
+
+    Returns: The saved plan, encoded as a string of bytes.
+    """
     if savedPlan is None:
         return None
     bytes = savedPlan.SerializeToString()
-    sp = b64encode(bytes).decode('utf-8')
-    if sp not in saved_plans:
-        # genereate uuid
-        id = str(uuid.uuid4())
-        saved_plans[id] = sp
-        return id
-    raise Exception("must not throw, report")
+    return b64encode(bytes).decode('utf-8')
 
 
-def decode_saved_plan(bytes):
-    if bytes in saved_plans:
-        copy = b64decode(saved_plans[bytes])
-        del saved_plans[bytes]
-        return copy if bytes is not None else None
-    else:
-        raise Exception("must not throw, report")
+def decode_saved_plan(input: str) -> RootTree:
+    """Decode a Protobuf-based saved plan from a string format.
+
+    Argument: A saved plan, encoded as a string of bytes.
+
+    Returns: The saved plan, encoded as a Protobuf message.
+    """
+    return b64decode(input) if input is not None else None
 
 
 def sage_http_error(text, status=400):

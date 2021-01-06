@@ -30,7 +30,11 @@ class CountAggregator(PartialAggregator):
 
     def done(self, group_key):
         """Complete the aggregation for a group and return the result"""
-        return '"{}"^^<http://www.w3.org/2001/XMLSchema#integer>'.format(self._groups[group_key])
+        return {
+            '__type__': 'count', 
+            '__value__': self._groups[group_key]
+        }
+        # return '"{}"^^<http://www.w3.org/2001/XMLSchema#integer>'.format(self._groups[group_key])
 
     def done_bounded(self, group_key, groups):
         """Complete the aggregation for a group and return the result"""

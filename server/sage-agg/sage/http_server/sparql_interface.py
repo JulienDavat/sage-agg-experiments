@@ -14,16 +14,19 @@ from sage.query_engine.optimizer.plan_builder import build_query_plan
 from sage.query_engine.optimizer.query_parser import parse_query
 from sage.query_engine.sage_engine import SageEngine
 
+import logging
 
 def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=False, buffer=-1):
     """
         Execute a query using the SageEngine and returns the appropriate HTTP response.
         Any failure will results in a rollback/abort on the current query execution.
     """
+    print(query)
     graph = None
     try:
         graph_name = format_graph_uri(default_graph_uri, url)
         if not dataset.has_graph(graph_name):
+            logging.error("No RDF graph matching the default URI provided was found.")
             return sage_http_error("No RDF graph matching the default URI provided was found.")
         graph = dataset.get_graph(graph_name)
         # decode next_link or build query execution plan
@@ -40,7 +43,7 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         quota = graph.quota / 1000
         max_results = graph.max_results
         bindings, saved_plan, is_done = engine.execute(plan, quota, max_results, optimized=optimized, buffer=buffer)
-
+        print(bindings)
         # commit (if necessary)
         graph.commit()
 
@@ -53,6 +56,7 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         stats = {"cardinalities": cardinalities, "import": loading_time, "export": exportTime}
 
         # send response
+        print(mimetype)
         if mimetype == "application/sparql-results+json":
             return Response(responses.w3c_json_streaming(bindings, next_page, stats, url),
                             content_type='application/json')
@@ -64,12 +68,13 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         # otherwise, return the HTML version
         return render_template("sage_page.html", query=query, default_graph_uri=default_graph_uri, bindings=bindings,
                                next_page=next_page, stats=stats)
-    except Exception as e:
+    except Exception as err:
         # abort all ongoing transactions (if required)
         # then forward the exception to the main loop
+        logging.error(f"sage execute_query error: {err}")
         if graph is not None:
             graph.abort()
-        raise e
+        raise err
 
 
 def sparql_blueprint(dataset, logger):
@@ -101,6 +106,7 @@ def sparql_blueprint(dataset, logger):
             post_query, err = SageSparqlQuery().load(request.get_json())
             if err is not None and len(err) > 0:
                 # TODO better formatting
+                logging.error(f"sage execute_query error: {err}")
                 return Response(format_marshmallow_errors(err), status=400)
             query = post_query["query"]
             default_graph_uri = post_query["defaultGraph"]
@@ -108,6 +114,7 @@ def sparql_blueprint(dataset, logger):
             optimized = post_query['optimized'] if 'optimized' in post_query else False
             buffer_size = post_query['buffer'] if 'buffer' in post_query else -1
         else:
+            logging.error("sage execute_query error: Invalid request sent to the server")
             return sage_http_error(
                 "Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
         # execute query
