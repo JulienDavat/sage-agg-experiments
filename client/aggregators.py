@@ -28,6 +28,9 @@ class AggregationReducer():
 
 
 class CountReducer(AggregationReducer):
+    """
+    This class is used to merge the count partial aggregations
+    """
 
     def __init__(self):
         super(CountReducer, self).__init__()
@@ -43,6 +46,10 @@ class CountReducer(AggregationReducer):
 
 
 class ApproximateCountDistinctReducer(AggregationReducer):
+    """
+    This class is used to merge the count distinct partial aggregations
+    when approximations are enabled
+    """
 
     def __init__(self):
         super(ApproximateCountDistinctReducer, self).__init__()
@@ -63,8 +70,11 @@ class ApproximateCountDistinctReducer(AggregationReducer):
 
 
 class CountDistinctReducer(AggregationReducer):
+    """
+    This class is used to merge the count distinct partial aggregations
+    """
 
-    def __init__(self, bind_variable):
+    def __init__(self):
         super(CountDistinctReducer, self).__init__()
 
     def create_group(self, group_key, aggregation):
@@ -80,150 +90,31 @@ class CountDistinctReducer(AggregationReducer):
         return Literal(len(distinct), datatype=XSD.integer).n3()
 
 
-# class Reducer():
-
-#     def __init__(self, bind_variable):
-#         self._bind_variable = bind_variable
-#         self._groups = dict()
-
-#     def create_group(self, group_key, bindings):
-#         raise Exception('This method must be implemented by the subclasses')
-
-#     def update_group(self, group_key, bindings):
-#         raise Exception('This method must be implemented by the subclasses')
-
-#     def accumulate(self, bindings):
-#         if not self._bind_variable in bindings:
-#             logger.warning('missing the aggregation variable in bindings')
-#             return
-#         elif not '?__group_key' in bindings:
-#             logger.warning('missing the group key in bindings')
-#             return
-#         group_key = bindings['?__group_key']
-#         if group_key not in self._groups:
-#             self.create_group(group_key, bindings)
-#         else:
-#             self.update_group(group_key, bindings)
-
-#     def result():
-#         raise Exception('This method must be implemented by the subclasses')
-
-# class CountReducer(Reducer):
-
-#     def __init__(self, bind_variable):
-#         super(CountReducer, self).__init__(bind_variable)
-
-#     def create_group(self, group_key, bindings):
-#         group = dict()
-#         for variable in bindings.keys():
-#             if variable != '?__group_key':
-#                 group[variable] = bindings[variable]
-#         self._groups[group_key] = group
-
-#     def merge(self, x, y):
-#         val_x = int(x.split('^^')[0].replace('"', ''))
-#         val_y = int(y.split('^^')[0].replace('"', ''))
-#         return Literal(val_x + val_y).n3()
-
-#     def update_group(self, group_key, bindings):
-#         group = self._groups[group_key]
-#         counter = group[self._bind_variable]
-#         group[self._bind_variable] = self.merge(counter, bindings[self._bind_variable])
-#         self._groups[group_key] = group
-
-#     def result(self):
-#         res = list()
-#         for item in self._groups.values():
-#             elt = dict()
-#             for variable in item.keys():
-#                 elt[variable] = item[variable]
-#             res.append(elt)
-#         return res
-
-# class ApproximateCountDistinctReducer(Reducer):
-
-#     def __init__(self, bind_variable):
-#         super(ApproximateCountDistinctReducer, self).__init__(bind_variable)
-
-#     def create_group(self, group_key, bindings):
-#         group = dict()
-#         for variable in bindings.keys():
-#             if variable != '?__group_key' and variable != self._bind_variable:
-#                 group[variable] = bindings[variable]
-#         hloglog = HyperLogLog(0.01)
-#         hloglog.load(bindings[self._bind_variable]['__value__'])
-#         group[self._bind_variable] = hloglog
-#         self._groups[group_key] = group
-
-#     def merge(self, x, y):
-#         x.update(y)
-#         return x
-
-#     def update_group(self, group_key, bindings):
-#         group = self._groups[group_key]
-#         counter = group[self._bind_variable]
-#         hloglog = HyperLogLog(0.01)
-#         hloglog.load(bindings[self._bind_variable]['__value__'])
-#         group[self._bind_variable] = self.merge(counter, hloglog)
-#         self._groups[group_key] = group
-
-#     def result(self):
-#         res = list()
-#         for item in self._groups.values():
-#             elt = dict()
-#             for variable in item.keys():
-#                 if variable != self._bind_variable:
-#                     elt[variable] = item[variable]
-#             elt[self._bind_variable] = Literal(int(item[self._bind_variable].card())).n3()
-#             res.append(elt)
-#         return res
-
-# class CountDistinctReducer(Reducer):
-
-#     def __init__(self, bind_variable):
-#         super(CountDistinctReducer, self).__init__(bind_variable)
-
-#     def create_group(self, group_key, bindings):
-#         group = dict()
-#         for variable in bindings.keys():
-#             if variable != '?__group_key' and variable != self._bind_variable:
-#                 group[variable] = bindings[variable]
-#         hloglog = HyperLogLog(0.01)
-#         hloglog.load(bindings[self._bind_variable]['__value__'])
-#         group[self._bind_variable] = hloglog
-#         self._groups[group_key] = group
-
-#     def merge(self, x, y):
-#         x.update(y)
-#         return x
-
-#     def update_group(self, group_key, bindings):
-#         group = self._groups[group_key]
-#         counter = group[self._bind_variable]
-#         hloglog = HyperLogLog(0.01)
-#         hloglog.load(bindings[self._bind_variable]['__value__'])
-#         group[self._bind_variable] = self.merge(counter, hloglog)
-#         self._groups[group_key] = group
-
-#     def result(self):
-#         res = list()
-#         for item in self._groups.values():
-#             elt = dict()
-#             for variable in item.keys():
-#                 if variable != self._bind_variable:
-#                     elt[variable] = item[variable]
-#             elt[self._bind_variable] = Literal(int(item[self._bind_variable].card())).n3()
-#             res.append(elt)
-#         return res
-
-
-
 class GenericReducer():
+    """
+    This class merges the partial aggregations computed by the server
 
-    def __init__(self):
+    To be able to merge partial aggregations, solution mappings must
+    have the following shape:
+
+    { ?__group_key: '_', ?v1: '_', ..., ?vn: '_', ?c1: { '__type__': '_', '__value__': '_' }, ..., cn: { '__type__': '_', '__value__': '_' } }
+
+    where:
+    - ?__group_key is used to identify each partial aggregation
+    - ?v1...?vn are random variables
+    - ?c1...?cn are the variables used to bind the result of the aggregations
+    - __type__ is used to identify an aggregation function. It can take the following values:
+        - count
+        - count-distinct
+        - approximative-count-distinct
+    - __value__ is the value of a partial aggregation
+    """
+
+    def __init__(self, projection):
+        self._projection = projection
         self._groups = dict()
         self._count = CountReducer()
-        self._count_distinct = CountDistinctReducer('')
+        self._count_distinct = CountDistinctReducer()
         self._approximative_count_distinct = ApproximateCountDistinctReducer()
 
     def accumulate_aggregation(self, group_key, aggregation):
@@ -246,7 +137,7 @@ class GenericReducer():
             if type(bindings[variable]) is str:
                 group[variable] = bindings[variable]
             elif type(bindings[variable]) is dict:
-                self.accumulate_aggregation(group_key, bindings[variable])
+                self.accumulate_aggregation(f'{group_key}-{variable}', bindings[variable])
                 group[variable] = {'__type__': bindings[variable]['__type__']}
             else:
                 logger.error('Malformed bindings')
@@ -256,11 +147,11 @@ class GenericReducer():
     def update_group(self, group_key, bindings):
         for variable in bindings.keys():
             if type(bindings[variable]) is dict:
-                self.accumulate_aggregation(group_key, bindings[variable])
+                self.accumulate_aggregation(f'{group_key}-{variable}', bindings[variable])
 
     def accumulate(self, bindings):
         if not '?__group_key' in bindings:
-            logger.warning('Group key is missing')
+            logger.error('Group key is missing')
             exit(1)
         group_key = bindings['?__group_key']
         if group_key not in self._groups:
@@ -280,15 +171,17 @@ class GenericReducer():
             logger.error(f'Unknwon aggregation type: {kind}')
             exit(1)
 
-    def result(self):
+    def get(self):
         res = list()
         for key, item in self._groups.items():
             elt = dict()
             for variable in item.keys():
+                if not variable in self._projection:
+                    continue
                 if type(item[variable]) is str:
                     elt[variable] = item[variable]
                 elif type(item[variable]) is dict:
-                    elt[variable] = self.reduce_aggregation(key, item[variable])
+                    elt[variable] = self.reduce_aggregation(f'{key}-{variable}', item[variable])
                 else:
                     logger.error('Malformed item')
                     exit(1)

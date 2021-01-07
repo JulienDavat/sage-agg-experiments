@@ -46,11 +46,9 @@ def execute(query, dataset, accumulator, spy):
         spy.report_data_transfer(sys.getsizeof(json.dumps(json_response)))
         
         for bindings in json_response['bindings']:
-            print(bindings)
+            # print(bindings)
             accumulator.accumulate(bindings)
     execution_time = time() - start
 
     spy.report_execution_time(execution_time)
     spy.report_nb_result(accumulator.size())
-
-    logger.info(f"source: {default_graph_uri}, #result: {nb_results}, time: {execution_time}s, #call: {nb_calls}")
