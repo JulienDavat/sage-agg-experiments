@@ -200,6 +200,10 @@ class Dataset(object):
     def is_approximation_enabled(self):
         return self._config['enable_approximation']
 
+    @property
+    def error_rate(self):
+        return self._config['error_rate']
+
     def describe(self, url):
         """Gives a generator over dataset descriptions"""
         for name, dataset in self._datasets.items():

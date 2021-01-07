@@ -8,7 +8,7 @@ from rdflib.plugins.sparql.parser import parseQuery
 from sage.http_server.utils import format_graph_uri
 from sage.query_engine.agg.count import CountAggregator
 from sage.query_engine.agg.count_distinct import CountDistinctAggregator
-from sage.query_engine.agg.count_distinct import ApproximateCountDistinctAggregator
+from sage.query_engine.agg.approximative_count_distinct import ApproximateCountDistinctAggregator
 from sage.query_engine.agg.groupby import GroupByAggregator
 from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.agg.sum import SumAggregator
@@ -63,7 +63,8 @@ def build_aggregator(dataset, aggregate, renaming_map, query_id=None, ID=None):
     binds_to = renaming_map[aggregate.res.n3()]
     if aggregate.name == 'Aggregate_Count':
         if aggregate.distinct == 'DISTINCT' and dataset.is_approximation_enabled:
-            return ApproximateCountDistinctAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
+            error_rate = dataset.error_rate
+            return ApproximateCountDistinctAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID, error_rate=error_rate)
         elif aggregate.distinct == 'DISTINCT' and not dataset.is_approximation_enabled:
             return CountDistinctAggregator(aggregate.vars.n3(), binds_to=binds_to, query_id=query_id, ID=ID)
         else:

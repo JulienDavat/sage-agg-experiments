@@ -2,7 +2,7 @@
 # Author: Thomas MINIER - MIT License 2017-2018
 from sage.query_engine.agg.count import CountAggregator
 from sage.query_engine.agg.count_distinct import CountDistinctAggregator
-from sage.query_engine.agg.count_distinct import ApproximateCountDistinctAggregator
+from sage.query_engine.agg.approximative_count_distinct import ApproximateCountDistinctAggregator
 from sage.query_engine.agg.groupby import GroupByAggregator
 from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.agg.sum import SumAggregator
@@ -105,8 +105,9 @@ def load_groupby(saved_plan, dataset):
             aggregators.append(
                 CountDistinctAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
         elif agg.name == 'approximative-count-distinct':
+            error_rate = dataset.error_rate
             aggregators.append(
-                ApproximateCountDistinctAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+                ApproximateCountDistinctAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id, error_rate=error_rate))
         elif agg.name == 'count-distinct-disk':
             aggregators.append(
                 CountDistinctDiskAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))

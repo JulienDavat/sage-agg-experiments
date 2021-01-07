@@ -3,7 +3,8 @@ maintainer: Grall Arnaud
 public_url: http://localhost:8000
 quota: 150
 max_results: 50000
-enable_approximation: true
+enable_approximation: false
+error_rate: 0.02
 datasets:
 - name: bsbm10
   uri: http://example.org/datasets/psql/bsbm10

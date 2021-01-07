@@ -48,12 +48,12 @@ class ApproximateCountDistinctReducer(AggregationReducer):
         super(ApproximateCountDistinctReducer, self).__init__()
 
     def create_group(self, group_key, aggregation):
-        hyperloglog = HyperLogLog(0.01)
+        hyperloglog = HyperLogLog(0.01) # do not care about the error rate, it will be overwritten
         hyperloglog.load(aggregation['__value__'])
         self._groups[group_key] = hyperloglog
 
     def update_group(self, group_key, aggregation):
-        hyperloglog = HyperLogLog(0.01)
+        hyperloglog = HyperLogLog(0.01) # do not care about the error rate, it will be overwritten
         hyperloglog.load(aggregation['__value__'])
         self._groups[group_key].update(hyperloglog)
 
@@ -228,7 +228,6 @@ class GenericReducer():
 
     def accumulate_aggregation(self, group_key, aggregation):
         kind = aggregation['__type__']
-        print(kind)
         if kind == 'count':
             self._count.accumulate(group_key, aggregation)
         elif kind == 'count-distinct':
@@ -296,5 +295,5 @@ class GenericReducer():
             res.append(elt)
         return res
 
-    def len(self):
+    def size(self):
         return len(self._groups.keys())

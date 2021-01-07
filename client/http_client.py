@@ -51,6 +51,6 @@ def execute(query, dataset, accumulator, spy):
     execution_time = time() - start
 
     spy.report_execution_time(execution_time)
-    spy.report_nb_result(accumulator.len())
+    spy.report_nb_result(accumulator.size())
 
     logger.info(f"source: {default_graph_uri}, #result: {nb_results}, time: {execution_time}s, #call: {nb_calls}")
