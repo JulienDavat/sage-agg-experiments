@@ -1,0 +1,1 @@
+SELECT (COUNT(DISTINCT ?o) AS ?count) ?p WHERE { ?s ?p ?o . } GROUP BY ?p

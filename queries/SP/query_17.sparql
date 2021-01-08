@@ -1,0 +1,1 @@
+SELECT (COUNT(?s) AS ?count) ?p ?sType WHERE { ?s ?p ?o ; a ?sType . } GROUP BY ?p ?sType

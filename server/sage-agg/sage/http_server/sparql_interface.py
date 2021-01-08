@@ -21,7 +21,6 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         Execute a query using the SageEngine and returns the appropriate HTTP response.
         Any failure will results in a rollback/abort on the current query execution.
     """
-    print(query)
     graph = None
     try:
         graph_name = format_graph_uri(default_graph_uri, url)
@@ -43,7 +42,7 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         quota = graph.quota / 1000
         max_results = graph.max_results
         bindings, saved_plan, is_done = engine.execute(plan, quota, max_results, optimized=optimized, buffer=buffer)
-        print(bindings)
+
         # commit (if necessary)
         graph.commit()
 
@@ -56,7 +55,6 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         stats = {"cardinalities": cardinalities, "import": loading_time, "export": exportTime}
 
         # send response
-        print(mimetype)
         if mimetype == "application/sparql-results+json":
             return Response(responses.w3c_json_streaming(bindings, next_page, stats, url),
                             content_type='application/json')

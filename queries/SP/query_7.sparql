@@ -1,0 +1,1 @@
+SELECT (COUNT(DISTINCT ?c2) AS ?count) ?c  WHERE { ?s a ?c ; a ?c2 . } GROUP BY ?c
