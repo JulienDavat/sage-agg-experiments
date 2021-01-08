@@ -1,4 +1,5 @@
 #!/bin/bash
 
-pids=$(cat output/pids)
+pids=$(cat .pids)
 kill -9 $pids
+rm .pids

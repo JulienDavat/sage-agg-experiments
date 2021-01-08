@@ -167,13 +167,14 @@ public class CLI implements Callable<Void> {
 
         if (this.measure != null) {
             double duration = spy.getExecutionTime();
-            String csvLine = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
-                    duration, spy.getNbCallsRead(), spy.getTotalTransferSize(), spy.getTotalPlanSize(),
-                    spy.getNbCallsWrite(),
-                    spy.getMeanHTTPTimesRead(), spy.getMeanHTTPTimesWrite(), spy.getMeanResumeTimeRead(),
-                    spy.getMeanResumeTimeWrite(), spy.getMeanSuspendTimeRead(), spy.getMeanSuspendTimeWrite(),
-                    spy.getMeanTransferSize(), spy.getMeanNextNumber(), spy.getMeanNextNumberOptimized()
-            );
+            // String csvLine = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+            //         duration, spy.getNbCallsRead(), spy.getTotalTransferSize(), spy.getTotalPlanSize(),
+            //         spy.getNbCallsWrite(),
+            //         spy.getMeanHTTPTimesRead(), spy.getMeanHTTPTimesWrite(), spy.getMeanResumeTimeRead(),
+            //         spy.getMeanResumeTimeWrite(), spy.getMeanSuspendTimeRead(), spy.getMeanSuspendTimeWrite(),
+            //         spy.getMeanTransferSize(), spy.getMeanNextNumber(), spy.getMeanNextNumberOptimized()
+            // );
+            String csvLine = String.format("%s,%s,%s\n", duration, spy.getNbCallsRead(), spy.getTotalTransferSize());
             try {
                 Files.write(Paths.get(this.measure), csvLine.getBytes(), StandardOpenOption.APPEND);
             } catch (IOException e) {

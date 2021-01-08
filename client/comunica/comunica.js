@@ -9,11 +9,11 @@ program
     .description('Execute a SPARQL query using the Comunica client')
     .usage('<server> [options]')
     .option('-q, --query <query>', 'evaluates the given SPARQL query')
+    .option('-f, --file <file>', 'evaluates the SPARQL query stored in the given file')
     .option('-t, --timeout <timeout>', 'set SPARQL query timeout in milliseconds (default: 30mn)', 30 * 60 * 1000)
     .option('-m, --measure <output>', 'measure the query execution time (in seconds) & append it to a file', __dirname + '/result.csv')
     .parse(process.argv)
 
-let timeoutId = undefined
 // get servers
 if (program.args.length !== 1) {
     process.stderr.write('Error: you must specify exactly one TPF server to use.\nSee ./comunica.js --help for more details.\n')
@@ -21,13 +21,16 @@ if (program.args.length !== 1) {
 }
 // fetch SPARQL query to execute
 let query = null
-let timeout = null
-if (program.query) {
+if (program.file) {
+   query = fs.readFileSync(program.file).toString()
+} else if (program.query) {
     query = program.query
-} else {
+} 
+if (query == null) {
     process.stderr.write('Error: you must specify a SPARQL query to execute.\nSee ./comunica.js --help for more details.\n')
     process.exit(1)
 }
+
 start(program.args[0], program.query, program.timeout)
 
 
@@ -35,8 +38,8 @@ async function start(server, query, timeout) {
   replace()
   // then load
   // set query timeout
-  timeoutId = setTimeout(() => {
-    fs.appendFileSync(program.measure, `0,0,0,1`)
+  let timeoutId = setTimeout(() => {
+    fs.appendFileSync(program.measure, `0,0,0`)
     process.stderr.write(`TIMEOUT EXCEEDED (${timeout}ms) - shutting down query processing...\n`)
   }, timeout)
   const engine = newEngine()
@@ -51,13 +54,13 @@ async function start(server, query, timeout) {
       })
       d.data.on('end', () => {
         clearTimeout(timeoutId)
-        parseXmlToCsv(res)
+        // parseXmlToCsv(res)
         const A = require('@comunica/actor-http-native').ActorHttpNative
         const stats = A.stats
         if (program.measure) {
           const endTime = Date.now()
           const time = endTime - startTime
-          fs.appendFileSync(program.measure, `${time / 1000},${stats.calls},${stats.bytes},0`)
+          fs.appendFileSync(program.measure, `${time / 1000},${stats.calls},${stats.bytes}`)
         }
       })
     })
@@ -66,36 +69,36 @@ async function start(server, query, timeout) {
   })
 }
 
-function parseXmlToCsv(xml) {
-  const parser = new Dom()
-  const bind = new Map()
-  const document = parser.parseFromString(xml)
-  const head = document.getElementsByTagName('head')[0].childNodes
-  const results = document.getElementsByTagName('results')[0].childNodes
-  headers = []
-  head.forEach(h => {
-    if (!h.text) {
-      headers.push("" + h.attributes[0].value)
-    }
-  })
-  process.stdout.write(headers.join(',') + '\n')
-  results.forEach(e => {
-    if(!e.text) {
-      const result = e
-      arr = new Array(headers.length)
-      e.getElementsByTagName('binding').forEach(b => {
-        attr = b.attributes[0].value
-        index = headers.indexOf(attr)
-        b.childNodes.forEach(ch => {
-          if(!ch.text) {
-            arr[index] = "" + ch.textContent
-          }
-        })
-      })
-      process.stdout.write(arr.join(',')  + '\n')
-    }
-  })
-}
+// function parseXmlToCsv(xml) {
+//   const parser = new Dom()
+//   const bind = new Map()
+//   const document = parser.parseFromString(xml)
+//   const head = document.getElementsByTagName('head')[0].childNodes
+//   const results = document.getElementsByTagName('results')[0].childNodes
+//   headers = []
+//   head.forEach(h => {
+//     if (!h.text) {
+//       headers.push("" + h.attributes[0].value)
+//     }
+//   })
+//   process.stdout.write(headers.join(',') + '\n')
+//   results.forEach(e => {
+//     if(!e.text) {
+//       const result = e
+//       arr = new Array(headers.length)
+//       e.getElementsByTagName('binding').forEach(b => {
+//         attr = b.attributes[0].value
+//         index = headers.indexOf(attr)
+//         b.childNodes.forEach(ch => {
+//           if(!ch.text) {
+//             arr[index] = "" + ch.textContent
+//           }
+//         })
+//       })
+//       process.stdout.write(arr.join(',')  + '\n')
+//     }
+//   })
+// }
 
 function replace () {
   // (NODE ONLY) before all replace manually Requester.js in actor-http-native

@@ -9,7 +9,7 @@ def compute_average(files):
         df = pd.read_csv(files[i], sep=',')
         data.append(df)
     df = pd.concat(data)
-    return df.groupby(['workload','query']).mean()
+    return df.groupby(['approach', 'workload', 'query']).mean()
 
 if __name__ == '__main__':
     files = sys.argv[1:-1]
