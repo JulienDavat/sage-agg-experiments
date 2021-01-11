@@ -1,0 +1,20 @@
+{
+    "title": "My Linked Data Fragments server",
+    "datasources": {
+        "bsbm10": {
+            "title": "BSBM-10",
+            "type": "HdtDatasource",
+            "settings": { "file": "graphs/bsbm10.hdt" }
+        },
+        "bsbm100": {
+            "title": "BSBM-100",
+            "type": "HdtDatasource",
+            "settings": { "file": "graphs/bsbm100.hdt" }
+        },
+        "bsbm1k": {
+            "title": "BSBM-1K",
+            "type": "HdtDatasource",
+            "settings": { "file": "graphs/bsbm1k.hdt" }
+        }
+    }
+}
