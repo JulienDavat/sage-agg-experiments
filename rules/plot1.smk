@@ -7,6 +7,7 @@
 PLOT1_DATASETS = ['bsbm10', 'bsbm100', 'bsbm1k']
 PLOT1_APPROACHES = ['sage-agg']
 PLOT1_WORKLOADS = ['SP', 'SP-ND']
+PLOT1_DATASETS_LABEL = {'bsbm10': 'BSBM-10', 'bsbm100': 'BSBM-100', 'bsbm1k': 'BSBM-1k'}
 
 SAGE_PORT = 8080
 SAGE_APPROX_PORT = 8083
@@ -210,10 +211,12 @@ rule plot1_format_query_file:
         ancient('output/data/performance/{approach}/{workload}/{dataset}/{run}/query_{query}.csv')
     output:
         'output/data/performance/{approach}/{workload}/{dataset}/{run}/mergeable_query_{query}.csv'
+    params:
+        label=lambda wcs: PLOT1_DATASETS_LABEL[wcs.dataset]
     shell:
         'touch {output}; '
         'echo "approach,workload,dataset,query,execution_time,nb_calls,data_transfer" >> {output}; '
-        'echo -n "{wildcards.approach},{wildcards.workload},{wildcards.dataset},Q{wildcards.query}," >> {output}; '
+        'echo -n "{wildcards.approach},{wildcards.workload},{params.label},Q{wildcards.query}," >> {output}; '
         'cat {input} >> {output}; '
         'echo "" >> {output};'
 

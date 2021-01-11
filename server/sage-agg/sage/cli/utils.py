@@ -10,7 +10,7 @@ from rdflib import Graph
 from rdflib.util import from_n3
 from yaml import load
 
-SAGE_NTRIPLES_REGEX = re.compile('(\<.*\>) (\<.*\>) (.*) \.')
+SAGE_NTRIPLES_REGEX = re.compile('(\<.*\>)[ \t](\<.*\>)[ \t](.*)[ \t]\.')
 
 
 def load_dataset(config_path, dataset_name, logger, backends=[]):
