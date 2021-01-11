@@ -22,9 +22,10 @@ rule plot1_sage_first_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/sage/{workload}/{dataset}/1/query_{query}.csv'
+        stats='output/data/performance/sage/{workload}/{dataset}/1/query_{query}.csv',
+        result='output/data/performance/sage/{workload}/{dataset}/1/query_{query}.xml'
     shell:
-        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output} --time'
+        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format XML 1> {output.result}'
 
 
 rule plot1_sage_second_run:
@@ -33,9 +34,10 @@ rule plot1_sage_second_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/sage/{workload}/{dataset}/2/query_{query}.csv'
+        stats='output/data/performance/sage/{workload}/{dataset}/2/query_{query}.csv',
+        result='output/data/performance/sage/{workload}/{dataset}/2/query_{query}.xml'
     shell:
-        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output} --time'
+        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format XML 1> {output.result}'
 
 
 rule plot1_sage_third_run:
@@ -44,9 +46,10 @@ rule plot1_sage_third_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/sage/{workload}/{dataset}/3/query_{query}.csv'
+        stats='output/data/performance/sage/{workload}/{dataset}/3/query_{query}.csv',
+        result='output/data/performance/sage/{workload}/{dataset}/3/query_{query}.xml'
     shell:
-        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output} --time'
+        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format XML 1> {output.result}'
 
 ####################################################################################################
 # >>>>> SAGE WITH PARTIAL AGGREGATIONS #############################################################
@@ -57,9 +60,10 @@ rule plot1_sage_agg_first_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/sage-agg/{workload}/{dataset}/1/query_{query}.csv'
+        stats='output/data/performance/sage-agg/{workload}/{dataset}/1/query_{query}.csv',
+        result='output/data/performance/sage-agg/{workload}/{dataset}/1/query_{query}.xml'
     shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output}; '
+        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 
 rule plot1_sage_agg_second_run:
@@ -68,9 +72,10 @@ rule plot1_sage_agg_second_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/sage-agg/{workload}/{dataset}/2/query_{query}.csv'
+        stats='output/data/performance/sage-agg/{workload}/{dataset}/2/query_{query}.csv',
+        result='output/data/performance/sage-agg/{workload}/{dataset}/2/query_{query}.xml'
     shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output}; '
+        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 
 rule plot1_sage_agg_third_run:
@@ -79,9 +84,10 @@ rule plot1_sage_agg_third_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/sage-agg/{workload}/{dataset}/3/query_{query}.csv'
+        stats='output/data/performance/sage-agg/{workload}/{dataset}/3/query_{query}.csv',
+        result='output/data/performance/sage-agg/{workload}/{dataset}/3/query_{query}.xml'
     shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output}; '
+        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 ####################################################################################################
 # >>>>> SAGE WITH PARTIAL AGGREGATIONS + APPROXIMATIONS ############################################
@@ -92,9 +98,10 @@ rule plot1_sage_approx_first_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/sage-approx/{workload}/{dataset}/1/query_{query}.csv'
+        stats='output/data/performance/sage-approx/{workload}/{dataset}/1/query_{query}.csv',
+        result='output/data/performance/sage-approx/{workload}/{dataset}/1/query_{query}.xml'
     shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_APPROX_PORT}/sparql http://localhost:{SAGE_APPROX_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output}; '
+        'python client/sage-agg/interface.py query http://localhost:{SAGE_APPROX_PORT}/sparql http://localhost:{SAGE_APPROX_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 
 rule plot1_sage_approx_second_run:
@@ -103,9 +110,10 @@ rule plot1_sage_approx_second_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/sage-approx/{workload}/{dataset}/2/query_{query}.csv'
+        stats='output/data/performance/sage-approx/{workload}/{dataset}/2/query_{query}.csv',
+        result='output/data/performance/sage-approx/{workload}/{dataset}/2/query_{query}.xml'
     shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_APPROX_PORT}/sparql http://localhost:{SAGE_APPROX_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output}; '
+        'python client/sage-agg/interface.py query http://localhost:{SAGE_APPROX_PORT}/sparql http://localhost:{SAGE_APPROX_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 
 rule plot1_sage_approx_third_run:
@@ -114,9 +122,10 @@ rule plot1_sage_approx_third_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/sage-approx/{workload}/{dataset}/3/query_{query}.csv'
+        stats='output/data/performance/sage-approx/{workload}/{dataset}/3/query_{query}.csv',
+        result='output/data/performance/sage-approx/{workload}/{dataset}/3/query_{query}.xml'
     shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_APPROX_PORT}/sparql http://localhost:{SAGE_APPROX_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output}; '
+        'python client/sage-agg/interface.py query http://localhost:{SAGE_APPROX_PORT}/sparql http://localhost:{SAGE_APPROX_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 ####################################################################################################
 # >>>>> VIRTUOSO ###################################################################################
@@ -127,9 +136,10 @@ rule plot1_virtuoso_first_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/virtuoso/{workload}/{dataset}/1/query_{query}.csv'
+        stats='output/data/performance/virtuoso/{workload}/{dataset}/1/query_{query}.csv',
+        result='output/data/performance/virtuoso/{workload}/{dataset}/1/query_{query}.xml'
     shell:
-        'python client/virtuoso/interface.py query http://localhost:{VIRTUOSO_PORT}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output}; '
+        'python client/virtuoso/interface.py query http://localhost:{VIRTUOSO_PORT}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 
 rule plot1_virtuoso_second_run:
@@ -138,9 +148,10 @@ rule plot1_virtuoso_second_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/virtuoso/{workload}/{dataset}/2/query_{query}.csv'
+        stats='output/data/performance/virtuoso/{workload}/{dataset}/2/query_{query}.csv',
+        result='output/data/performance/virtuoso/{workload}/{dataset}/2/query_{query}.xml'
     shell:
-        'python client/virtuoso/interface.py query http://localhost:{VIRTUOSO_PORT}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output}; '
+        'python client/virtuoso/interface.py query http://localhost:{VIRTUOSO_PORT}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 
 rule plot1_virtuoso_third_run:
@@ -149,9 +160,10 @@ rule plot1_virtuoso_third_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/virtuoso/{workload}/{dataset}/3/query_{query}.csv'
+        stats='output/data/performance/virtuoso/{workload}/{dataset}/3/query_{query}.csv',
+        result='output/data/performance/virtuoso/{workload}/{dataset}/3/query_{query}.xml'
     shell:
-        'python client/virtuoso/interface.py query http://localhost:{VIRTUOSO_PORT}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output}; '
+        'python client/virtuoso/interface.py query http://localhost:{VIRTUOSO_PORT}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 ####################################################################################################
 # >>>>> COMUNICA ###################################################################################
@@ -162,9 +174,10 @@ rule plot1_comunica_first_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/comunica/{workload}/{dataset}/1/query_{query}.csv'
+        stats='output/data/performance/comunica/{workload}/{dataset}/1/query_{query}.csv',
+        result='output/data/performance/comunica/{workload}/{dataset}/1/query_{query}.xml'
     shell:
-        'node --max-old-space-size=6000 client/comunica/comunica.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input} --measure {output}'
+        'node --max-old-space-size=6000 client/comunica/interface.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input} --measure {output.stats} --format xml --output {output.result}'
 
 
 rule plot1_comunica_second_run:
@@ -173,9 +186,10 @@ rule plot1_comunica_second_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/comunica/{workload}/{dataset}/2/query_{query}.csv'
+        stats='output/data/performance/comunica/{workload}/{dataset}/2/query_{query}.csv',
+        result='output/data/performance/comunica/{workload}/{dataset}/2/query_{query}.xml'
     shell:
-        'node --max-old-space-size=6000 client/comunica/comunica.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input} --measure {output}'
+        'node --max-old-space-size=6000 client/comunica/interface.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input} --measure {output.stats} --format xml --output {output.result}'
 
 
 rule plot1_comunica_third_run:
@@ -184,9 +198,10 @@ rule plot1_comunica_third_run:
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        'output/data/performance/comunica/{workload}/{dataset}/3/query_{query}.csv'
+        stats='output/data/performance/comunica/{workload}/{dataset}/3/query_{query}.csv',
+        result='output/data/performance/comunica/{workload}/{dataset}/3/query_{query}.xml'
     shell:
-        'node --max-old-space-size=6000 client/comunica/comunica.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input} --measure {output}'
+        'node --max-old-space-size=6000 client/comunica/interface.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input} --measure {output.stats} --format xml --output {output.result}'
 
 # >>>>> PREPARE CSV FILES TO BUILD PLOTS ###########################################################
 

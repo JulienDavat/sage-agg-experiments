@@ -26,13 +26,3 @@ onerror:
 include: 'rules/plot1.smk'
 include: 'rules/plot2.smk'
 include: 'rules/plot3.smk'
-
-####################################################################################################
-# >>>>> ENTRY POINT ################################################################################
-####################################################################################################
-
-# rule run_all:
-#     input:
-#         ancient('output/figures/bsbm/figure.png'),
-#         ancient('output/figures/quantum_impact/figure.png'),
-#         ancient('output/figures/dbpedia/figure.png')

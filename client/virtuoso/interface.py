@@ -17,7 +17,7 @@ def cli():
 @click.option("--query", type=click.STRING)
 @click.option("--file", type=click.Path(exists=True))
 @click.option("--measure", type=click.Path())
-@click.option("--format", type=click.Choice(["w3c/json", "w3c/xml", "json"]))
+@click.option("--format", type=click.Choice(["w3c/json", "w3c/xml"]))
 @click.option("--output", type=click.STRING)
 @click.option("--display", is_flag=True, default=False)
 def query(server, dataset, query, file, measure, format, output, display):
