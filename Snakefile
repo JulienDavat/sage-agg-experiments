@@ -8,16 +8,16 @@ RUNS = [1, 2, 3]
 
 onstart:
     shell('mkdir -p output/log')
-    shell('bash scripts/start_sage_servers.sh')
-    print('starting sage servers...')
+    shell('bash scripts/start_servers.sh')
+    print('Starting all servers...')
 
 onsuccess:
-    shell('bash scripts/stop_sage_servers.sh')
-    print('Shutting down sage servers')
+    shell('bash scripts/stop_servers.sh')
+    print('Shutting down all servers')
 
 onerror:
-    shell('bash scripts/stop_sage_servers.sh')
-    print('Shutting down sage servers')
+    shell('bash scripts/stop_servers.sh')
+    print('Shutting down all servers')
 
 ####################################################################################################
 ########## DEPENDENCIES ############################################################################
