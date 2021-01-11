@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='iterators',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0fiterators.proto\x12\titerators\"R\n\rTriplePattern\x12\x0f\n\x07subject\x18\x01 \x01(\t\x12\x11\n\tpredicate\x18\x02 \x01(\t\x12\x0e\n\x06object\x18\x03 \x01(\t\x12\r\n\x05graph\x18\x04 \x01(\t\"e\n\x11SavedScanIterator\x12(\n\x06triple\x18\x01 \x01(\x0b\x32\x18.iterators.TriplePattern\x12\x11\n\tlast_read\x18\x02 \x01(\t\x12\x13\n\x0b\x63\x61rdinality\x18\x03 \x01(\x03\"\x95\x02\n\x17SavedProjectionIterator\x12\x0e\n\x06values\x18\x01 \x03(\t\x12\x33\n\x0bscan_source\x18\x02 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x03 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x38\n\x0cunion_source\x18\x04 \x01(\x0b\x32 .iterators.SavedBagUnionIteratorH\x00\x12\x37\n\rfilter_source\x18\x05 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x42\x08\n\x06source\"\xeb\x02\n\x16SavedIndexJoinIterator\x12\x33\n\x0bscan_source\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x02 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x37\n\rfilter_source\x18\x03 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12\'\n\x05inner\x18\x04 \x01(\x0b\x32\x18.iterators.TriplePattern\x12\x37\n\x03muc\x18\x05 \x03(\x0b\x32*.iterators.SavedIndexJoinIterator.MucEntry\x12\x11\n\tlast_read\x18\x06 \x01(\t\x1a*\n\x08MucEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x08\n\x06source\"\xd3\x04\n\x15SavedBagUnionIterator\x12\x31\n\tscan_left\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x37\n\tproj_left\x18\x02 \x01(\x0b\x32\".iterators.SavedProjectionIteratorH\x00\x12\x36\n\nunion_left\x18\x03 \x01(\x0b\x32 .iterators.SavedBagUnionIteratorH\x00\x12\x36\n\tjoin_left\x18\x04 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x35\n\x0b\x66ilter_left\x18\x05 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12\x32\n\nscan_right\x18\x06 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x01\x12\x38\n\nproj_right\x18\x07 \x01(\x0b\x32\".iterators.SavedProjectionIteratorH\x01\x12\x37\n\x0bunion_right\x18\x08 \x01(\x0b\x32 .iterators.SavedBagUnionIteratorH\x01\x12\x37\n\njoin_right\x18\t \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x01\x12\x36\n\x0c\x66ilter_right\x18\n \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x01\x42\x06\n\x04leftB\x07\n\x05right\"\xf5\x02\n\x13SavedFilterIterator\x12\x33\n\x0bscan_source\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x39\n\x0bproj_source\x18\x02 \x01(\x0b\x32\".iterators.SavedProjectionIteratorH\x00\x12\x37\n\rfilter_source\x18\x03 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x04 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x12\n\nexpression\x18\x05 \x01(\t\x12\x32\n\x02mu\x18\x06 \x03(\x0b\x32&.iterators.SavedFilterIterator.MuEntry\x1a)\n\x07MuEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x08\n\x06source\"\x84\x02\n\x15SavedDistinctIterator\x12\x33\n\x0bscan_source\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x39\n\x0bproj_source\x18\x02 \x01(\x0b\x32\".iterators.SavedProjectionIteratorH\x00\x12\x37\n\rfilter_source\x18\x03 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x04 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x42\x08\n\x06source\"\x89\x01\n\x0fSavedGroupByAgg\x12\x32\n\x06source\x18\x01 \x01(\x0b\x32\".iterators.SavedProjectionIterator\x12\x11\n\tvariables\x18\x02 \x03(\t\x12/\n\x0b\x61ggregators\x18\x03 \x03(\x0b\x32\x1a.iterators.SavedAggregator\"C\n\x0fSavedAggregator\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08variable\x18\x02 \x01(\t\x12\x10\n\x08\x62inds_to\x18\x03 \x01(\t\"\xa4\x03\n\x08RootTree\x12\x33\n\x0bscan_source\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x39\n\x0bproj_source\x18\x02 \x01(\x0b\x32\".iterators.SavedProjectionIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x03 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x38\n\x0cunion_source\x18\x04 \x01(\x0b\x32 .iterators.SavedBagUnionIteratorH\x00\x12\x37\n\rfilter_source\x18\x05 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12;\n\x0f\x64istinct_source\x18\x06 \x01(\x0b\x32 .iterators.SavedDistinctIteratorH\x00\x12\x34\n\x0egroupby_source\x18\x07 \x01(\x0b\x32\x1a.iterators.SavedGroupByAggH\x00\x42\x08\n\x06sourceb\x06proto3')
+  serialized_pb=_b('\n\x0fiterators.proto\x12\titerators\"R\n\rTriplePattern\x12\x0f\n\x07subject\x18\x01 \x01(\t\x12\x11\n\tpredicate\x18\x02 \x01(\t\x12\x0e\n\x06object\x18\x03 \x01(\t\x12\r\n\x05graph\x18\x04 \x01(\t\"e\n\x11SavedScanIterator\x12(\n\x06triple\x18\x01 \x01(\x0b\x32\x18.iterators.TriplePattern\x12\x11\n\tlast_read\x18\x02 \x01(\t\x12\x13\n\x0b\x63\x61rdinality\x18\x03 \x01(\x03\"\x95\x02\n\x17SavedProjectionIterator\x12\x0e\n\x06values\x18\x01 \x03(\t\x12\x33\n\x0bscan_source\x18\x02 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x03 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x38\n\x0cunion_source\x18\x04 \x01(\x0b\x32 .iterators.SavedBagUnionIteratorH\x00\x12\x37\n\rfilter_source\x18\x05 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x42\x08\n\x06source\"\xd5\x02\n!SavedAggregatesProjectionIterator\x12\x0e\n\x06values\x18\x01 \x03(\t\x12\x33\n\x0bscan_source\x18\x02 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x03 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x38\n\x0cunion_source\x18\x04 \x01(\x0b\x32 .iterators.SavedBagUnionIteratorH\x00\x12\x37\n\rfilter_source\x18\x05 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12\x34\n\x0egroupby_source\x18\x06 \x01(\x0b\x32\x1a.iterators.SavedGroupByAggH\x00\x42\x08\n\x06source\"\xeb\x02\n\x16SavedIndexJoinIterator\x12\x33\n\x0bscan_source\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x02 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x37\n\rfilter_source\x18\x03 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12\'\n\x05inner\x18\x04 \x01(\x0b\x32\x18.iterators.TriplePattern\x12\x37\n\x03muc\x18\x05 \x03(\x0b\x32*.iterators.SavedIndexJoinIterator.MucEntry\x12\x11\n\tlast_read\x18\x06 \x01(\t\x1a*\n\x08MucEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x08\n\x06source\"\xd3\x04\n\x15SavedBagUnionIterator\x12\x31\n\tscan_left\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x37\n\tproj_left\x18\x02 \x01(\x0b\x32\".iterators.SavedProjectionIteratorH\x00\x12\x36\n\nunion_left\x18\x03 \x01(\x0b\x32 .iterators.SavedBagUnionIteratorH\x00\x12\x36\n\tjoin_left\x18\x04 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x35\n\x0b\x66ilter_left\x18\x05 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12\x32\n\nscan_right\x18\x06 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x01\x12\x38\n\nproj_right\x18\x07 \x01(\x0b\x32\".iterators.SavedProjectionIteratorH\x01\x12\x37\n\x0bunion_right\x18\x08 \x01(\x0b\x32 .iterators.SavedBagUnionIteratorH\x01\x12\x37\n\njoin_right\x18\t \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x01\x12\x36\n\x0c\x66ilter_right\x18\n \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x01\x42\x06\n\x04leftB\x07\n\x05right\"\xf5\x02\n\x13SavedFilterIterator\x12\x33\n\x0bscan_source\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x39\n\x0bproj_source\x18\x02 \x01(\x0b\x32\".iterators.SavedProjectionIteratorH\x00\x12\x37\n\rfilter_source\x18\x03 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x04 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x12\n\nexpression\x18\x05 \x01(\t\x12\x32\n\x02mu\x18\x06 \x03(\x0b\x32&.iterators.SavedFilterIterator.MuEntry\x1a)\n\x07MuEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x08\n\x06source\"\x84\x02\n\x15SavedDistinctIterator\x12\x33\n\x0bscan_source\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x39\n\x0bproj_source\x18\x02 \x01(\x0b\x32\".iterators.SavedProjectionIteratorH\x00\x12\x37\n\rfilter_source\x18\x03 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x04 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x42\x08\n\x06source\"\xc1\x02\n\x0fSavedGroupByAgg\x12\x33\n\x0bscan_source\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x02 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x38\n\x0cunion_source\x18\x03 \x01(\x0b\x32 .iterators.SavedBagUnionIteratorH\x00\x12\x37\n\rfilter_source\x18\x04 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12\x11\n\tvariables\x18\x05 \x03(\t\x12/\n\x0b\x61ggregators\x18\x06 \x03(\x0b\x32\x1a.iterators.SavedAggregatorB\x08\n\x06source\"C\n\x0fSavedAggregator\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08variable\x18\x02 \x01(\t\x12\x10\n\x08\x62inds_to\x18\x03 \x01(\t\"\xed\x03\n\x08RootTree\x12\x33\n\x0bscan_source\x18\x01 \x01(\x0b\x32\x1c.iterators.SavedScanIteratorH\x00\x12\x39\n\x0bproj_source\x18\x02 \x01(\x0b\x32\".iterators.SavedProjectionIteratorH\x00\x12\x38\n\x0bjoin_source\x18\x03 \x01(\x0b\x32!.iterators.SavedIndexJoinIteratorH\x00\x12\x38\n\x0cunion_source\x18\x04 \x01(\x0b\x32 .iterators.SavedBagUnionIteratorH\x00\x12\x37\n\rfilter_source\x18\x05 \x01(\x0b\x32\x1e.iterators.SavedFilterIteratorH\x00\x12;\n\x0f\x64istinct_source\x18\x06 \x01(\x0b\x32 .iterators.SavedDistinctIteratorH\x00\x12\x34\n\x0egroupby_source\x18\x07 \x01(\x0b\x32\x1a.iterators.SavedGroupByAggH\x00\x12G\n\x0f\x61gg_proj_source\x18\x08 \x01(\x0b\x32,.iterators.SavedAggregatesProjectionIteratorH\x00\x42\x08\n\x06sourceb\x06proto3')
 )
 
 
@@ -184,6 +184,75 @@ _SAVEDPROJECTIONITERATOR = _descriptor.Descriptor(
 )
 
 
+_SAVEDAGGREGATESPROJECTIONITERATOR = _descriptor.Descriptor(
+  name='SavedAggregatesProjectionIterator',
+  full_name='iterators.SavedAggregatesProjectionIterator',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='values', full_name='iterators.SavedAggregatesProjectionIterator.values', index=0,
+      number=1, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='scan_source', full_name='iterators.SavedAggregatesProjectionIterator.scan_source', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='join_source', full_name='iterators.SavedAggregatesProjectionIterator.join_source', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='union_source', full_name='iterators.SavedAggregatesProjectionIterator.union_source', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='filter_source', full_name='iterators.SavedAggregatesProjectionIterator.filter_source', index=4,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='groupby_source', full_name='iterators.SavedAggregatesProjectionIterator.groupby_source', index=5,
+      number=6, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='source', full_name='iterators.SavedAggregatesProjectionIterator.source',
+      index=0, containing_type=None, fields=[]),
+  ],
+  serialized_start=498,
+  serialized_end=839,
+)
+
+
 _SAVEDINDEXJOINITERATOR_MUCENTRY = _descriptor.Descriptor(
   name='MucEntry',
   full_name='iterators.SavedIndexJoinIterator.MucEntry',
@@ -217,8 +286,8 @@ _SAVEDINDEXJOINITERATOR_MUCENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=809,
-  serialized_end=851,
+  serialized_start=1153,
+  serialized_end=1195,
 )
 
 _SAVEDINDEXJOINITERATOR = _descriptor.Descriptor(
@@ -285,8 +354,8 @@ _SAVEDINDEXJOINITERATOR = _descriptor.Descriptor(
       name='source', full_name='iterators.SavedIndexJoinIterator.source',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=498,
-  serialized_end=861,
+  serialized_start=842,
+  serialized_end=1205,
 )
 
 
@@ -385,8 +454,8 @@ _SAVEDBAGUNIONITERATOR = _descriptor.Descriptor(
       name='right', full_name='iterators.SavedBagUnionIterator.right',
       index=1, containing_type=None, fields=[]),
   ],
-  serialized_start=864,
-  serialized_end=1459,
+  serialized_start=1208,
+  serialized_end=1803,
 )
 
 
@@ -423,8 +492,8 @@ _SAVEDFILTERITERATOR_MUENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1784,
-  serialized_end=1825,
+  serialized_start=2128,
+  serialized_end=2169,
 )
 
 _SAVEDFILTERITERATOR = _descriptor.Descriptor(
@@ -491,8 +560,8 @@ _SAVEDFILTERITERATOR = _descriptor.Descriptor(
       name='source', full_name='iterators.SavedFilterIterator.source',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1462,
-  serialized_end=1835,
+  serialized_start=1806,
+  serialized_end=2179,
 )
 
 
@@ -546,8 +615,8 @@ _SAVEDDISTINCTITERATOR = _descriptor.Descriptor(
       name='source', full_name='iterators.SavedDistinctIterator.source',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1838,
-  serialized_end=2098,
+  serialized_start=2182,
+  serialized_end=2442,
 )
 
 
@@ -559,22 +628,43 @@ _SAVEDGROUPBYAGG = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='source', full_name='iterators.SavedGroupByAgg.source', index=0,
+      name='scan_source', full_name='iterators.SavedGroupByAgg.scan_source', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='variables', full_name='iterators.SavedGroupByAgg.variables', index=1,
-      number=2, type=9, cpp_type=9, label=3,
+      name='join_source', full_name='iterators.SavedGroupByAgg.join_source', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='union_source', full_name='iterators.SavedGroupByAgg.union_source', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='filter_source', full_name='iterators.SavedGroupByAgg.filter_source', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='variables', full_name='iterators.SavedGroupByAgg.variables', index=4,
+      number=5, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='aggregators', full_name='iterators.SavedGroupByAgg.aggregators', index=2,
-      number=3, type=11, cpp_type=10, label=3,
+      name='aggregators', full_name='iterators.SavedGroupByAgg.aggregators', index=5,
+      number=6, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -590,9 +680,12 @@ _SAVEDGROUPBYAGG = _descriptor.Descriptor(
   syntax='proto3',
   extension_ranges=[],
   oneofs=[
+    _descriptor.OneofDescriptor(
+      name='source', full_name='iterators.SavedGroupByAgg.source',
+      index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2101,
-  serialized_end=2238,
+  serialized_start=2445,
+  serialized_end=2766,
 )
 
 
@@ -636,8 +729,8 @@ _SAVEDAGGREGATOR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2240,
-  serialized_end=2307,
+  serialized_start=2768,
+  serialized_end=2835,
 )
 
 
@@ -697,6 +790,13 @@ _ROOTTREE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='agg_proj_source', full_name='iterators.RootTree.agg_proj_source', index=7,
+      number=8, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -712,8 +812,8 @@ _ROOTTREE = _descriptor.Descriptor(
       name='source', full_name='iterators.RootTree.source',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2310,
-  serialized_end=2730,
+  serialized_start=2838,
+  serialized_end=3331,
 )
 
 _SAVEDSCANITERATOR.fields_by_name['triple'].message_type = _TRIPLEPATTERN
@@ -733,6 +833,26 @@ _SAVEDPROJECTIONITERATOR.fields_by_name['union_source'].containing_oneof = _SAVE
 _SAVEDPROJECTIONITERATOR.oneofs_by_name['source'].fields.append(
   _SAVEDPROJECTIONITERATOR.fields_by_name['filter_source'])
 _SAVEDPROJECTIONITERATOR.fields_by_name['filter_source'].containing_oneof = _SAVEDPROJECTIONITERATOR.oneofs_by_name['source']
+_SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['scan_source'].message_type = _SAVEDSCANITERATOR
+_SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['join_source'].message_type = _SAVEDINDEXJOINITERATOR
+_SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['union_source'].message_type = _SAVEDBAGUNIONITERATOR
+_SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['filter_source'].message_type = _SAVEDFILTERITERATOR
+_SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['groupby_source'].message_type = _SAVEDGROUPBYAGG
+_SAVEDAGGREGATESPROJECTIONITERATOR.oneofs_by_name['source'].fields.append(
+  _SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['scan_source'])
+_SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['scan_source'].containing_oneof = _SAVEDAGGREGATESPROJECTIONITERATOR.oneofs_by_name['source']
+_SAVEDAGGREGATESPROJECTIONITERATOR.oneofs_by_name['source'].fields.append(
+  _SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['join_source'])
+_SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['join_source'].containing_oneof = _SAVEDAGGREGATESPROJECTIONITERATOR.oneofs_by_name['source']
+_SAVEDAGGREGATESPROJECTIONITERATOR.oneofs_by_name['source'].fields.append(
+  _SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['union_source'])
+_SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['union_source'].containing_oneof = _SAVEDAGGREGATESPROJECTIONITERATOR.oneofs_by_name['source']
+_SAVEDAGGREGATESPROJECTIONITERATOR.oneofs_by_name['source'].fields.append(
+  _SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['filter_source'])
+_SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['filter_source'].containing_oneof = _SAVEDAGGREGATESPROJECTIONITERATOR.oneofs_by_name['source']
+_SAVEDAGGREGATESPROJECTIONITERATOR.oneofs_by_name['source'].fields.append(
+  _SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['groupby_source'])
+_SAVEDAGGREGATESPROJECTIONITERATOR.fields_by_name['groupby_source'].containing_oneof = _SAVEDAGGREGATESPROJECTIONITERATOR.oneofs_by_name['source']
 _SAVEDINDEXJOINITERATOR_MUCENTRY.containing_type = _SAVEDINDEXJOINITERATOR
 _SAVEDINDEXJOINITERATOR.fields_by_name['scan_source'].message_type = _SAVEDSCANITERATOR
 _SAVEDINDEXJOINITERATOR.fields_by_name['join_source'].message_type = _SAVEDINDEXJOINITERATOR
@@ -822,8 +942,23 @@ _SAVEDDISTINCTITERATOR.fields_by_name['filter_source'].containing_oneof = _SAVED
 _SAVEDDISTINCTITERATOR.oneofs_by_name['source'].fields.append(
   _SAVEDDISTINCTITERATOR.fields_by_name['join_source'])
 _SAVEDDISTINCTITERATOR.fields_by_name['join_source'].containing_oneof = _SAVEDDISTINCTITERATOR.oneofs_by_name['source']
-_SAVEDGROUPBYAGG.fields_by_name['source'].message_type = _SAVEDPROJECTIONITERATOR
+_SAVEDGROUPBYAGG.fields_by_name['scan_source'].message_type = _SAVEDSCANITERATOR
+_SAVEDGROUPBYAGG.fields_by_name['join_source'].message_type = _SAVEDINDEXJOINITERATOR
+_SAVEDGROUPBYAGG.fields_by_name['union_source'].message_type = _SAVEDBAGUNIONITERATOR
+_SAVEDGROUPBYAGG.fields_by_name['filter_source'].message_type = _SAVEDFILTERITERATOR
 _SAVEDGROUPBYAGG.fields_by_name['aggregators'].message_type = _SAVEDAGGREGATOR
+_SAVEDGROUPBYAGG.oneofs_by_name['source'].fields.append(
+  _SAVEDGROUPBYAGG.fields_by_name['scan_source'])
+_SAVEDGROUPBYAGG.fields_by_name['scan_source'].containing_oneof = _SAVEDGROUPBYAGG.oneofs_by_name['source']
+_SAVEDGROUPBYAGG.oneofs_by_name['source'].fields.append(
+  _SAVEDGROUPBYAGG.fields_by_name['join_source'])
+_SAVEDGROUPBYAGG.fields_by_name['join_source'].containing_oneof = _SAVEDGROUPBYAGG.oneofs_by_name['source']
+_SAVEDGROUPBYAGG.oneofs_by_name['source'].fields.append(
+  _SAVEDGROUPBYAGG.fields_by_name['union_source'])
+_SAVEDGROUPBYAGG.fields_by_name['union_source'].containing_oneof = _SAVEDGROUPBYAGG.oneofs_by_name['source']
+_SAVEDGROUPBYAGG.oneofs_by_name['source'].fields.append(
+  _SAVEDGROUPBYAGG.fields_by_name['filter_source'])
+_SAVEDGROUPBYAGG.fields_by_name['filter_source'].containing_oneof = _SAVEDGROUPBYAGG.oneofs_by_name['source']
 _ROOTTREE.fields_by_name['scan_source'].message_type = _SAVEDSCANITERATOR
 _ROOTTREE.fields_by_name['proj_source'].message_type = _SAVEDPROJECTIONITERATOR
 _ROOTTREE.fields_by_name['join_source'].message_type = _SAVEDINDEXJOINITERATOR
@@ -831,6 +966,7 @@ _ROOTTREE.fields_by_name['union_source'].message_type = _SAVEDBAGUNIONITERATOR
 _ROOTTREE.fields_by_name['filter_source'].message_type = _SAVEDFILTERITERATOR
 _ROOTTREE.fields_by_name['distinct_source'].message_type = _SAVEDDISTINCTITERATOR
 _ROOTTREE.fields_by_name['groupby_source'].message_type = _SAVEDGROUPBYAGG
+_ROOTTREE.fields_by_name['agg_proj_source'].message_type = _SAVEDAGGREGATESPROJECTIONITERATOR
 _ROOTTREE.oneofs_by_name['source'].fields.append(
   _ROOTTREE.fields_by_name['scan_source'])
 _ROOTTREE.fields_by_name['scan_source'].containing_oneof = _ROOTTREE.oneofs_by_name['source']
@@ -852,9 +988,13 @@ _ROOTTREE.fields_by_name['distinct_source'].containing_oneof = _ROOTTREE.oneofs_
 _ROOTTREE.oneofs_by_name['source'].fields.append(
   _ROOTTREE.fields_by_name['groupby_source'])
 _ROOTTREE.fields_by_name['groupby_source'].containing_oneof = _ROOTTREE.oneofs_by_name['source']
+_ROOTTREE.oneofs_by_name['source'].fields.append(
+  _ROOTTREE.fields_by_name['agg_proj_source'])
+_ROOTTREE.fields_by_name['agg_proj_source'].containing_oneof = _ROOTTREE.oneofs_by_name['source']
 DESCRIPTOR.message_types_by_name['TriplePattern'] = _TRIPLEPATTERN
 DESCRIPTOR.message_types_by_name['SavedScanIterator'] = _SAVEDSCANITERATOR
 DESCRIPTOR.message_types_by_name['SavedProjectionIterator'] = _SAVEDPROJECTIONITERATOR
+DESCRIPTOR.message_types_by_name['SavedAggregatesProjectionIterator'] = _SAVEDAGGREGATESPROJECTIONITERATOR
 DESCRIPTOR.message_types_by_name['SavedIndexJoinIterator'] = _SAVEDINDEXJOINITERATOR
 DESCRIPTOR.message_types_by_name['SavedBagUnionIterator'] = _SAVEDBAGUNIONITERATOR
 DESCRIPTOR.message_types_by_name['SavedFilterIterator'] = _SAVEDFILTERITERATOR
@@ -884,6 +1024,13 @@ SavedProjectionIterator = _reflection.GeneratedProtocolMessageType('SavedProject
   # @@protoc_insertion_point(class_scope:iterators.SavedProjectionIterator)
   ))
 _sym_db.RegisterMessage(SavedProjectionIterator)
+
+SavedAggregatesProjectionIterator = _reflection.GeneratedProtocolMessageType('SavedAggregatesProjectionIterator', (_message.Message,), dict(
+  DESCRIPTOR = _SAVEDAGGREGATESPROJECTIONITERATOR,
+  __module__ = 'iterators_pb2'
+  # @@protoc_insertion_point(class_scope:iterators.SavedAggregatesProjectionIterator)
+  ))
+_sym_db.RegisterMessage(SavedAggregatesProjectionIterator)
 
 SavedIndexJoinIterator = _reflection.GeneratedProtocolMessageType('SavedIndexJoinIterator', (_message.Message,), dict(
 

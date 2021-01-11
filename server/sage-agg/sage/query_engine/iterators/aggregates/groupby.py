@@ -79,16 +79,17 @@ class GroupByAggregator(PreemptableIterator):
         return None
 
     def save(self):
-        saved = SavedGroupByAgg()
-        saved.source.CopyFrom(self._source.save())
+        saved_groupby = SavedGroupByAgg()
+        source_field = self._source.serialized_name() + '_source'
+        getattr(saved_groupby, source_field).CopyFrom(self._source.save())
         for variable in self._grouping_variables:
-            saved.variables.append(variable)
+            saved_groupby.variables.append(variable)
         for aggregator in self._aggregators:
-            agg = saved.aggregators.add()
+            agg = saved_groupby.aggregators.add()
             agg.name = aggregator.get_type()
             agg.variable = aggregator.get_variable()
             agg.binds_to = aggregator.get_binds_to()
-        return saved
+        return saved_groupby
 
     def is_aggregator(self):
         return True

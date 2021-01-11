@@ -12,6 +12,7 @@ from sage.query_engine.iterators.aggregates.approximative_count_distinct import 
 from sage.query_engine.iterators.aggregates.groupby import GroupByAggregator
 from sage.query_engine.iterators.aggregates.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.iterators.aggregates.sum import SumAggregator
+from sage.query_engine.iterators.aggregates.projection import AggregatesProjectionIterator
 from sage.query_engine.iterators.filter import FilterIterator
 from sage.query_engine.iterators.projection import ProjectionIterator
 from sage.query_engine.iterators.union import BagUnionIterator
@@ -109,8 +110,7 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         if node.p.name == 'AggregateJoin' or node.p.name == 'Extend':
             # forward projection variables, as we need them for parsing an AggregateJoin
             node.p['PV'] = query_vars
-            child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities)
-            return child
+            return parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities)
         child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities)
         return ProjectionIterator(child, query_vars)
     elif node.name == 'BGP':
@@ -143,41 +143,34 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         while current.name == 'Extend':
             renaming[current.expr.n3()] = current.var.n3()
             current = current.p
+        current['PV'] = node['PV']
         return parse_query_node(current, dataset, current_graphs, server_url, cardinalities, renaming_map=renaming)
     elif node.name == 'AggregateJoin':
         groupby_variables = list()
-        proj_variables = list()
         # build GROUP BY variables
         last_groupby_var = None
-        # case 1: no explicit group BY, so we group by all variables in the query
-        if node.p.expr is None:
+        if node.p.expr is None: # case 1: no explicit group BY, so we group by all variables in the query
             last_groupby_var = list(node.p._vars)[0]
             # for variable in node.p._vars:
             #     groupby_variables.append(variable.n3())
-            #     # proj_variables.append(variable.n3())
             #     last_groupby_var = variable
         else:  # case 2: there is an explicit group by
             for variable in node.p.expr:
                 groupby_variables.append(variable.n3())
-                proj_variables.append(variable.n3())
                 last_groupby_var = variable
         # build aggregators for evaluating SPARQL aggregations (if any)
         aggregators = list()
         for agg in node.A:
             if agg.vars == '*':
                 agg.vars = last_groupby_var
-            proj_variables.append(agg.vars.n3())
-            aggregators.append(build_aggregator(dataset, agg, renaming_map))
+            if agg.name != 'Aggregate_Sample':
+                aggregators.append(build_aggregator(dataset, agg, renaming_map))
         # build source iterator from child node
         source = parse_query_node(node.p.p, dataset, current_graphs, server_url, cardinalities)
-        # add projection to the pipeline, depending of the context
-        if 'PV' in node:
-            source = ProjectionIterator(source, node.PV)
-        else:
-            source = ProjectionIterator(source, proj_variables)
-        # add GROUP BY operator (with aggregators) to the pipeline
+        # add the GROUP BY operator (with aggregators) to the pipeline
         source = GroupByAggregator(source, groupby_variables, aggregators=aggregators)
-        return source
+        # add the projection to the pipeline, depending of the context
+        return AggregatesProjectionIterator(source, node.PV)
     else:
         raise UnsupportedSPARQL("Unsupported SPARQL feature: {}".format(node.name))
 

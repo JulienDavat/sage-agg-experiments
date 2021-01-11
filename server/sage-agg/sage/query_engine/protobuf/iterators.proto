@@ -25,6 +25,17 @@ message SavedProjectionIterator {
     }
 }
 
+message SavedAggregatesProjectionIterator {
+    repeated string values = 1;
+    oneof source {
+        SavedScanIterator scan_source = 2;
+        SavedIndexJoinIterator join_source = 3;
+        SavedBagUnionIterator union_source = 4;
+        SavedFilterIterator filter_source = 5;
+        SavedGroupByAgg groupby_source = 6;
+    }
+}
+
 message SavedIndexJoinIterator {
     oneof source {
         SavedScanIterator scan_source = 1;
@@ -74,9 +85,14 @@ message SavedDistinctIterator {
 }
 
 message SavedGroupByAgg {
-    SavedProjectionIterator source = 1;
-    repeated string variables = 2;
-    repeated SavedAggregator aggregators = 3;
+    oneof source {
+        SavedScanIterator scan_source = 1;
+        SavedIndexJoinIterator join_source = 2;
+        SavedBagUnionIterator union_source = 3;
+        SavedFilterIterator filter_source = 4;
+    }
+    repeated string variables = 5;
+    repeated SavedAggregator aggregators = 6;
 }
 
 message SavedAggregator {
@@ -94,5 +110,6 @@ message RootTree {
         SavedFilterIterator filter_source = 5;
         SavedDistinctIterator distinct_source = 6;
         SavedGroupByAgg groupby_source = 7;
+        SavedAggregatesProjectionIterator agg_proj_source = 8;
     }
 }

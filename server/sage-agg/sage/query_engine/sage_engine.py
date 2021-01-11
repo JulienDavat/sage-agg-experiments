@@ -87,8 +87,6 @@ class SageEngine(object):
             # fetch partial aggregate if the query is an aggreation query
             if plan.is_aggregator():
                 results += plan.generate_results()
-            if results == [{'?__default_group': 'https://sage-org.github.io/sage-engine#DefaultGroupKey'}]:
-                results = []
             # collect results from classic query
             while not queue.empty():
                 results.append(queue.get_nowait())

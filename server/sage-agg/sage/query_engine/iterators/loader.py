@@ -6,13 +6,14 @@ from sage.query_engine.iterators.aggregates.approximative_count_distinct import 
 from sage.query_engine.iterators.aggregates.groupby import GroupByAggregator
 from sage.query_engine.iterators.aggregates.min_max import MinAggregator, MaxAggregator
 from sage.query_engine.iterators.aggregates.sum import SumAggregator
+from sage.query_engine.iterators.aggregates.projection import AggregatesProjectionIterator
 from sage.query_engine.iterators.filter import FilterIterator
 from sage.query_engine.iterators.nlj import IndexJoinIterator
 from sage.query_engine.iterators.projection import ProjectionIterator
 from sage.query_engine.iterators.scan import ScanIterator
 from sage.query_engine.iterators.union import BagUnionIterator
 from sage.query_engine.protobuf.iterators_pb2 import RootTree, SavedProjectionIterator, SavedScanIterator, \
-    SavedIndexJoinIterator, SavedBagUnionIterator, SavedFilterIterator, SavedGroupByAgg
+    SavedIndexJoinIterator, SavedBagUnionIterator, SavedFilterIterator, SavedGroupByAgg, SavedAggregatesProjectionIterator
 from sage.query_engine.protobuf.utils import protoTriple_to_dict
 
 
@@ -36,6 +37,8 @@ def load(protoMsg, dataset):
         return load_union(saved_plan, dataset)
     elif type(saved_plan) is SavedGroupByAgg:
         return load_groupby(saved_plan, dataset)
+    elif type(saved_plan) is SavedAggregatesProjectionIterator:
+        return load_aggregates_projection(saved_plan, dataset)
     else:
         raise Exception('Unknown iterator type "%s" when loading controls' % type(saved_plan))
 
@@ -90,7 +93,8 @@ def load_union(saved_plan, dataset):
 
 def load_groupby(saved_plan, dataset):
     """Load a GroupByAggregator from a protobuf serialization"""
-    source = load(saved_plan.source, dataset)
+    sourceField = saved_plan.WhichOneof('source')
+    source = load(getattr(saved_plan, sourceField), dataset)
     aggregators = list()
     for agg in saved_plan.aggregators:
         if agg.name == 'count':
@@ -113,3 +117,10 @@ def load_groupby(saved_plan, dataset):
         else:
             raise Exception("Unknown SPARQL aggregators of type '{}' found when resuming query.".format(agg.name))
     return GroupByAggregator(source, saved_plan.variables, aggregators=aggregators)
+
+def load_aggregates_projection(saved_plan, dataset):
+    """Load a AggregatesProjectionIterator from a protobuf serialization"""
+    sourceField = saved_plan.WhichOneof('source')
+    source = load(getattr(saved_plan, sourceField), dataset)
+    values = saved_plan.values if len(saved_plan.values) > 0 else None
+    return AggregatesProjectionIterator(source, values)

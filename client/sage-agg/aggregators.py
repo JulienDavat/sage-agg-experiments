@@ -109,8 +109,7 @@ class GenericReducer():
     - __value__ is the value of a partial aggregation
     """
 
-    def __init__(self, projection):
-        self._projection = projection
+    def __init__(self):
         self._groups = dict()
         self._count = CountReducer()
         self._count_distinct = CountDistinctReducer()
@@ -175,8 +174,6 @@ class GenericReducer():
         for key, item in self._groups.items():
             elt = dict()
             for variable in item.keys():
-                if not variable in self._projection:
-                    continue
                 if type(item[variable]) is str:
                     elt[variable] = item[variable]
                 elif type(item[variable]) is dict:
