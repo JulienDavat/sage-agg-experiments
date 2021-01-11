@@ -1,5 +1,6 @@
 {
     "title": "My Linked Data Fragments server",
+    "pageSize":10000,
     "datasources": {
         "bsbm10": {
             "title": "BSBM-10",

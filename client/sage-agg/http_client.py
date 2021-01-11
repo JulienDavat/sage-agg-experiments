@@ -19,9 +19,7 @@ def execute(server, dataset, query, accumulator, spy):
     payload = {
         "query": query,
         "defaultGraph": dataset,
-        "next": None,
-        "optimized": True,
-        "buffer": -1
+        "next": None
     }
 
     start = time()
@@ -35,7 +33,7 @@ def execute(server, dataset, query, accumulator, spy):
         spy.report_data_transfer(sys.getsizeof(json.dumps(json_response)))
         
         for bindings in json_response['bindings']:
-            # print(bindings)
+            logger.debug(bindings)
             accumulator.accumulate(bindings)
     execution_time = time() - start
 

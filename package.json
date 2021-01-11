@@ -1,0 +1,27 @@
+{
+  "name": "experiments",
+  "version": "1.0.0",
+  "description": "Experimental study of the paper: Processing SPARQL Aggregate Queries with Web Preemption",
+  "main": "index.js",
+  "dependencies": {
+    "@comunica/actor-init-sparql": "^1.9.4",
+    "commander": "^4.0.1",
+    "isomorphic-fetch": "^3.0.0",
+    "ldf-server": "^2.2.5",
+    "object-sizeof": "^1.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JulienDavat/sage-sparql-void.git"
+  },
+  "author": "Arnaud Graals, Thomas Minier, Julien Aimonier-Davat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JulienDavat/sage-sparql-void/issues"
+  },
+  "homepage": "https://github.com/JulienDavat/sage-sparql-void#readme"
+}

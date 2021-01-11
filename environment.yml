@@ -1,0 +1,16 @@
+name: aggregates
+channels:
+- bioconda
+- conda-forge
+- defaults
+dependencies:
+- snakemake
+- snakemake-minimal
+- seaborn
+- seaborn-base
+- python=3.8.5
+- numpy
+- matplotlib
+- matplotlib-base
+- coloredlogs
+- click

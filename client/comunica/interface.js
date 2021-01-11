@@ -70,6 +70,6 @@ async function start(server, query) {
 
 function replace () {
   // replaces Requester.js in actor-http-native manually in order to compute query execution metrics
-  fs.writeFileSync(__dirname + '/node_modules/@comunica/actor-http-native/lib/Requester.js', fs.readFileSync(__dirname + '/Requester.js', 'utf-8'))
-  fs.writeFileSync(__dirname + '/node_modules/@comunica/actor-http-native/lib/ActorHttpNative.js', fs.readFileSync(__dirname + '/ActorHttpNative.js', 'utf-8'))
+  fs.writeFileSync(__dirname + '/../../node_modules/@comunica/actor-http-native/lib/Requester.js', fs.readFileSync(__dirname + '/Requester.js', 'utf-8'))
+  fs.writeFileSync(__dirname + '/../../node_modules/@comunica/actor-http-native/lib/ActorHttpNative.js', fs.readFileSync(__dirname + '/ActorHttpNative.js', 'utf-8'))
 }
