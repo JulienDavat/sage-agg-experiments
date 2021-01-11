@@ -1,11 +1,15 @@
 #!/bin/bash
 
-if (( $# != 4 )); then
+VIRTUOSO_DIR=/usr/local/virtuoso-opensource
+
+if (( $# != 3 )); then
     echo "Usage error: dump.sh <graph> <size> <output>"
     exit 1
 fi
 
-VIRTUOSO_DIR=/usr/local/virtuoso-opensource
+graph=$1
+size=$2
+output=$3
 
 sudo $VIRTUOSO_DIR/bin/isql exec="CREATE PROCEDURE dump_one_graph 
   ( IN  srcgraph           VARCHAR
