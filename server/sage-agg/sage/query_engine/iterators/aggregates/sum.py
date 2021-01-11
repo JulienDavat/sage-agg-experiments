@@ -1,14 +1,14 @@
 # sum.py
 # Author: Thomas MINIER - MIT License 2017-2019
-from sage.query_engine.agg.partial_agg import PartialAggregator
-from sage.query_engine.agg.utils import to_numeric
+from sage.query_engine.iterators.aggregates.partial_agg import PartialAggregator
+from sage.query_engine.iterators.aggregates.utils import to_numeric
 
 
 class SumAggregator(PartialAggregator):
     """A SumAggregator evaluates a SUM aggregation"""
 
-    def __init__(self, variable, binds_to='?sum', query_id=None, ID=None):
-        super(SumAggregator, self).__init__(variable, binds_to, query_id=query_id, ID=ID)
+    def __init__(self, variable, binds_to='?sum'):
+        super(SumAggregator, self).__init__(variable, binds_to)
         self._groups = dict()
 
     def update(self, group_key, bindings):

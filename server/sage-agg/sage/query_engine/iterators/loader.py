@@ -1,11 +1,11 @@
 # loader.py
 # Author: Thomas MINIER - MIT License 2017-2018
-from sage.query_engine.agg.count import CountAggregator
-from sage.query_engine.agg.count_distinct import CountDistinctAggregator
-from sage.query_engine.agg.approximative_count_distinct import ApproximateCountDistinctAggregator
-from sage.query_engine.agg.groupby import GroupByAggregator
-from sage.query_engine.agg.min_max import MinAggregator, MaxAggregator
-from sage.query_engine.agg.sum import SumAggregator
+from sage.query_engine.iterators.aggregates.count import CountAggregator
+from sage.query_engine.iterators.aggregates.count_distinct import CountDistinctAggregator
+from sage.query_engine.iterators.aggregates.approximative_count_distinct import ApproximateCountDistinctAggregator
+from sage.query_engine.iterators.aggregates.groupby import GroupByAggregator
+from sage.query_engine.iterators.aggregates.min_max import MinAggregator, MaxAggregator
+from sage.query_engine.iterators.aggregates.sum import SumAggregator
 from sage.query_engine.iterators.filter import FilterIterator
 from sage.query_engine.iterators.nlj import IndexJoinIterator
 from sage.query_engine.iterators.projection import ProjectionIterator
@@ -91,32 +91,25 @@ def load_union(saved_plan, dataset):
 def load_groupby(saved_plan, dataset):
     """Load a GroupByAggregator from a protobuf serialization"""
     source = load(saved_plan.source, dataset)
-    # load aggregators
     aggregators = list()
-    keep_groups = len(saved_plan.aggregators) == 0
-
     for agg in saved_plan.aggregators:
         if agg.name == 'count':
-            aggregators.append(CountAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+            aggregators.append(CountAggregator(agg.variable, binds_to=agg.binds_to))
         elif agg.name == 'count-disk':
-            aggregators.append(
-                CountDiskAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+            aggregators.append(CountDiskAggregator(agg.variable, binds_to=agg.binds_to))
         elif agg.name == 'count-distinct':
-            aggregators.append(
-                CountDistinctAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+            aggregators.append(CountDistinctAggregator(agg.variable, binds_to=agg.binds_to))
         elif agg.name == 'approximative-count-distinct':
             error_rate = dataset.error_rate
-            aggregators.append(
-                ApproximateCountDistinctAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id, error_rate=error_rate))
+            aggregators.append(ApproximateCountDistinctAggregator(agg.variable, binds_to=agg.binds_to, error_rate=error_rate))
         elif agg.name == 'count-distinct-disk':
-            aggregators.append(
-                CountDistinctDiskAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+            aggregators.append(CountDistinctDiskAggregator(agg.variable, binds_to=agg.binds_to))
         elif agg.name == 'sum':
-            aggregators.append(SumAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+            aggregators.append(SumAggregator(agg.variable, binds_to=agg.binds_to))
         elif agg.name == 'min':
-            aggregators.append(MinAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+            aggregators.append(MinAggregator(agg.variable, binds_to=agg.binds_to))
         elif agg.name == 'max':
-            aggregators.append(MaxAggregator(agg.variable, binds_to=agg.binds_to, query_id=agg.query_id, ID=agg.id))
+            aggregators.append(MaxAggregator(agg.variable, binds_to=agg.binds_to))
         else:
             raise Exception("Unknown SPARQL aggregators of type '{}' found when resuming query.".format(agg.name))
-    return GroupByAggregator(source, saved_plan.variables, aggregators=aggregators, keep_groups=keep_groups)
+    return GroupByAggregator(source, saved_plan.variables, aggregators=aggregators)

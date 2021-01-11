@@ -16,7 +16,7 @@ from sage.query_engine.sage_engine import SageEngine
 
 import logging
 
-def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=False, buffer=-1):
+def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url):
     """
         Execute a query using the SageEngine and returns the appropriate HTTP response.
         Any failure will results in a rollback/abort on the current query execution.
@@ -35,13 +35,13 @@ def execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, o
         if next_link is not None:
             plan = load(decode_saved_plan(next_link), dataset)
         else:
-            plan, cardinalities = parse_query(query, dataset, graph_name, url, optimized=optimized, buffer=buffer)
+            plan, cardinalities = parse_query(query, dataset, graph_name, url)
         loading_time = (time() - start) * 1000
         # execute query
         engine = SageEngine()
         quota = graph.quota / 1000
         max_results = graph.max_results
-        bindings, saved_plan, is_done = engine.execute(plan, quota, max_results, optimized=optimized, buffer=buffer)
+        bindings, saved_plan, is_done = engine.execute(plan, quota, max_results)
 
         # commit (if necessary)
         graph.commit()
@@ -109,15 +109,12 @@ def sparql_blueprint(dataset, logger):
             query = post_query["query"]
             default_graph_uri = post_query["defaultGraph"]
             next_link = post_query["next"] if 'next' in post_query else None
-            optimized = post_query['optimized'] if 'optimized' in post_query else False
-            buffer_size = post_query['buffer'] if 'buffer' in post_query else -1
         else:
             logging.error("sage execute_query error: Invalid request sent to the server")
             return sage_http_error(
                 "Invalid request sent to server: a GET request must contains both parameters 'query' and 'default-graph-uri'. See <a href='http://sage.univ-nantes.fr/documentation'>the API documentation</a> for reference.")
         # execute query
-        return execute_query(query, default_graph_uri, next_link, dataset, mimetype, url, optimized=optimized,
-                             buffer=buffer_size)
+        return execute_query(query, default_graph_uri, next_link, dataset, mimetype, url)
         # except Exception as e:
         #     logger.error(e)
         #     abort(500)

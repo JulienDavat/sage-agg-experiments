@@ -1,8 +1,7 @@
 # count.py
 # Author: Julien AIMONIER-DAVAT
 import xxhash
-from sage.query_engine.agg.bb import BoundedBuffer
-from sage.query_engine.agg.partial_agg import PartialAggregator
+from sage.query_engine.iterators.aggregates.partial_agg import PartialAggregator
 
 from hyperloglog import HyperLogLog
 
@@ -10,8 +9,8 @@ from hyperloglog import HyperLogLog
 class ApproximateCountDistinctAggregator(PartialAggregator):
     """AN ApproximateCountDistinctAggregator evaluates an approximation of a COUNT distinct aggregation"""
 
-    def __init__(self, variable, binds_to='?c', query_id=None, ID=None, error_rate=0.01):
-        super(ApproximateCountDistinctAggregator, self).__init__(variable, binds_to, query_id=query_id, ID=ID)
+    def __init__(self, variable, binds_to='?c', error_rate=0.01):
+        super(ApproximateCountDistinctAggregator, self).__init__(variable, binds_to)
         self._error_rate = error_rate
         self._groups = dict()
 
@@ -21,18 +20,6 @@ class ApproximateCountDistinctAggregator(PartialAggregator):
             if group_key not in self._groups:
                 self._groups[group_key] = HyperLogLog(self._error_rate)
             self._groups[group_key].add(bindings[self._variable])
-            # try:
-            #     hash = xxhash.xxh64_hexdigest(bindings[self._variable])
-            #     if not hash in self._groups[group_key]:
-            #         self._groups[group_key][0].add(hash)
-            # except Exception as err:
-            #     print(err)
-            #     exit(1)
-            #     raise err
-
-    # def done(self, group_key):
-    #     """Complete the distinct aggregation for a group and return the result"""
-    #     return '"{}"^^<http://www.w3.org/2001/XMLSchema#integer>'.format(int(self._groups[group_key].card()))
 
     def done(self, group_key):
         """Complete the distinct aggregation for a group and return the result"""

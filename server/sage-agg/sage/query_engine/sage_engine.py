@@ -19,14 +19,13 @@ class TooManyResults(Exception):
     pass
 
 
-async def executor(plan, queue, limit, optimized, optimized_disk):
+async def executor(plan, queue, limit):
     """Executor used to evaluated a plan under a time quota"""
     try:
         cpt = 0
         agg = False
         if plan.is_aggregator():
             agg = True
-            plan.set_optimization(optimized, optimized_disk)
         while plan.has_next():
             value = await plan.next()
             # discard None values
@@ -57,7 +56,7 @@ class SageEngine(object):
             self._loop = new_event_loop()
             set_event_loop(self._loop)
 
-    def execute(self, plan, quota, limit=inf, optimized=False, buffer=-1):
+    def execute(self, plan, quota, limit=inf):
         """
             Execute a preemptable physical query execution plan under a time quota.
 
@@ -75,7 +74,7 @@ class SageEngine(object):
         queue = Queue()
         query_done = False
         try:
-            task = wait_for(executor(plan, queue, limit, optimized, buffer), timeout=quota)
+            task = wait_for(executor(plan, queue, limit), timeout=quota)
             self._loop.run_until_complete(task)
             query_done = True
         except asyncTimeoutError:
@@ -85,21 +84,15 @@ class SageEngine(object):
         finally:
             # dont forget to close the event loop or we get a Too Many open files OSError
             self._loop.close()
-            # backward compatibility
-            # if optimized and not optimized_disk:
-
-            # print('Generating results....')
-            if optimized:
-                # fetch partial aggregate if the query is an aggreation query
-                if plan.is_aggregator():
-                    results += plan.generate_results()
-                if results == [{'?__default_group': 'https://sage-org.github.io/sage-engine#DefaultGroupKey'}]:
-                    results = []
+            # fetch partial aggregate if the query is an aggreation query
+            if plan.is_aggregator():
+                results += plan.generate_results()
+            if results == [{'?__default_group': 'https://sage-org.github.io/sage-engine#DefaultGroupKey'}]:
+                results = []
             # collect results from classic query
             while not queue.empty():
                 results.append(queue.get_nowait())
             # print('Returning response ({}) ...'.format(time() - start))
-        # save plan
         # print('final results:', results)
         saved_plan = plan.save()
         root = RootTree()

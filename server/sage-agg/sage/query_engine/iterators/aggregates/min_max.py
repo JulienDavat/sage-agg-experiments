@@ -2,14 +2,14 @@
 # Author: Thomas MINIER - MIT License 2017-2019
 from abc import abstractmethod
 
-from sage.query_engine.agg.partial_agg import PartialAggregator
+from sage.query_engine.iterators.aggregates.partial_agg import PartialAggregator
 
 
 class MinMaxAggregator(PartialAggregator):
     """A generic class for implementing Min/Max aggregations"""
 
-    def __init__(self, variable, binds_to='?m', query_id=None, ID=None):
-        super(MinMaxAggregator, self).__init__(variable, binds_to, query_id=query_id, ID=ID)
+    def __init__(self, variable, binds_to='?m'):
+        super(MinMaxAggregator, self).__init__(variable, binds_to)
         self._groups = dict()
 
     def update(self, group_key, bindings):
