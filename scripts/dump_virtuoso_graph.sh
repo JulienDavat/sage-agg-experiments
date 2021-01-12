@@ -13,8 +13,8 @@ limit=$step
 output=$4
 
 while (( $offset < $cardinality )); do
-    sudo /usr/local/virtuoso-opensource/bin/isql exec="set blobs on; sparql define output:format '\"NT\"' construct { ?s ?p ?o } from <$graph> where { ?s ?p ?o } offset ${offset} limit ${limit}" | egrep "^<http" >> $output
-    echo "construct { ?s ?p ?o } from <$graph> where { ?s ?p ?o } offset ${offset} limit ${limit}"
+    echo "construct { ?s ?p ?o } from <$graph> where { ?s ?p ?o } offset $offset limit $limit"
+    sudo /usr/local/virtuoso-opensource/bin/isql exec="set blobs on; sparql define output:format '"NT"' construct { ?s ?p ?o } from <$graph> where { ?s ?p ?o } offset $offset limit $limit" | egrep "^<http" >> $output
     offset=$(($offset + $step))
     echo "Progress: $offset/$cardinality triples"
 done
