@@ -11,3 +11,4 @@ coloredlogs==10.0
 click==7.0
 xxhash==1.4.1
 cachetools==3.1.1
+git+https://github.com/svpcom/hyperloglog
