@@ -1,5 +1,6 @@
 
 from rdflib.plugins.parsers.ntriples import NTriplesParser, Sink, ParseError
+from urllib.parse import urlparse
 import hashlib, logging, coloredlogs, click, codecs, sys
 
 coloredlogs.install(level='INFO', fmt='%(asctime)s - %(levelname)s %(message)s')
@@ -31,38 +32,21 @@ class NTParser(NTriplesParser):
 
 class NTCleaner(Sink):
 
-    def __init__(self):
-        self._memory = dict()
+    def __hash_term(self, term):
+        if term.startswith('<'):
+            url = urlparse(term[1:-1])
+            path = hashlib.sha256(f'{url.path}{url.fragment}'.encode('utf-8')).hexdigest()
+            return f'<{url.scheme}://{url.netloc}/{path}>'
+        else:
+            literal = hashlib.sha256(term.encode('utf-8')).hexdigest()
+            return f'"{literal}"'
 
     def __parse_triple(self, triple):
         (s, p, o) = triple
-        return f"{s.n3()} {p.n3()} {o.n3()} ."
+        return f"{self.__hash_term(s.n3())} {p.n3()} {self.__hash_term(o.n3())} ."
 
-    def __has_encoding_issue(self, triple, encoding):
-        (s, p, o) = triple
-        try:
-            f"{s.n3()} {p.n3()} {o.n3()}".encode(encoding)
-            return False
-        except:
-            return True
-
-    def __mark_as_visited(self, triple):
-        key = hashlib.sha256(triple.encode('utf-8')).hexdigest()
-        self._memory[key] = None
-
-    def __visited(self, triple):
-        key = hashlib.sha256(triple.encode('utf-8')).hexdigest()
-        return key in self._memory
-        
     def triple(self, s, p, o):
-        if not self.__has_encoding_issue((s, p, o), "utf-8"):
-            triple = self.__parse_triple((s, p, o))
-            if not self.__visited(triple):
-                self.__mark_as_visited(triple)
-                print(triple)
-        else:
-            logger.warning(f"print error. ({s}, {p}, {o}) Dropped.  Reason {sys.exc_info()[0]}")
-
+        print(self.__parse_triple((s, p, o)))
 
 @click.command()
 @click.argument("dataset", type=click.Path(exists=True))
