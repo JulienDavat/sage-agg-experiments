@@ -27,8 +27,8 @@ datasets:
   dbname: aggregates
   user: aggregates
   password: 'aggregates'
-- name: dbpedia351
-  uri: http://example.org/datasets/psql/dbpedia351
+- name: subdbpedia
+  uri: http://example.org/datasets/psql/subdbpedia
   description: Dbpedia 3.5.1 using Postgres backend
   backend: postgres
   dbname: aggregates
