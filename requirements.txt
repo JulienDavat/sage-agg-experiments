@@ -1,11 +1,8 @@
 snakemake
-snakemake-minimal
 seaborn
 seaborn-base
-python=3.8.5
 numpy
 matplotlib
-matplotlib-base
 coloredlogs
 click
 git+https://github.com/svpcom/hyperloglog
