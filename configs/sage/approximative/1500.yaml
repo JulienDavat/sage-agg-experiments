@@ -3,6 +3,7 @@ maintainer: Grall Arnaud
 public_url: http://localhost:8000
 quota: 1500
 max_results: 10000
+max_group_keys: 10000
 enable_approximation: true
 error_rate: 0.02
 datasets:

@@ -26,6 +26,11 @@ class PartialAggregator(ABC):
         """Complete the aggregation for a group and return the result"""
         pass
 
+    @abstractmethod
+    def size(self):
+        """Return the size of the internal data structure"""
+        pass
+
     def get_variable(self):
         """Return the variable on which the aggregator is performed (used for serialization)"""
         return self._variable

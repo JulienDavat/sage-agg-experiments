@@ -9,12 +9,14 @@ class CountAggregator(PartialAggregator):
     def __init__(self, variable, binds_to='?c'):
         super(CountAggregator, self).__init__(variable, binds_to)
         self._groups = dict()
+        self._size = 0
 
     def update(self, group_key, bindings):
         """Update the aggregator with a new value for a group of bindings"""
         if self._variable in bindings:
             if group_key not in self._groups:
                 self._groups[group_key] = 0
+                self._size += 1
             self._groups[group_key] += 1
 
     def done(self, group_key):
@@ -30,3 +32,6 @@ class CountAggregator(PartialAggregator):
 
     def __repr__(self):
         return "<Aggregator(COUNT({}) AS {})>".format(self._variable, self._binds_to)
+
+    def size(self):
+        return self._size

@@ -2,6 +2,7 @@
 # Author: Thomas MINIER - MIT License 2017-2019
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
 from sage.query_engine.protobuf.iterators_pb2 import SavedGroupByAgg
+from sage.query_engine.iterators.utils import GroupByTooManyEntries
 import xxhash, re
 
 class GroupByAggregator(PreemptableIterator):
@@ -15,13 +16,14 @@ class GroupByAggregator(PreemptableIterator):
             - keep_groups [`bool`] - True if the groups should be sent alongside results, False otherwise
     """
 
-    def __init__(self, source, grouping_variables, aggregators=list()):
+    def __init__(self, source, grouping_variables, aggregators=list(), max_size=10000):
         super(GroupByAggregator, self).__init__()
         self._source = source
         self._grouping_variables = grouping_variables
         self._groups = dict()
         self._aggregators = aggregators
         self._default_key = 'https://sage-org.github.io/sage-engine#DefaultGroupKey'
+        self._max_size = max_size
 
     def serialized_name(self):
         return 'groupby'
@@ -51,12 +53,12 @@ class GroupByAggregator(PreemptableIterator):
         res = list()
         groups = self._groups
         # build groups & apply aggregations on the fly for non distinct aggregation
-        for key, values in groups.items():
+        for key, bindings in groups.items():
             elt = dict()
             # recopy keys
             elt['?__group_key'] = key
             for variable in self._grouping_variables:
-                elt[variable] = values[0][variable]
+                elt[variable] = bindings[variable] # values[0][variable]
             for agg in self._aggregators:
                 elt[agg.get_binds_to()] = agg.done(key)
             res.append(elt)
@@ -72,10 +74,15 @@ class GroupByAggregator(PreemptableIterator):
         bindings = await self._source.next()
         group_key = self.__get_group_key(bindings)
         if group_key not in self._groups:
-            self._groups[group_key] = list()
-        self._groups[group_key].append(bindings)
+            self._groups[group_key] = bindings
+        # self._groups[group_key].append(bindings)
+        size = 0
         for agg in self._aggregators:
             agg.update(group_key, bindings)
+            size += agg.size()
+        if size > self._max_size:
+            print(f"too many group keys: {size}")
+            raise GroupByTooManyEntries()
         return None
 
     def save(self):

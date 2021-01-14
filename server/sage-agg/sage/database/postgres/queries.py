@@ -12,8 +12,10 @@ def get_start_query(subj, pred, obj, table_name, fetch_size=500):
     query = "SELECT * FROM {} ".format(table_name)
     params = None
     if kind == 'spo':
-        query += "WHERE subject = %s AND predicate = %s AND md5(object) = md5(%s) ORDER BY subject, predicate, md5(object)"
-        params = (subj, pred, obj)
+        # query += "WHERE subject = %s AND predicate = %s AND md5(object) = md5(%s) ORDER BY subject, predicate, md5(object)"
+        # params = (subj, pred, obj)
+        query += "WHERE predicate = %s AND md5(object) = md5(%s) AND subject = %s ORDER BY predicate, md5(object), subject"
+        params = (pred, obj, subj)
     elif kind == '???':
         query += ' ORDER BY subject, predicate, md5(object)'
     elif kind == 's??':
@@ -51,9 +53,12 @@ def get_resume_query(subj, pred, obj, last_read, table_name, fetch_size=500, sym
     if kind == 'spo':
         return None, None
     elif kind == '???':
-        query += "WHERE (subject, predicate, md5(object)) {} (%s, %s, md5(%s)) ORDER BY subject, predicate, md5(object)".format(
+        # query += "WHERE (subject, predicate, md5(object)) {} (%s, %s, md5(%s)) ORDER BY subject, predicate, md5(object)".format(
+        #     symbol)
+        # params = (last_s, last_p, last_o)
+        query += "WHERE (predicate, md5(object), subject) {} (%s, md5(%s), %s) ORDER BY predicate, md5(object), subject".format(
             symbol)
-        params = (last_s, last_p, last_o)
+        params = (last_p, last_o, last_s)
     elif kind == 's??':
         query += "WHERE subject = %s AND (predicate, md5(object)) {} (%s, md5(%s)) ORDER BY subject, predicate, md5(object)".format(
             symbol)

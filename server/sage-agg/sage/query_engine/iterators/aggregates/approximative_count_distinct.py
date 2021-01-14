@@ -13,12 +13,14 @@ class ApproximateCountDistinctAggregator(PartialAggregator):
         super(ApproximateCountDistinctAggregator, self).__init__(variable, binds_to)
         self._error_rate = error_rate
         self._groups = dict()
+        self._size = 0
 
     def update(self, group_key, bindings):
         """Update the aggregator with a new value for a group of bindings"""
         if self._variable in bindings:
             if group_key not in self._groups:
                 self._groups[group_key] = HyperLogLog(self._error_rate)
+                self._size += 1
             self._groups[group_key].add(bindings[self._variable])
 
     def done(self, group_key):
@@ -37,3 +39,6 @@ class ApproximateCountDistinctAggregator(PartialAggregator):
 
     def is_distinct(self):
         return True
+
+    def size(self):
+        return self._size

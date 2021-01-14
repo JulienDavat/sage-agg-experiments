@@ -116,7 +116,7 @@ def load_groupby(saved_plan, dataset):
             aggregators.append(MaxAggregator(agg.variable, binds_to=agg.binds_to))
         else:
             raise Exception("Unknown SPARQL aggregators of type '{}' found when resuming query.".format(agg.name))
-    return GroupByAggregator(source, saved_plan.variables, aggregators=aggregators)
+    return GroupByAggregator(source, saved_plan.variables, aggregators=aggregators, max_size=dataset.max_group_keys)
 
 def load_aggregates_projection(saved_plan, dataset):
     """Load a AggregatesProjectionIterator from a protobuf serialization"""

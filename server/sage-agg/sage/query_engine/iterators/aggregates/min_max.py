@@ -11,16 +11,23 @@ class MinMaxAggregator(PartialAggregator):
     def __init__(self, variable, binds_to='?m'):
         super(MinMaxAggregator, self).__init__(variable, binds_to)
         self._groups = dict()
+        self._size = 0
 
     def update(self, group_key, bindings):
         """Update the aggregator with a new value for a group of bindings"""
         if self._variable in bindings:
-            if group_key not in self._groups or self.is_new_local(self._groups[group_key], bindings[self._variable]):
+            if group_key not in self._groups:
+                self._groups[group_key] = bindings[self._variable]
+                self._size += 1
+            elif self.is_new_local(self._groups[group_key], bindings[self._variable]):
                 self._groups[group_key] = bindings[self._variable]
 
     def done(self, group_key):
         """Complete the aggregation for a group and return the result"""
         return self._groups[group_key]
+
+    def size(self):
+        return self._size
 
     @abstractmethod
     def is_new_local(self, old, value):

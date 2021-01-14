@@ -204,6 +204,10 @@ class Dataset(object):
     def error_rate(self):
         return self._config['error_rate']
 
+    @property
+    def max_group_keys(self):
+        return self._config['max_group_keys']
+
     def describe(self, url):
         """Gives a generator over dataset descriptions"""
         for name, dataset in self._datasets.items():

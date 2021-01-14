@@ -10,6 +10,7 @@ class CountDistinctAggregator(PartialAggregator):
     def __init__(self, variable, binds_to='?c'):
         super(CountDistinctAggregator, self).__init__(variable, binds_to)
         self._groups = dict()
+        self._size = 0
 
     def update(self, group_key, bindings):
         """Update the aggregator with a new value for a group of bindings"""
@@ -19,6 +20,7 @@ class CountDistinctAggregator(PartialAggregator):
             elt = xxhash.xxh64_hexdigest(bindings[self._variable])
             if not elt in self._groups[group_key]:
                 self._groups[group_key].add(elt)
+                self._size += 1
 
     def done(self, group_key):
         """Return the group for the distinct aggregation given the group key"""
@@ -36,3 +38,6 @@ class CountDistinctAggregator(PartialAggregator):
 
     def is_distinct(self):
         return True
+
+    def size(self):
+        return self._size

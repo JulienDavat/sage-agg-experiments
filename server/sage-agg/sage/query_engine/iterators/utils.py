@@ -6,6 +6,9 @@ class IteratorExhausted(Exception):
     """Exception raised when a closed iterator was requested to produce a value"""
     pass
 
+class GroupByTooManyEntries(Exception):
+    """Exception raised when a group by iterator holds to many group keys"""
+    pass
 
 class EmptyIterator(object):
     """An Iterator that yields nothing"""
