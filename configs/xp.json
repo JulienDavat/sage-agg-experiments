@@ -1,0 +1,60 @@
+{
+    "settings": {
+        "plot1" : {
+            "title": "Data transfer and execution time for BSBM-10, BSBM-100 and BSBM-1k, when running the SP and SP-ND workload",
+            "settings": {
+                "datasets": ["bsbm10", "bsbm100", "bsbm1k"],
+                "approaches": ["sage", "sage-agg"],
+                "workloads": ["SP", "SP-ND"],
+                "queries": [1, 2, 3],
+                "warmup": true,
+                "runs": 2
+            }
+        },
+        "plot2": {
+            "title": "Time quantum impacts executing SP and SP-ND over BSBM-1k",
+            "settings": {
+                "quantums": ["150", "1500", "15000"],
+                "approaches": ["sage", "sage-agg", "sage-approx", "virtuoso"],
+                "workloads": ["SP", "SP-ND"],
+                "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                "runs": 2,
+                "warmup": true
+            }
+        },
+        "plot3": {
+            "title": "Data transfer and execution time for dbpedia, when running the SP and SP-ND workload",
+            "settings": {
+                "datasets": ["subdbpedia"],
+                "approaches": ["sage-agg", "sage-approx", "virtuoso"],
+                "workloads": ["SP", "SP-ND"],
+                "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                "runs": 1,
+                "warmup": true
+            }
+        }
+    },
+    "information": {
+        "servers": {
+            "sage-150ms": 8080,
+            "sage-1500ms": 8081,
+            "sage-15000ms": 8082,
+            "sage-150ms-approx": 8083,
+            "sage-1500ms-approx": 8084,
+            "sage-15000ms-approx": 8085,
+            "virtuoso": 8890,
+            "ldf": 8000
+        },
+        "datasets_label": {
+            "bsbm10": "BSBM-10", 
+            "bsbm100": "BSBM-100", 
+            "bsbm1k": "BSBM-1k"
+        },
+        "port_selector": {
+            "sage": {"150": "8080", "1500": "8081", "15000": "8082"},
+            "sage-agg": {"150": "8080", "1500": "8081", "15000": "8082"},
+            "sage-approx": {"150": "8083", "1500": "8084", "15000": "8085"},
+            "virtuoso": {"150": "8890", "1500": "8890", "15000": "8890"}
+        }
+    }
+}

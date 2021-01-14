@@ -4,51 +4,23 @@
 ####################################################################################################
 ####################################################################################################
 
-PLOT1_DATASETS = ['bsbm10', 'bsbm100', 'bsbm1k']
-PLOT1_APPROACHES = ['sage-agg']
-PLOT1_WORKLOADS = ['SP', 'SP-ND']
-PLOT1_DATASETS_LABEL = {'bsbm10': 'BSBM-10', 'bsbm100': 'BSBM-100', 'bsbm1k': 'BSBM-1k'}
-
-SAGE_PORT = 8080
-SAGE_APPROX_PORT = 8083
-VIRTUOSO_PORT = 8890
-LDF_PORT = 8000
+SAGE_PORT = config['information']['servers']['sage-150ms']
+SAGE_APPROX_PORT = config['information']['servers']['sage-150ms-approx']
+VIRTUOSO_PORT = config['information']['servers']['virtuoso']
+LDF_PORT = config['information']['servers']['ldf']
 
 ####################################################################################################
 # >>>>> SAGE WITHOUT PARTIAL AGGREGATIONS ##########################################################
 ####################################################################################################
 
-rule plot1_sage_first_run:
+rule plot1_sage_run:
     input: 
+        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/performance/sage/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        stats='output/data/performance/sage/{workload}/{dataset}/1/query_{query}.csv',
-        result='output/data/performance/sage/{workload}/{dataset}/1/query_{query}.xml'
-    shell:
-        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format XML 1> {output.result}'
-
-
-rule plot1_sage_second_run:
-    input:
-        first_run_complete=ancient('output/data/performance/sage/{workload}/{dataset}/1/all.csv'),
-        graph=ancient('graphs/{dataset}.nt'),
-        query=ancient('queries/{workload}/query_{query}.sparql')
-    output:
-        stats='output/data/performance/sage/{workload}/{dataset}/2/query_{query}.csv',
-        result='output/data/performance/sage/{workload}/{dataset}/2/query_{query}.xml'
-    shell:
-        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format XML 1> {output.result}'
-
-
-rule plot1_sage_third_run:
-    input:
-        second_run_complete=ancient('output/data/performance/sage/{workload}/{dataset}/2/all.csv'),
-        graph=ancient('graphs/{dataset}.nt'),
-        query=ancient('queries/{workload}/query_{query}.sparql')
-    output:
-        stats='output/data/performance/sage/{workload}/{dataset}/3/query_{query}.csv',
-        result='output/data/performance/sage/{workload}/{dataset}/3/query_{query}.xml'
+        stats='output/data/performance/sage/{workload}/{dataset}/{run}/query_{query}.csv',
+        result='output/data/performance/sage/{workload}/{dataset}/{run}/query_{query}.xml'
     shell:
         'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format XML 1> {output.result}'
 
@@ -56,37 +28,14 @@ rule plot1_sage_third_run:
 # >>>>> SAGE WITH PARTIAL AGGREGATIONS #############################################################
 ####################################################################################################
 
-rule plot1_sage_agg_first_run:
+rule plot1_sage_agg_run:
     input: 
+        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/performance/sage-agg/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        stats='output/data/performance/sage-agg/{workload}/{dataset}/1/query_{query}.csv',
-        result='output/data/performance/sage-agg/{workload}/{dataset}/1/query_{query}.xml'
-    shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
-
-
-rule plot1_sage_agg_second_run:
-    input:
-        first_run_complete=ancient('output/data/performance/sage-agg/{workload}/{dataset}/1/all.csv'),
-        graph=ancient('graphs/{dataset}.nt'),
-        query=ancient('queries/{workload}/query_{query}.sparql')
-    output:
-        stats='output/data/performance/sage-agg/{workload}/{dataset}/2/query_{query}.csv',
-        result='output/data/performance/sage-agg/{workload}/{dataset}/2/query_{query}.xml'
-    shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
-
-
-rule plot1_sage_agg_third_run:
-    input:
-        second_run_complete=ancient('output/data/performance/sage-agg/{workload}/{dataset}/2/all.csv'),
-        graph=ancient('graphs/{dataset}.nt'),
-        query=ancient('queries/{workload}/query_{query}.sparql')
-    output:
-        stats='output/data/performance/sage-agg/{workload}/{dataset}/3/query_{query}.csv',
-        result='output/data/performance/sage-agg/{workload}/{dataset}/3/query_{query}.xml'
+        stats='output/data/performance/sage-agg/{workload}/{dataset}/{run}/query_{query}.csv',
+        result='output/data/performance/sage-agg/{workload}/{dataset}/{run}/query_{query}.xml'
     shell:
         'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
@@ -94,37 +43,14 @@ rule plot1_sage_agg_third_run:
 # >>>>> SAGE WITH PARTIAL AGGREGATIONS + APPROXIMATIONS ############################################
 ####################################################################################################
 
-rule plot1_sage_approx_first_run:
+rule plot1_sage_approx_run:
     input: 
+        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/performance/sage-approx/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        stats='output/data/performance/sage-approx/{workload}/{dataset}/1/query_{query}.csv',
-        result='output/data/performance/sage-approx/{workload}/{dataset}/1/query_{query}.xml'
-    shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_APPROX_PORT}/sparql http://localhost:{SAGE_APPROX_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
-
-
-rule plot1_sage_approx_second_run:
-    input:
-        first_run_complete=ancient('output/data/performance/sage-approx/{workload}/{dataset}/1/all.csv'),
-        graph=ancient('graphs/{dataset}.nt'),
-        query=ancient('queries/{workload}/query_{query}.sparql')
-    output:
-        stats='output/data/performance/sage-approx/{workload}/{dataset}/2/query_{query}.csv',
-        result='output/data/performance/sage-approx/{workload}/{dataset}/2/query_{query}.xml'
-    shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_APPROX_PORT}/sparql http://localhost:{SAGE_APPROX_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
-
-
-rule plot1_sage_approx_third_run:
-    input:
-        second_run_complete=ancient('output/data/performance/sage-approx/{workload}/{dataset}/2/all.csv'),
-        graph=ancient('graphs/{dataset}.nt'),
-        query=ancient('queries/{workload}/query_{query}.sparql')
-    output:
-        stats='output/data/performance/sage-approx/{workload}/{dataset}/3/query_{query}.csv',
-        result='output/data/performance/sage-approx/{workload}/{dataset}/3/query_{query}.xml'
+        stats='output/data/performance/sage-approx/{workload}/{dataset}/{run}/query_{query}.csv',
+        result='output/data/performance/sage-approx/{workload}/{dataset}/{run}/query_{query}.xml'
     shell:
         'python client/sage-agg/interface.py query http://localhost:{SAGE_APPROX_PORT}/sparql http://localhost:{SAGE_APPROX_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
@@ -132,37 +58,14 @@ rule plot1_sage_approx_third_run:
 # >>>>> VIRTUOSO ###################################################################################
 ####################################################################################################
 
-rule plot1_virtuoso_first_run:
+rule plot1_virtuoso_run:
     input: 
+        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/performance/virtuoso/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        stats='output/data/performance/virtuoso/{workload}/{dataset}/1/query_{query}.csv',
-        result='output/data/performance/virtuoso/{workload}/{dataset}/1/query_{query}.xml'
-    shell:
-        'python client/virtuoso/interface.py query http://localhost:{VIRTUOSO_PORT}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
-
-
-rule plot1_virtuoso_second_run:
-    input:
-        first_run_complete=ancient('output/data/performance/virtuoso/{workload}/{dataset}/1/all.csv'),
-        graph=ancient('graphs/{dataset}.nt'),
-        query=ancient('queries/{workload}/query_{query}.sparql')
-    output:
-        stats='output/data/performance/virtuoso/{workload}/{dataset}/2/query_{query}.csv',
-        result='output/data/performance/virtuoso/{workload}/{dataset}/2/query_{query}.xml'
-    shell:
-        'python client/virtuoso/interface.py query http://localhost:{VIRTUOSO_PORT}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
-
-
-rule plot1_virtuoso_third_run:
-    input:
-        second_run_complete=ancient('output/data/performance/virtuoso/{workload}/{dataset}/2/all.csv'),
-        graph=ancient('graphs/{dataset}.nt'),
-        query=ancient('queries/{workload}/query_{query}.sparql')
-    output:
-        stats='output/data/performance/virtuoso/{workload}/{dataset}/3/query_{query}.csv',
-        result='output/data/performance/virtuoso/{workload}/{dataset}/3/query_{query}.xml'
+        stats='output/data/performance/virtuoso/{workload}/{dataset}/{run}/query_{query}.csv',
+        result='output/data/performance/virtuoso/{workload}/{dataset}/{run}/query_{query}.xml'
     shell:
         'python client/virtuoso/interface.py query http://localhost:{VIRTUOSO_PORT}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
@@ -170,49 +73,28 @@ rule plot1_virtuoso_third_run:
 # >>>>> COMUNICA ###################################################################################
 ####################################################################################################
 
-rule plot1_comunica_first_run:
+rule plot1_comunica_run:
     input: 
+        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/performance/comunica/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        stats='output/data/performance/comunica/{workload}/{dataset}/1/query_{query}.csv',
-        result='output/data/performance/comunica/{workload}/{dataset}/1/query_{query}.xml'
+        stats='output/data/performance/comunica/{workload}/{dataset}/{run}/query_{query}.csv',
+        result='output/data/performance/comunica/{workload}/{dataset}/{run}/query_{query}.xml'
     shell:
         'node --max-old-space-size=6000 client/comunica/interface.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input} --measure {output.stats} --format xml --output {output.result}'
 
-
-rule plot1_comunica_second_run:
-    input:
-        first_run_complete=ancient('output/data/performance/comunica/{workload}/{dataset}/1/all.csv'),
-        graph=ancient('graphs/{dataset}.nt'),
-        query=ancient('queries/{workload}/query_{query}.sparql')
-    output:
-        stats='output/data/performance/comunica/{workload}/{dataset}/2/query_{query}.csv',
-        result='output/data/performance/comunica/{workload}/{dataset}/2/query_{query}.xml'
-    shell:
-        'node --max-old-space-size=6000 client/comunica/interface.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input} --measure {output.stats} --format xml --output {output.result}'
-
-
-rule plot1_comunica_third_run:
-    input:
-        second_run_complete=ancient('output/data/performance/comunica/{workload}/{dataset}/2/all.csv'),
-        graph=ancient('graphs/{dataset}.nt'),
-        query=ancient('queries/{workload}/query_{query}.sparql')
-    output:
-        stats='output/data/performance/comunica/{workload}/{dataset}/3/query_{query}.csv',
-        result='output/data/performance/comunica/{workload}/{dataset}/3/query_{query}.xml'
-    shell:
-        'node --max-old-space-size=6000 client/comunica/interface.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input} --measure {output.stats} --format xml --output {output.result}'
-
+####################################################################################################
 # >>>>> PREPARE CSV FILES TO BUILD PLOTS ###########################################################
+####################################################################################################
 
 rule plot1_format_query_file:
     input:
         ancient('output/data/performance/{approach}/{workload}/{dataset}/{run}/query_{query}.csv')
     output:
-        'output/data/performance/{approach}/{workload}/{dataset}/{run}/mergeable_query_{query}.csv'
+        'output/data/performance/{approach}/{workload}/{dataset}/{run}/query_{query}.mergeable.csv'
     params:
-        label=lambda wcs: PLOT1_DATASETS_LABEL[wcs.dataset]
+        label=lambda wcs: config["information"]["datasets_label"][wcs.dataset]
     shell:
         'touch {output}; '
         'echo "approach,workload,dataset,query,execution_time,nb_calls,data_transfer" >> {output}; '
@@ -223,7 +105,8 @@ rule plot1_format_query_file:
 
 rule plot1_merge_query_files:
     input:
-        expand('output/data/performance/{{approach}}/{{workload}}/{{dataset}}/{{run}}/mergeable_query_{query}.csv', query=QUERIES)
+        expand('output/data/performance/{{approach}}/{{workload}}/{{dataset}}/{{run}}/query_{query}.mergeable.csv', 
+            query=config["settings"]["plot1"]["settings"]["queries"])
     output:
         'output/data/performance/{approach}/{workload}/{dataset}/{run}/all.csv'
     shell:
@@ -232,25 +115,31 @@ rule plot1_merge_query_files:
 
 rule plot1_compute_average:
     input:
-        expand('output/data/performance/{{approach}}/{{workload}}/{{dataset}}/{run}/all.csv', run=RUNS)
+        expand('output/data/performance/{{approach}}/{{workload}}/{{dataset}}/{run}/all.csv', 
+            run=[x for x in range(1, last_run(1) + 1)])
     output:
         'output/data/performance/{approach}/{workload}/{dataset}/all.csv'
+    params:
+        files=lambda wcs: [f'output/data/performance/{wcs.approach}/{wcs.workload}/{wcs.dataset}/{run}/all.csv' for run in range(first_run(1), last_run(1) + 1)]
     shell:
-        'python scripts/average.py {input} {output}'
+        'python scripts/average.py {params.files} {output}'
 
 
 rule plot1_merge_all_files:
     input:
-        expand('output/data/performance/{approach}/{workload}/{dataset}/all.csv', approach=PLOT1_APPROACHES, workload=PLOT1_WORKLOADS, dataset=PLOT1_DATASETS)
+        expand('output/data/performance/{approach}/{workload}/{dataset}/all.csv', 
+            approach=config["settings"]["plot1"]["settings"]["approaches"], 
+            workload=config["settings"]["plot1"]["settings"]["workloads"], 
+            dataset=config["settings"]["plot1"]["settings"]["datasets"])
     output:
-        'output/data/performance/bsbm_data.csv'
+        'output/data/performance/plot1.csv'
     shell:
         'bash scripts/merge_csv.sh {input} > {output}'
 
 
 rule build_plot1:
     input:
-        ancient('output/data/performance/bsbm_data.csv')
+        ancient('output/data/performance/plot1.csv')
     output:
         'output/figures/bsbm.png'
     shell:
