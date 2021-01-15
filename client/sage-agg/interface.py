@@ -40,12 +40,12 @@ def query(server, dataset, query, file, measure, format, output, display):
     data = None
     if format == 'w3c/json':
         data = sparql_json(result.get())
-    elif format == 'wc3/xml':
+    elif format == 'w3c/xml':
         data = sparql_xml(result.get())
     elif format == 'json':
-        data = result.get()
+        data = json.dumps(result.get())
     else:
-        data = result.get()
+        data = json.dumps(result.get())
     if display:
         logger.info(data)
     if output is not None:
