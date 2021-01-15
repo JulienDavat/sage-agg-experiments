@@ -19,7 +19,7 @@ rule plot2_sage_run:
     params:
         port=lambda wcs: config["information"]["port_selector"]['sage'][wcs.quantum]
     shell:
-        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{params.port}/sparql/bsbm1k --file {input.query} --measure {output.stats} --format XML 1> {output.result}'
+        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{params.port}/sparql/bsbm1k --file {input.query} --measure {output.stats} --format xml 1> {output.result}'
 
 ####################################################################################################
 # >>>>> SAGE WITH PARTIAL AGGREGATIONS #############################################################
@@ -118,14 +118,14 @@ rule plot2_merge_all_files:
             workload=config["settings"]["plot2"]["settings"]["workloads"], 
             quantum=config["settings"]["plot2"]["settings"]["quantums"])
     output:
-        'output/data/quantum/plot2.csv'
+        'output/data/plot2.csv'
     shell:
         'bash scripts/merge_csv.sh {input} > {output}'
 
 
 rule build_plot2:
     input:
-        ancient('output/data/quantum/plot2.csv')
+        ancient('output/data/plot2.csv')
     output:
         'output/figures/quantum_impact.png'
     shell:

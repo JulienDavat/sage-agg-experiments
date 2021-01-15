@@ -22,7 +22,7 @@ rule plot1_sage_run:
         stats='output/data/performance/sage/{workload}/{dataset}/{run}/query_{query}.csv',
         result='output/data/performance/sage/{workload}/{dataset}/{run}/query_{query}.xml'
     shell:
-        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format XML 1> {output.result}'
+        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format xml 1> {output.result}'
 
 ####################################################################################################
 # >>>>> SAGE WITH PARTIAL AGGREGATIONS #############################################################
@@ -132,14 +132,14 @@ rule plot1_merge_all_files:
             workload=config["settings"]["plot1"]["settings"]["workloads"], 
             dataset=config["settings"]["plot1"]["settings"]["datasets"])
     output:
-        'output/data/performance/plot1.csv'
+        'output/data/plot1.csv'
     shell:
         'bash scripts/merge_csv.sh {input} > {output}'
 
 
 rule build_plot1:
     input:
-        ancient('output/data/performance/plot1.csv')
+        ancient('output/data/plot1.csv')
     output:
         'output/figures/bsbm.png'
     shell:

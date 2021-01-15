@@ -17,13 +17,13 @@ rule plot3_merge_all_files:
             workload=config["settings"]["plot3"]["settings"]["workloads"], 
             dataset=config["settings"]["plot3"]["settings"]["datasets"])
     output:
-        'output/data/performance/plot3.csv'
+        'output/data/plot3.csv'
     shell:
         'bash scripts/merge_csv.sh {input} > {output}'
 
 rule build_plot3:
     input:
-        ancient('output/data/performance/plot3.csv')
+        ancient('output/data/plot3.csv')
     output:
         'output/figures/dbpedia.png'
     shell:
