@@ -53,7 +53,7 @@ def create_figure(data, logscale=False):
     plt.subplots_adjust(wspace=0.25)
     # creation of the left part (SP workload)
     ax1 = fig.add_subplot(121)
-    plot_metric(ax1, data, 'execution_time', '', '', 'Execution Time (ms)', logscale=logscale)
+    plot_metric(ax1, data, 'execution_time', '', '', 'Execution Time (sec)', logscale=logscale)
     plt.legend().remove()
     fig.legend(loc='upper center', bbox_to_anchor=(0.5, 0.99), fancybox=True, shadow=True, ncol=5)
     ax2 = fig.add_subplot(122)

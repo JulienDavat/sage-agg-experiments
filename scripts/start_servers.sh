@@ -27,5 +27,5 @@ nohup node_modules/ldf-server/bin/ldf-server configs/ldf/config.json 8000 1 > ou
 echo -n "$! " >> .pids
 
 # To be sure that all servers have started
-echo "Starting all servers..."
-sleep 15
+echo "Starting all servers... it will takes 30 seconds..."
+sleep 30
