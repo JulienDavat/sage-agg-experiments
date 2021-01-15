@@ -12,12 +12,11 @@ def get_start_query(subj, pred, obj, table_name, fetch_size=500):
     query = "SELECT * FROM {} ".format(table_name)
     params = None
     if kind == 'spo':
-        # query += "WHERE subject = %s AND predicate = %s AND md5(object) = md5(%s) ORDER BY subject, predicate, md5(object)"
-        # params = (subj, pred, obj)
-        query += "WHERE predicate = %s AND md5(object) = md5(%s) AND subject = %s ORDER BY predicate, md5(object), subject"
-        params = (pred, obj, subj)
+        query += "WHERE subject = %s AND predicate = %s AND md5(object) = md5(%s) ORDER BY subject, predicate, md5(object)"
+        params = (subj, pred, obj)
     elif kind == '???':
-        query += ' ORDER BY subject, predicate, md5(object)'
+        # query += ' ORDER BY subject, predicate, md5(object)'
+        query += ' ORDER BY predicate, md5(object), subject'
     elif kind == 's??':
         query += "WHERE subject = %s ORDER BY subject, predicate, md5(object)"
         params = [subj]
