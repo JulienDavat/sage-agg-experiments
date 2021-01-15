@@ -176,7 +176,7 @@ public class CLI implements Callable<Void> {
             // );
             String csvLine = String.format("%s,%s,%s\n", duration, spy.getNbCallsRead(), spy.getTotalTransferSize());
             try {
-                Files.write(Paths.get(this.measure), csvLine.getBytes(), StandardOpenOption.APPEND);
+                Files.write(Paths.get(this.measure), csvLine.getBytes(), StandardOpenOption.CREATE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
