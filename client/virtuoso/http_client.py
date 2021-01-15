@@ -15,6 +15,14 @@ def select_format(format):
     else:
         return JSON
 
+def stringify_result(result, format):
+    if format == "w3c/json":
+        return json.dumps(result)
+    elif format == "w3c/xml":
+        return result.toxml()
+    else:
+        return json.dumps(result)
+
 def execute(server, dataset, query, format):
     sparql = SPARQLWrapper(server)
     sparql.setQuery(query)
@@ -26,11 +34,11 @@ def execute(server, dataset, query, format):
     try:
         start = time()
         results = sparql.query()
-        formatedResults = results.convert()
+        formatedResults = stringify_result(results.convert(), format)
         execution_time = time() - start
         
         stats.report_execution_time(execution_time)
-        stats.report_data_transfer(sys.getsizeof(json.dumps(formatedResults, ensure_ascii=False)))
+        stats.report_data_transfer(sys.getsizeof(formatedResults))
         stats.report_nb_calls(1)
 
         return formatedResults, stats
