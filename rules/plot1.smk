@@ -82,7 +82,7 @@ rule plot1_comunica_run:
         stats='output/data/performance/comunica/{workload}/{dataset}/{run}/query_{query}.csv',
         result='output/data/performance/comunica/{workload}/{dataset}/{run}/query_{query}.xml'
     shell:
-        'node --max-old-space-size=6000 client/comunica/interface.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input} --measure {output.stats} --format xml --output {output.result}'
+        'node --max-old-space-size=6000 client/comunica/interface.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input.query} --measure {output.stats} --format xml --output {output.result}'
 
 ####################################################################################################
 # >>>>> PREPARE CSV FILES TO BUILD PLOTS ###########################################################
