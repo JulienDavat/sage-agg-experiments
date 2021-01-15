@@ -12,8 +12,9 @@ def compute_average(files):
     return df.groupby(['approach', 'workload', 'query']).mean()
 
 if __name__ == '__main__':
-    files = sys.argv[1:-1]
-    output = sys.argv[-1]
+    output = sys.argv[1]
+    group_by_variables = sys.argv[2].split(',')
+    files = sys.argv[3:-1]
     result = compute_average(files)
     with open(output, 'w') as out_file:
         out_file.write(result.to_csv())

@@ -122,7 +122,7 @@ rule plot1_compute_average:
     params:
         files=lambda wcs: [f'output/data/performance/{wcs.approach}/{wcs.workload}/{wcs.dataset}/{run}/all.csv' for run in range(first_run(1), last_run(1) + 1)]
     shell:
-        'python scripts/average.py {params.files} {output}'
+        'python scripts/average.py {output} "approach,workload,dataset,query" {params.files}'
 
 
 rule plot1_merge_all_files:
