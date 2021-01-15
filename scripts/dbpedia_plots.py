@@ -16,8 +16,8 @@ args = parser.parse_args()
 input_file = args.input
 output_file = args.output
 
-if input_file is None or output_directory is None:
-    print('Error: missing required arguments ! USAGE: dbpedia_plots.py --input <data> --output <output>')
+if input_file is None or output_file is None:
+    print('Error: missing required arguments ! USAGE: dbpedia_plots.py --input <file> --output <file>')
     exit(1)
 
 # ====================================================================================================
