@@ -20,7 +20,8 @@ console_scripts = [
     'sage-query = sage.cli.commons:sage_query',
     'sage-postgres-init = sage.cli.postgres:init_postgres',
     'sage-postgres-index = sage.cli.postgres:index_postgres',
-    'sage-postgres-put = sage.cli.postgres:put_postgres'
+    'sage-postgres-put = sage.cli.postgres:put_postgres',
+    'sage-postgres-sput = sage.cli.postgres:stream_postgres'
 ]
 
 with open('README.rst') as file:

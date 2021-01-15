@@ -8,8 +8,13 @@ import click
 import coloredlogs
 import psycopg2
 import sage.cli.postgres_utils as p_utils
+import sys
+from rdflib.util import from_n3
+from rdflib import BNode, Literal, URIRef, Variable,Graph
+import codecs
 from psycopg2.extras import execute_values
 from sage.cli.utils import load_dataset, get_rdf_reader
+from rdflib.plugins.parsers.ntriples import NTriplesParser, Sink, ParseError
 
 
 def bucketify(iterable, bucket_size):
@@ -269,3 +274,164 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
     logger.info("RDF data from file '{}' successfully inserted into RDF dataset '{}'".format(rdf_file, table_name))
     if format == 'nt':
         file.close()
+
+
+class SkipParser(NTriplesParser):
+    def skipparse(self, f):
+        """Parse f as an N-Triples file."""
+        if not hasattr(f, 'read'):
+            raise ParseError("Item to parse must be a file-like object.")
+
+        # since N-Triples 1.1 files can and should be utf-8 encoded
+        f = codecs.getreader('utf-8')(f)
+
+        self.file = f
+        self.buffer = ''
+        while True:
+            self.line = self.readline()
+            if self.line is None:
+                break
+            try:
+                self.parseline()
+            except ParseError:
+                logger.warning(f"parse error: dropping {self.line}. Reason {sys.exc_info()[0]}")
+                continue
+                # raise ParseError("Invalid line: %r" % self.line)
+        return self.sink
+
+class StreamSink(Sink):
+    """
+    A sink is used to store the results of parsing, this almost matches the sink
+    example shown in ntriples:
+      https://github.com/RDFLib/rdflib/blob/395a40101fe133d97f454ee61da0fc748a93b007/rdflib/plugins/parsers/ntriples.py#L43
+    """
+    #bucket = list()
+    length = 0
+    to_commit=0
+
+    def __init__(self, bucket,  bucket_size,insert_into_query,cursor,connection,commit_threshold,logger):
+        self.bucket=bucket
+        self._bucket_size = bucket_size
+        self._insert_into_query=insert_into_query
+        self._cursor=cursor
+        self._connection=connection
+        self._commit_threshold=commit_threshold
+        # insert rdf triples
+        self.to_commit = 0
+        self._logger=logger
+
+    def triple(self, s, p, o):
+        self.length += 1
+
+        # drop incorrect triple
+        try:
+            a=f"{s.n3()} {p.n3()} {o.n3()}".encode('utf-8')
+        except:
+            self._logger.warning(f"print error. ({s},{p},{o}) Dropped.  Reason {sys.exc_info()[0]}")
+            return
+
+        #how to store objects ??
+        # if literal store starting with \"
+        # else store plain text (BNOde or URI)
+        if isinstance(o,Literal):
+            ow=o.n3()
+        else:
+            ow=str(o)
+        # try:
+        #     ow.encode('utf-8')
+        # except (UnicodeEncodeError):
+        #     ow=ow.encode('utf-8','backslashreplace').decode('utf-8')
+        #     self._logger.warning(f"corrected bad encoding for {ow} in {s} {p} {ow}. Reason {sys.exc_info()[0]}")
+
+        # max size for a btree index cell in postgres
+        # for experiments !! otherwise index md5 on object
+        #ERROR:  index row size 2712 exceeds btree version 4 maximum 2704 for index "pos"
+        #Consider a function index of an MD5 hash of the value, or use full text indexing.
+        # if sys.getsizeof(ow)<2000:
+        self.bucket.append((s, p, ow))
+        # else:
+        #     self._logger.warning("truncated object {}".format(o))
+        #     # 2 bytes for an utf-8 ??
+        #     self.bucket.append((s,p,ow[:800]))
+        self.to_commit +=1
+        if len(self.bucket) >= self._bucket_size:
+            try :
+                execute_values(self._cursor, self._insert_into_query, self.bucket, page_size=self._bucket_size)
+            except:
+                self._logger.error(f"bucket rejected {self.bucket}. Reason {sys.exc_info()[0]}")
+            self.bucket.clear()
+
+        if self.to_commit >= self._commit_threshold:
+            self._connection.commit();
+            self._logger.info("inserted {} triples".format(self.length))
+            self.to_commit = 0
+
+@click.command()
+@click.argument("rdf_file")
+@click.argument("config")
+@click.argument("dataset_name")
+@click.option("-b", "--block_size", type=int, default=100, show_default=True,
+              help="Block size used for the bulk loading")
+@click.option("-c", "--commit_threshold", type=int, default=500000, show_default=True,
+              help="Commit after sending this number of RDF triples")
+def stream_postgres(config, dataset_name, rdf_file, block_size, commit_threshold):
+    """
+        Insert RDF triples from file RDF_FILE into the RDF graph GRAPH_NAME, described in the configuration file CONFIG. The graph must use the PostgreSQL or PostgreSQL-MVCC backend.
+    """
+    # install logger
+    coloredlogs.install(level='INFO', fmt='%(asctime)s - %(levelname)s %(message)s')
+    logger = logging.getLogger(__name__)
+
+    # load graph from config file
+    dataset, kind = load_dataset(config, dataset_name, logger, backends=['postgres', 'postgres-mvcc'])
+    enable_mvcc = kind == 'postgres-mvcc'
+
+    # init PostgreSQL connection
+    logger.info("Connecting to PostgreSQL server...")
+    connection = connect_postgres(dataset)
+    logger.info("Connected to PostgreSQL server")
+    if connection is None:
+        exit(1)
+    # turn off autocommit
+    connection.autocommit = False
+
+    # compute SQL table name and the bulk load SQL query
+    table_name = dataset['name']
+    insert_into_query = p_utils.get_postgres_insert_into(table_name, enable_mvcc=enable_mvcc)
+
+    cursor = connection.cursor()
+
+
+    logger.info("Reading NT RDF source file...(I hope)")
+#    iterator, nb_triples = get_rdf_reader(rdf_file, format=format)
+
+    start = time()
+    bucket= list()
+    n = SkipParser(StreamSink(bucket, block_size,insert_into_query,cursor,connection,commit_threshold,logger))
+    with open(rdf_file, "rb") as anons:
+        n.skipparse(anons)
+    try :
+        #print("remaining bucket:"+str(bucket))
+        execute_values(cursor, insert_into_query, bucket, page_size=block_size)
+    except:
+        logger.error("Failed to insert:"+str(bucket))
+
+    connection.commit()
+
+    end = time()
+    logger.info("RDF triples ingestion successfully completed in {}s".format(end - start))
+
+    # run an ANALYZE query to rebuild statistics
+    # logger.info("Rebuilding table statistics...")
+    # start = time()
+    # cursor.execute("ANALYZE {}".format(table_name))
+    # end = time()
+    # logger.info("Table statistics successfully rebuilt in {}s".format(end - start))
+
+    # commit and cleanup connection
+    logger.info("Committing and cleaning up...")
+    connection.commit()
+    cursor.close()
+    connection.close()
+    logger.info("RDF data from file '{}' successfully inserted into RDF graph '{}'".format(rdf_file, table_name))
+    logger.info(f"Remember to run ANALYZE on Postgres table: {table_name}")
