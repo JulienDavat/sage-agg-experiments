@@ -1,6 +1,5 @@
 snakemake
 seaborn
-seaborn-base
 numpy
 matplotlib
 coloredlogs
