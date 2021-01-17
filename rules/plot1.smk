@@ -4,11 +4,6 @@
 ####################################################################################################
 ####################################################################################################
 
-SAGE_PORT = config['information']['servers']['sage-150ms']
-SAGE_APPROX_PORT = config['information']['servers']['sage-150ms-approx']
-VIRTUOSO_PORT = config['information']['servers']['virtuoso']
-LDF_PORT = config['information']['servers']['ldf']
-
 ####################################################################################################
 # >>>>> SAGE WITHOUT PARTIAL AGGREGATIONS ##########################################################
 ####################################################################################################
@@ -21,8 +16,10 @@ rule plot1_sage_run:
     output:
         stats='output/data/performance/sage/{workload}/{dataset}/{run}/query_{query}.csv',
         result='output/data/performance/sage/{workload}/{dataset}/{run}/query_{query}.xml'
+    params:
+        port=lambda wcs: config["information"]["ports"]['sage-exact-150ms']
     shell:
-        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format xml 1> {output.result}'
+        'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{params.port}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format xml 1> {output.result}'
 
 ####################################################################################################
 # >>>>> SAGE WITH PARTIAL AGGREGATIONS #############################################################
@@ -36,8 +33,10 @@ rule plot1_sage_agg_run:
     output:
         stats='output/data/performance/sage-agg/{workload}/{dataset}/{run}/query_{query}.csv',
         result='output/data/performance/sage-agg/{workload}/{dataset}/{run}/query_{query}.xml'
+    params:
+        port=lambda wcs: config["information"]["ports"]['sage-exact-150ms']
     shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{SAGE_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
+        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{params.port}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 ####################################################################################################
 # >>>>> SAGE WITH PARTIAL AGGREGATIONS + APPROXIMATIONS ############################################
@@ -51,8 +50,10 @@ rule plot1_sage_approx_run:
     output:
         stats='output/data/performance/sage-approx/{workload}/{dataset}/{run}/query_{query}.csv',
         result='output/data/performance/sage-approx/{workload}/{dataset}/{run}/query_{query}.xml'
+    params:
+        port=lambda wcs: config["information"]["ports"]['sage-approx-98-150ms']
     shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_APPROX_PORT}/sparql http://localhost:{SAGE_APPROX_PORT}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
+        'python client/sage-agg/interface.py query http://localhost:{params.port}/sparql http://localhost:{params.port}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 ####################################################################################################
 # >>>>> VIRTUOSO ###################################################################################
@@ -66,8 +67,10 @@ rule plot1_virtuoso_run:
     output:
         stats='output/data/performance/virtuoso/{workload}/{dataset}/{run}/query_{query}.csv',
         result='output/data/performance/virtuoso/{workload}/{dataset}/{run}/query_{query}.xml'
+    params:
+        port=lambda wcs: config["information"]["ports"]['virtuoso']
     shell:
-        'python client/virtuoso/interface.py query http://localhost:{VIRTUOSO_PORT}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
+        'python client/virtuoso/interface.py query http://localhost:{params.port}/sparql http://example.org/datasets/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 ####################################################################################################
 # >>>>> COMUNICA ###################################################################################
@@ -81,8 +84,10 @@ rule plot1_comunica_run:
     output:
         stats='output/data/performance/comunica/{workload}/{dataset}/{run}/query_{query}.csv',
         result='output/data/performance/comunica/{workload}/{dataset}/{run}/query_{query}.xml'
+    params:
+        port=lambda wcs: config["information"]["ports"]['ldf']
     shell:
-        'node --max-old-space-size=6000 client/comunica/interface.js http://localhost:{LDF_PORT}/{wildcards.dataset} --file {input.query} --measure {output.stats} --format xml --output {output.result}'
+        'node --max-old-space-size=6000 client/comunica/interface.js http://localhost:{params.port}/{wildcards.dataset} --file {input.query} --measure {output.stats} --format xml --output {output.result}'
 
 ####################################################################################################
 # >>>>> PREPARE CSV FILES TO BUILD PLOTS ###########################################################

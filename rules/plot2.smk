@@ -17,7 +17,7 @@ rule plot2_sage_run:
         stats='output/data/quantum/sage/{workload}/{quantum}/{run}/query_{query}.csv',
         result='output/data/quantum/sage/{workload}/{quantum}/{run}/query_{query}.xml'
     params:
-        port=lambda wcs: config["information"]["port_selector"]['sage'][wcs.quantum]
+        port=lambda wcs: config["information"]["ports"][f'sage-exact-{wcs.quantum}ms']
     shell:
         'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{params.port}/sparql/bsbm1k --file {input.query} --measure {output.stats} --format xml 1> {output.result}'
 
@@ -34,7 +34,7 @@ rule plot2_sage_agg_run:
         stats='output/data/quantum/sage-agg/{workload}/{quantum}/{run}/query_{query}.csv',
         result='output/data/quantum/sage-agg/{workload}/{quantum}/{run}/query_{query}.xml'
     params:
-        port=lambda wcs: config["information"]["port_selector"]['sage-agg'][wcs.quantum]
+        port=lambda wcs: config["information"]["ports"][f'sage-exact-{wcs.quantum}ms']
     shell:
         'python client/sage-agg/interface.py query http://localhost:{params.port}/sparql http://localhost:{params.port}/sparql/bsbm1k --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
@@ -51,7 +51,7 @@ rule plot2_sage_approx_run:
         stats='output/data/quantum/sage-approx/{workload}/{quantum}/{run}/query_{query}.csv',
         result='output/data/quantum/sage-approx/{workload}/{quantum}/{run}/query_{query}.xml'
     params:
-        port=lambda wcs: config["information"]["port_selector"]['sage-approx'][wcs.quantum]
+        port=lambda wcs: config["information"]["ports"][f'sage-approx-98-{wcs.quantum}ms']
     shell:
         'python client/sage-agg/interface.py query http://localhost:{params.port}/sparql http://localhost:{params.port}/sparql/bsbm1k --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
@@ -68,7 +68,7 @@ rule plot2_virtuoso_run:
         stats='output/data/quantum/virtuoso/{workload}/{quantum}/{run}/query_{query}.csv',
         result='output/data/quantum/virtuoso/{workload}/{quantum}/{run}/query_{query}.xml'
     params:
-        port=lambda wcs: config["information"]["port_selector"]['virtuoso'][wcs.quantum]
+        port=lambda wcs: config["information"]["ports"]['virtuoso']
     shell:
         'python client/virtuoso/interface.py query http://localhost:{params.port}/sparql http://example.org/datasets/bsbm1k --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
@@ -127,6 +127,6 @@ rule build_plot2:
     input:
         ancient('output/data/plot2.csv')
     output:
-        'output/figures/quantum_impact.png'
+        'output/figures/quantum_impacts.png'
     shell:
         'python scripts/quantum_plots.py --input {input} --output {output}'

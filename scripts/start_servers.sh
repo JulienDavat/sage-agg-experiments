@@ -6,17 +6,17 @@
 VIRTUOSO_DIR=/usr/local/virtuoso-opensource
 
 # Starting SaGe servers
-nohup sage -w 1 -p 8080 "configs/sage/correct/150.yaml" > output/log/sage-150.log 2>&1 &
+nohup sage -w 1 -p 8080 "configs/sage/sage-exact-150ms.yaml" > output/log/sage-150.log 2>&1 &
 echo -n "$! " > .pids
-nohup sage -w 1 -p 8081 "configs/sage/correct/1500.yaml" > output/log/sage-1500.log 2>&1 &
+nohup sage -w 1 -p 8081 "configs/sage/sage-exact-1500ms.yaml" > output/log/sage-1500.log 2>&1 &
 echo -n "$! " >> .pids
-nohup sage -w 1 -p 8082 "configs/sage/correct/15000.yaml" > output/log/sage-15000.log 2>&1 &
+nohup sage -w 1 -p 8082 "configs/sage/sage-exact-15000ms.yaml" > output/log/sage-15000.log 2>&1 &
 echo -n "$! " >> .pids
-nohup sage -w 1 -p 8083 "configs/sage/approximative/150.yaml" > output/log/sage-approx-150.log 2>&1 &
+nohup sage -w 1 -p 8083 "configs/sage/sage-approx-98-150ms.yaml" > output/log/sage-approx-150.log 2>&1 &
 echo -n "$! " >> .pids
-nohup sage -w 1 -p 8084 "configs/sage/approximative/1500.yaml" > output/log/sage-approx-1500.log 2>&1 &
+nohup sage -w 1 -p 8084 "configs/sage/sage-approx-98-1500ms.yaml" > output/log/sage-approx-1500.log 2>&1 &
 echo -n "$! " >> .pids
-nohup sage -w 1 -p 8085 "configs/sage/approximative/15000.yaml" > output/log/sage-approx-15000.log 2>&1 &
+nohup sage -w 1 -p 8085 "configs/sage/sage-approx-98-15000ms.yaml" > output/log/sage-approx-15000.log 2>&1 &
 echo -n "$! " >> .pids
 
 # Starting Virtuoso
