@@ -55,6 +55,7 @@ def plot_metric(ax, data, metric, title, xlabel, ylabel, logscale=False, display
         chart.set(xticklabels=[])
 
 def create_figure(data, logscale=False):
+    data['quantum'] = data['quantum'].astype(str)
     sp_workload = data[(data['workload'] == 'SP')]
     sp_nd_workload = data[(data['workload'] == 'SP-ND')]
     # initialization of the figure
