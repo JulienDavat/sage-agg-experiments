@@ -36,7 +36,7 @@ rule plot1_sage_agg_run:
     params:
         port=lambda wcs: config["information"]["ports"]['sage-exact-150ms']
     shell:
-        'python client/sage-agg/interface.py query http://localhost:{SAGE_PORT}/sparql http://localhost:{params.port}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
+        'python client/sage-agg/interface.py query http://localhost:{params.port}/sparql http://localhost:{params.port}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
 ####################################################################################################
 # >>>>> SAGE WITH PARTIAL AGGREGATIONS + APPROXIMATIONS ############################################

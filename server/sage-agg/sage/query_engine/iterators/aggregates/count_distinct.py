@@ -1,6 +1,6 @@
 # count.py
 # Author: Thomas MINIER - MIT License 2017-2019
-import xxhash
+from hashlib import sha256
 from sage.query_engine.iterators.aggregates.partial_agg import PartialAggregator
 
 
@@ -17,7 +17,8 @@ class CountDistinctAggregator(PartialAggregator):
         if self._variable in bindings:
             if group_key not in self._groups:
                 self._groups[group_key] = set()
-            elt = xxhash.xxh64_hexdigest(bindings[self._variable])
+            value = bindings[self._variable]
+            elt = sha256(bytes(value.encode('utf-8'))).hexdigest()
             if not elt in self._groups[group_key]:
                 self._groups[group_key].add(elt)
                 self._size += 1
