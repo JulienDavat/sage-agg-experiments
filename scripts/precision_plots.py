@@ -55,25 +55,17 @@ def plot_metric(ax, data, metric, title, xlabel, ylabel, logscale=False, display
         chart.set(xticklabels=[])
 
 def create_figure(data, logscale=False):
-    sp_workload = data[(data['workload'] == 'SP')]
-    sp_nd_workload = data[(data['workload'] == 'SP-ND')]
     # initialization of the figure
-    fig = plt.figure(figsize=(8, 6))
-    plt.subplots_adjust(hspace=0.2)
-    # creation of the left part (SP workload)
-    ax1 = fig.add_subplot(221)
-    plot_metric(ax1, sp_workload, 'execution_time', '', '', 'Execution Time (sec)', logscale=logscale, display_x=False)
+    fig = plt.figure(figsize=(8, 4))
+    plt.subplots_adjust(wspace=0.3)
+    # creation of the left part (execution time)
+    ax1 = fig.add_subplot(121)
+    plot_metric(ax1, data, 'execution_time', '', '', 'Execution Time (sec)', logscale=logscale)
     plt.legend().remove()
-    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 0.97), fancybox=True, shadow=True, ncol=5)
-    ax2 = fig.add_subplot(223)
-    plot_metric(ax2, sp_workload, 'data_transfer', '', '', 'Traffic (KBytes)', logscale=logscale)
-    plt.legend().remove()
-    # creattion of the right part (SP-ND workload)
-    ax3 = fig.add_subplot(222)
-    plot_metric(ax3, sp_nd_workload, 'execution_time', '', '', '', logscale=logscale, display_x=False)
-    plt.legend().remove()
-    ax4 = fig.add_subplot(224)
-    plot_metric(ax4, sp_nd_workload, 'data_transfer', '', '', '', logscale=logscale)
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 0.99), fancybox=True, shadow=True, ncol=5)
+    # creattion of the right part (data transfer)
+    ax2 = fig.add_subplot(122)
+    plot_metric(ax2, data, 'data_transfer', '', '', 'Traffic (KBytes)', logscale=logscale)
     plt.legend().remove()
     
     plt.show()
