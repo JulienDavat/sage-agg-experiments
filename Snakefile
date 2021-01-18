@@ -41,3 +41,4 @@ def first_run(plot):
 include: 'rules/plot1.smk'
 include: 'rules/plot2.smk'
 include: 'rules/plot3.smk'
+include: 'rules/plot4.smk'

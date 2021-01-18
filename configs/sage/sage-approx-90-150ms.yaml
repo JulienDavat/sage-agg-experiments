@@ -1,0 +1,37 @@
+name: SaGe Experiment server
+maintainer: Grall Arnaud
+public_url: http://localhost:8000
+quota: 150
+max_results: 10000
+max_group_keys: 10000
+enable_approximation: true
+error_rate: 0.10
+datasets:
+- name: bsbm10
+  uri: http://example.org/datasets/psql/bsbm10
+  description: BSBM 10 products using Postgres backend
+  backend: postgres
+  dbname: aggregates
+  user: aggregates
+  password: 'aggregates'
+- name: bsbm100
+  uri: http://example.org/datasets/psql/bsbm100
+  description: BSBM 100 products using Postgres backend
+  backend: postgres
+  dbname: aggregates
+  user: aggregates
+  password: 'aggregates'
+- name: bsbm1k
+  uri: http://example.org/datasets/psql/bsbm1k
+  description: BSBM 1K products using Postgres backend
+  backend: postgres
+  dbname: aggregates
+  user: aggregates
+  password: 'aggregates'
+- name: subdbpedia
+  uri: http://example.org/datasets/psql/subdbpedia
+  description: Dbpedia 3.5.1 using Postgres backend
+  backend: postgres
+  dbname: aggregates
+  user: aggregates
+  password: 'aggregates'

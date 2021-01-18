@@ -42,9 +42,9 @@ def transform_bytes_to_kbytes(data):
 #     return data.sort_values(by=['order', 'query'])
 
 def plot_metric(ax, data, metric, title, xlabel, ylabel, logscale=False, display_x=True):
-    df = data[['approach', 'quantum', metric]].groupby(['approach', 'quantum']).sum()
+    df = data[['approach', 'precision', metric]].groupby(['approach', 'precision']).sum()
     dashes = [(2,2)] * data['approach'].nunique()
-    chart = lineplot(x='quantum', y=metric, hue='approach', data=df, ax=ax, markers=True, style="approach", dashes=dashes)
+    chart = lineplot(x='precision', y=metric, hue='approach', data=df, ax=ax, markers=True, style="approach", dashes=dashes)
     if logscale:
         chart.set_yscale("log")
     chart.set_title(title)
@@ -55,7 +55,6 @@ def plot_metric(ax, data, metric, title, xlabel, ylabel, logscale=False, display
         chart.set(xticklabels=[])
 
 def create_figure(data, logscale=False):
-    data['quantum'] = data['quantum'].astype(str)
     sp_workload = data[(data['workload'] == 'SP')]
     sp_nd_workload = data[(data['workload'] == 'SP-ND')]
     # initialization of the figure
