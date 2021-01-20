@@ -1,4 +1,5 @@
-output
+output/log
+output/data
 data/virtuoso-data/
 data/datasets/dbpedia351.ttl
 .DS_Store

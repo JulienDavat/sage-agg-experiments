@@ -104,7 +104,7 @@ rule plot2_compute_average:
         expand('output/data/quantum/{{approach}}/{{workload}}/{{quantum}}/{run}/all.csv', 
             run=[x for x in range(1, last_run(2) + 1)])
     output:
-        'output/data/quantum/{approach}/{workload}/{quantum}/all.csv'
+        'output/data/quantum/{approach}/{workload}/{quantum}/all-plot2.csv'
     params:
         files=lambda wcs: [f'output/data/quantum/{wcs.approach}/{wcs.workload}/{wcs.quantum}/{run}/all.csv' for run in range(first_run(2), last_run(2) + 1)]
     shell:
@@ -113,7 +113,7 @@ rule plot2_compute_average:
 
 rule plot2_merge_all_files:
     input:
-        expand('output/data/quantum/{approach}/{workload}/{quantum}/all.csv', 
+        expand('output/data/quantum/{approach}/{workload}/{quantum}/all-plot2.csv', 
             approach=config["settings"]["plot2"]["settings"]["approaches"], 
             workload=config["settings"]["plot2"]["settings"]["workloads"], 
             quantum=config["settings"]["plot2"]["settings"]["quantums"])

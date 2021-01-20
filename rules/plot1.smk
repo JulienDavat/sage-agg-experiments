@@ -123,7 +123,7 @@ rule plot1_compute_average:
         expand('output/data/performance/{{approach}}/{{workload}}/{{dataset}}/{run}/all.csv', 
             run=[x for x in range(1, last_run(1) + 1)])
     output:
-        'output/data/performance/{approach}/{workload}/{dataset}/all.csv'
+        'output/data/performance/{approach}/{workload}/{dataset}/all-plot1.csv'
     params:
         files=lambda wcs: [f'output/data/performance/{wcs.approach}/{wcs.workload}/{wcs.dataset}/{run}/all.csv' for run in range(first_run(1), last_run(1) + 1)]
     shell:
@@ -132,7 +132,7 @@ rule plot1_compute_average:
 
 rule plot1_merge_all_files:
     input:
-        expand('output/data/performance/{approach}/{workload}/{dataset}/all.csv', 
+        expand('output/data/performance/{approach}/{workload}/{dataset}/all-plot1.csv', 
             approach=config["settings"]["plot1"]["settings"]["approaches"], 
             workload=config["settings"]["plot1"]["settings"]["workloads"], 
             dataset=config["settings"]["plot1"]["settings"]["datasets"])

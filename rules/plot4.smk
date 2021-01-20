@@ -101,7 +101,7 @@ rule plot4_merge_query_files:
 
 rule plot4_compute_average:
     input:
-        expand('output/data/precision/{{approach}}/{{workload}}/{{precision}}/{run}/all.csv', 
+        expand('output/data/precision/{{approach}}/{{workload}}/{{precision}}/{run}/all-plot4.csv', 
             run=[x for x in range(1, last_run(4) + 1)])
     output:
         'output/data/precision/{approach}/{workload}/{precision}/all.csv'
@@ -113,7 +113,7 @@ rule plot4_compute_average:
 
 rule plot4_merge_all_files:
     input:
-        expand('output/data/precision/{approach}/{workload}/{precision}/all.csv', 
+        expand('output/data/precision/{approach}/{workload}/{precision}/all-plot4.csv', 
             approach=config["settings"]["plot4"]["settings"]["approaches"], 
             workload=config["settings"]["plot4"]["settings"]["workloads"], 
             precision=config["settings"]["plot4"]["settings"]["precisions"])

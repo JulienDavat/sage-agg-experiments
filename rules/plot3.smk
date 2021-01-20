@@ -10,9 +10,20 @@
 
 # Information: this file mainly uses the rules defined in the file plot1.smk !!!
 
+rule plot3_compute_average:
+    input:
+        expand('output/data/performance/{{approach}}/{{workload}}/{{dataset}}/{run}/all.csv', 
+            run=[x for x in range(1, last_run(3) + 1)])
+    output:
+        'output/data/performance/{approach}/{workload}/{dataset}/all-plot3.csv'
+    params:
+        files=lambda wcs: [f'output/data/performance/{wcs.approach}/{wcs.workload}/{wcs.dataset}/{run}/all.csv' for run in range(first_run(3), last_run(3) + 1)]
+    shell:
+        'python scripts/average.py {output} "approach,workload,dataset,query" {params.files}'
+
 rule plot3_merge_all_files:
     input:
-        expand('output/data/performance/{approach}/{workload}/{dataset}/all.csv', 
+        expand('output/data/performance/{approach}/{workload}/{dataset}/all-plot3.csv', 
             approach=config["settings"]["plot3"]["settings"]["approaches"], 
             workload=config["settings"]["plot3"]["settings"]["workloads"], 
             dataset=config["settings"]["plot3"]["settings"]["datasets"])
