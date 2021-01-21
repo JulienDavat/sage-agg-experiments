@@ -25,7 +25,7 @@
         "plot3": {
             "title": "Data transfer and execution time for dbpedia, when running the SP and SP-ND workload",
             "settings": {
-                "datasets": ["subdbpedia"],
+                "datasets": ["dbpedia100M"],
                 "approaches": ["sage-agg", "sage-approx", "virtuoso"],
                 "workloads": ["SP", "SP-ND"],
                 "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
@@ -50,7 +50,7 @@
             "bsbm10": "BSBM-10", 
             "bsbm100": "BSBM-100", 
             "bsbm1k": "BSBM-1k",
-            "subdbpedia": "DBpedia-150M"
+            "dbpedia100M": "DBpedia-100M"
         },
         "ports": {
             "sage-exact-150ms": "8080",

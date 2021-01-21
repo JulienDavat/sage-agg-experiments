@@ -211,7 +211,7 @@ def insert_bucket(cursor, bucket, cache, table_name, backend):
         cursor.executemany(insert_query, bucket)
     elif backend == 'sqlite-catalog':
         # Insert terms
-        insert_into_catalog_query = f'INSERT INTO {table_name}_catalog (value) VALUES (?) ON CONFLICT DO NOTHING'
+        insert_into_catalog_query = f'INSERT OR IGNORE INTO {table_name}_catalog (value) VALUES (?);'
         terms = []
         for (s, p, o) in bucket:
             if s not in cache:

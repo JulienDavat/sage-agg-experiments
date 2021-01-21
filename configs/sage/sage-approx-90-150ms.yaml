@@ -8,30 +8,22 @@ enable_approximation: true
 error_rate: 0.10
 datasets:
 - name: bsbm10
-  uri: http://example.org/datasets/psql/bsbm10
-  description: BSBM 10 products using Postgres backend
-  backend: postgres
-  dbname: aggregates
-  user: aggregates
-  password: 'aggregates'
+  uri: http://example.org/datasets/bsbm10
+  description: BSBM 10 products using SQlite backend
+  backend: sqlite
+  database: graphs/sage_sqlite.db
 - name: bsbm100
-  uri: http://example.org/datasets/psql/bsbm100
-  description: BSBM 100 products using Postgres backend
-  backend: postgres
-  dbname: aggregates
-  user: aggregates
-  password: 'aggregates'
+  uri: http://example.org/datasets/bsbm100
+  description: BSBM 100 products using SQlite backend
+  backend: sqlite
+  database: graphs/sage_sqlite.db
 - name: bsbm1k
-  uri: http://example.org/datasets/psql/bsbm1k
-  description: BSBM 1K products using Postgres backend
-  backend: postgres
-  dbname: aggregates
-  user: aggregates
-  password: 'aggregates'
-- name: subdbpedia
-  uri: http://example.org/datasets/psql/subdbpedia
-  description: Dbpedia 3.5.1 using Postgres backend
-  backend: postgres
-  dbname: aggregates
-  user: aggregates
-  password: 'aggregates'
+  uri: http://example.org/datasets/bsbm1k
+  description: BSBM 1K products using SQlite backend
+  backend: sqlite
+  database: graphs/sage_sqlite.db
+- name: dbpedia100M
+  uri: http://example.org/datasets/dbpedia100M
+  description: Dbpedia 3.5.1 using SQlite backend
+  backend: sqlite
+  database: graphs/sage_sqlite.db
