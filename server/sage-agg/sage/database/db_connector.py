@@ -47,12 +47,32 @@ class DatabaseConnector(ABC):
         """
         raise NotImplementedError("The RDF graph is read-only: INSERT DATA queries are not allowed")
 
+    def search(self, subject, predicate, object, last_read=None, as_of=None):
+        """
+            Get an iterator over all RDF triples matching a triple pattern.
+            Args:
+                - subject ``string`` - Subject of the triple pattern
+                - predicate ``string`` - Predicate of the triple pattern
+                - obj ``string`` - Object of the triple pattern
+                - last_read ``string=None`` ``optional`` -  OFFSET ID used to resume scan
+                - as_of ``datetime=None`` ``optional`` - Perform all reads against a consistent snapshot represented by a timestamp.
+            Returns:
+                A tuple (`iterator`, `cardinality`), where `iterator` is a Python iterator over RDF triples matching the given triples pattern, and `cardinality` is the estimated cardinality of the triple pattern
+        """
+        raise NotImplementedError("The RDF graph has no search method implemented")
+
     def delete(self, subject, predicate, obj):
         """
             Delete a RDF triple from the RDF Graph.
             If not overrided, this method raises an exception as it consider the graph as read-only.
         """
         raise NotImplementedError("The RDF graph is read-only: DELETE DATA queries are not allowed")
+
+    def get_value(self, term):
+        return term
+
+    def get_identifiant(self, term):
+        return term
 
     def start_transaction(self):
         """Start a transaction (if supported by this type of connector)"""

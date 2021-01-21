@@ -1,6 +1,7 @@
 # utils.py
 # Author: Thomas MINIER - MIT License 2017-2018
 
+from sage.query_engine.optimizer.utils import is_variable
 
 class IteratorExhausted(Exception):
     """Exception raised when a closed iterator was requested to produce a value"""
@@ -66,14 +67,14 @@ def selection(triple, variables):
 
 def apply_bindings(elt, bindings={}):
     """Try to apply bindings to a subject, predicate or object"""
-    if not elt.startswith('?'):
-        return elt
+    # if not elt.startswith('?'):
+    #     return elt
     return bindings[elt] if elt in bindings else elt
 
 
 def vars_positions(subject, predicate, obj):
     """Find position of SPARQL variables in a triple pattern"""
-    return [var if var.startswith('?') else None for var in [subject, predicate, obj]]
+    return [var if is_variable(var) else None for var in [subject, predicate, obj]]
 
 
 def flattenValue(value):

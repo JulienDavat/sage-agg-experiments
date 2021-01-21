@@ -6,13 +6,12 @@ from time import time
 
 import click
 import coloredlogs
-import psycopg2
 import sys
 import codecs
 import pylru
+import sqlite3
 from rdflib.util import from_n3
 from rdflib import BNode, Literal, URIRef, Variable,Graph
-from psycopg2.extras import execute_values
 from sage.cli.utils import load_dataset, get_rdf_reader
 from rdflib.plugins.parsers.ntriples import NTriplesParser, Sink, ParseError
 
@@ -60,42 +59,28 @@ def bucketify_bytes(iterable, bucket_size, encoding='utf-8', throw=True):
         yield bucket
 
 
-def connect_postgres(dataset):
-    """Try to connect to a PostgreSQL server"""
-    if 'dbname' not in dataset or 'user' not in dataset or 'password' not in dataset:
-        print("Error: a valid PostgreSQL dataset must be declared with fields 'dbname', 'user' and 'password'")
+def connect_sqlite(dataset):
+    if 'database' not in dataset:
+        print("Error: a valid SQlite dataset must be declared with a field 'database'")
         return None
-    dbname = dataset['dbname']
-    user = dataset['user']
-    password = dataset['password']
-    host = dataset['host'] if 'host' in dataset else ''
-    port = int(dataset['port']) if 'port' in dataset else 5432
-    return psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+    database = dataset['database']
+    return sqlite3.connect(database)
 
 
 def get_create_tables_queries(table_name, backend):
     """Format a postgre CREATE TABLE with the name of a SQL table"""
-    if backend == 'postgres':
+    if backend == 'sqlite':
         return [(
             f'CREATE TABLE {table_name} ('
             f'subject TEXT, '
             f'predicate TEXT, '
             f'object TEXT);'
         )]
-    elif backend == 'postgres-mvcc':
-        return [(
-            f'CREATE TABLE {table_name} ('
-            f'subject TEXT, '
-            f'predicate TEXT, '
-            f'object TEXT, '
-            f'insert_t abstime DEFAULT transaction_timestamp(), '
-            f'delete_t abstime DEFAULT \'infinity\');'
-        )]
-    elif backend == 'postgres-catalog':
+    elif backend == 'sqlite-catalog':
         return [
             (
                 f'CREATE TABLE {table_name}_catalog ('
-                f'id SERIAL PRIMARY KEY, '
+                f'id INTEGER PRIMARY KEY, '
                 f'value TEXT UNIQUE);'
             ),
             (
@@ -111,17 +96,17 @@ def get_create_tables_queries(table_name, backend):
 
 def get_create_indexes_queries(table_name, backend):
     """Format all postgre CREATE INDEXE with the name of a SQL table"""
-    if backend == 'postgres' or backend == 'postgres-catalog':
+    if backend == 'sqlite':
         return [
             f'CREATE INDEX {table_name}_spo_index ON {table_name} (subject,predicate,object);',
             f'CREATE INDEX {table_name}_osp_index ON {table_name} (object,subject,predicate);',
             f'CREATE INDEX {table_name}_pos_index ON {table_name} (predicate,object,subject);'
         ]
-    elif backend == 'postgres-mvcc':
+    elif backend == 'sqlite-catalog':
         return [
-            f'CREATE INDEX {table_name}_spo_index ON {table_name} (subject text_ops,predicate text_ops, object text_ops, insert_t abstime_ops,delete_t abstime_ops);',
-            f'CREATE INDEX {table_name}_osp_index ON {table_name} (object text_ops,subject text_ops,predicate text_ops, insert_t abstime_ops,delete_t abstime_ops);',
-            f'CREATE INDEX {table_name}_pos_index ON {table_name} (predicate text_ops,object text_ops,subject text_ops, insert_t abstime_ops,delete_t abstime_ops);'
+            f'CREATE INDEX {table_name}_spo_index ON {table_name} (subject,predicate,object);',
+            f'CREATE INDEX {table_name}_osp_index ON {table_name} (object,subject,predicate);',
+            f'CREATE INDEX {table_name}_pos_index ON {table_name} (predicate,object,subject);'
         ]
     else:
         raise Exception(f'Unknown backend: {backend}')
@@ -132,19 +117,17 @@ def get_create_indexes_queries(table_name, backend):
 @click.argument("dataset_name")
 @click.option('--index/--no-index', default=True,
               help="Enable/disable indexing of SQL tables. The indexes can be created separately using the command sage-postgre-index")
-def init_postgres(config, dataset_name, index):
+def init_sqlite(config, dataset_name, index):
     """
-        Initialize the RDF dataset DATASET_NAME with a PostgreSQL/PostgreSQL-MVCC backend, described in the configuration file CONFIG.
+        Initialize the RDF dataset DATASET_NAME with a SQlite backend, described in the configuration file CONFIG.
     """
     # load dataset from config file
-    dataset, backend = load_dataset(config, dataset_name, logger, backends=['postgres', 'postgres-mvcc', 'postgres-catalog'])
+    dataset, backend = load_dataset(config, dataset_name, logger, backends=['sqlite', 'sqlite-catalog'])
 
     # init postgre connection
-    connection = connect_postgres(dataset)
+    connection = connect_sqlite(dataset)
     if connection is None:
         exit(1)
-    # turn off autocommit
-    connection.autocommit = False
 
     # create all SQL queries used to init the dataset, using the dataset name
     table_name = dataset['name']
@@ -173,25 +156,24 @@ def init_postgres(config, dataset_name, index):
     connection.commit()
     cursor.close()
     connection.close()
-    logger.info("Sage PostgreSQL model for table {} successfully initialized".format(table_name))
+    logger.info("Sage SQlite model for table {} successfully initialized".format(table_name))
 
 
 @click.command()
 @click.argument("config")
 @click.argument("dataset_name")
-def index_postgres(config, dataset_name):
+def index_sqlite(config, dataset_name):
     """
         Create the additional B-tree indexes on the RDF dataset DATASET_NAME, described in the configuration file CONFIG. The dataset must use the PostgreSQL or PostgreSQL-MVCC backend.
     """
     # load dataset from config file
-    dataset, backend = load_dataset(config, dataset_name, logger, backends=['postgres', 'postgres-mvcc', 'postgres-catalog'])
+    dataset, backend = load_dataset(config, dataset_name, logger, backends=['sqlite', 'sqlite-catalog'])
 
     # init PostgreSQL connection
-    connection = connect_postgres(dataset)
+    connection = connect_sqlite(dataset)
     if connection is None:
         exit(1)
-    # turn off autocommit
-    connection.autocommit = False
+
     # create all SQL queries used to init the dataset, using the dataset name
     table_name = dataset['name']
     create_indexes_queries = get_create_indexes_queries(table_name, backend)
@@ -220,16 +202,16 @@ def index_postgres(config, dataset_name):
     # quit
     cursor.close()
     connection.close()
-    logger.info("Sage PostgreSQL model for table {} successfully initialized".format(table_name))
+    logger.info("Sage SQlite model for table {} successfully initialized".format(table_name))
 
 
-def insert_bucket(cursor, bucket, cache, table_name, backend, block_size):
-    if backend == 'postgres' or backend == 'postgres-mvcc':
-        insert_query = f'INSERT INTO {table_name} (subject,predicate,object) VALUES %s'
-        execute_values(cursor, insert_query, bucket, page_size=block_size)
-    elif backend == 'postgres-catalog':
+def insert_bucket(cursor, bucket, cache, table_name, backend):
+    if backend == 'sqlite':
+        insert_query = f'INSERT INTO {table_name} (subject,predicate,object) VALUES (?, ?, ?);'
+        cursor.executemany(insert_query, bucket)
+    elif backend == 'sqlite-catalog':
         # Insert terms
-        insert_into_catalog_query = f'INSERT INTO {table_name}_catalog (value) VALUES %s ON CONFLICT DO NOTHING'
+        insert_into_catalog_query = f'INSERT INTO {table_name}_catalog (value) VALUES (?) ON CONFLICT DO NOTHING'
         terms = []
         for (s, p, o) in bucket:
             if s not in cache:
@@ -239,7 +221,7 @@ def insert_bucket(cursor, bucket, cache, table_name, backend, block_size):
             if o not in cache:
                 terms.append([o])
         if len(terms) > 0:
-            execute_values(cursor, insert_into_catalog_query, terms, page_size=block_size)
+            cursor.executemany(insert_into_catalog_query, terms)
         # Insert triples
         triples = []
         for (s, p, o) in bucket:
@@ -262,8 +244,8 @@ def insert_bucket(cursor, bucket, cache, table_name, backend, block_size):
             else:
                 object_id = cache[o]
             triples.append((subject_id, predicate_id, object_id))
-        insert_query = f'INSERT INTO {table_name} (subject,predicate,object) VALUES %s'
-        execute_values(cursor, insert_query, triples, page_size=block_size)
+        insert_query = f'INSERT INTO {table_name} (subject,predicate,object) VALUES (?, ?, ?);'
+        cursor.executemany(insert_query, triples)
     else:
         raise Exception(f'Unknown backend: {backend}')
 
@@ -283,21 +265,17 @@ def insert_bucket(cursor, bucket, cache, table_name, backend, block_size):
               help="Define the encoding of the dataset")
 @click.option("--throw/--no-throw", default=True, show_default=True,
               help="if loaded with hdt, throw an error when we cannot convert to utf-8 otherwise pass")
-def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_threshold, encoding, throw):
+def put_sqlite(config, dataset_name, rdf_file, format, block_size, commit_threshold, encoding, throw):
     """
         Insert RDF triples from file RDF_FILE into the RDF dataset DATASET_NAME, described in the configuration file CONFIG. The dataset must use the PostgreSQL or PostgreSQL-MVCC backend.
     """
     # load dataset from config file
-    dataset, backend = load_dataset(config, dataset_name, logger, backends=['postgres', 'postgres-mvcc', 'postgres-catalog'])
+    dataset, backend = load_dataset(config, dataset_name, logger, backends=['sqlite', 'sqlite-catalog'])
 
     # init PostgreSQL connection
-    logger.info("Connecting to PostgreSQL server...")
-    connection = connect_postgres(dataset)
-    logger.info("Connected to PostgreSQL server")
+    connection = connect_sqlite(dataset)
     if connection is None:
         exit(1)
-    # turn off autocommit
-    connection.autocommit = False
 
     # compute SQL table name and the bulk load SQL query
     table_name = dataset['name']
@@ -325,8 +303,7 @@ def put_postgres(config, dataset_name, rdf_file, format, block_size, commit_thre
             inserted += len(bucket)
             to_commit += len(bucket)
             # bulk load the bucket of RDF triples, then update progress bar
-            # execute_values(cursor, insert_into_query, bucket, page_size=block_size)
-            insert_bucket(cursor, bucket, cache, table_name, backend, block_size)
+            insert_bucket(cursor, bucket, cache, table_name, backend)
             bar.label = "Inserting RDF triples {}/{}, encoding={}".format(inserted, nb_triples, encoding)
             bar.update(len(bucket))
 

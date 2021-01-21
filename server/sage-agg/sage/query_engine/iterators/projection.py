@@ -8,10 +8,12 @@ from sage.query_engine.protobuf.iterators_pb2 import SavedProjectionIterator
 class ProjectionIterator(PreemptableIterator):
     """A ProjectionIterator perform a projection over solution mappings"""
 
-    def __init__(self, source, values=None):
+    def __init__(self, source, dataset, default_graph, values=[]):
         super(ProjectionIterator, self).__init__()
         self._source = source
         self._values = values
+        self._dataset = dataset
+        self._default_graph = default_graph
 
     def __repr__(self):
         return '<ProjectionIterator SELECT %s FROM { %s }>' % (self._values, self._source)
@@ -29,13 +31,15 @@ class ProjectionIterator(PreemptableIterator):
         if not self.has_next():
             raise IteratorExhausted()
         value = await self._source.next()
-        if self._values is None:
-            return value
-        return {k: v for k, v in value.items() if k in self._values}
+        # if self._values is None:
+        #     return value
+        graph = self._dataset.get_graph(self._default_graph)
+        return {k: graph.get_value(v) for k, v in value.items() if k in self._values}
 
     def save(self):
         """Save and serialize the iterator as a machine-readable format"""
         saved_proj = SavedProjectionIterator()
+        saved_proj.graph = self._default_graph
         saved_proj.values.extend(self._values)
         source_field = self._source.serialized_name() + '_source'
         getattr(saved_proj, source_field).CopyFrom(self._source.save())

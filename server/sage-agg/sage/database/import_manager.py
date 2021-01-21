@@ -31,6 +31,47 @@ def postgres_backend():
     return import_backend(data['name'], data['path'], data['connector'], data['required'])
 
 
+def postgres_catalog_backend():
+    """Get the loader for the PostgreSQL backend"""
+    data = {
+        'name': 'postgres',
+        'path': 'sage.database.postgres_catalog.connector',
+        'connector': 'PostgresConnector',
+        'required': [
+            'dbname',
+            'user',
+            'password'
+        ]
+    }
+    return import_backend(data['name'], data['path'], data['connector'], data['required'])
+
+
+def sqlite_backend():
+    """Get the loader for the SQlite backend"""
+    data = {
+        'name': 'sqlite',
+        'path': 'sage.database.sqlite.connector',
+        'connector': 'SQliteConnector',
+        'required': [
+            'database'
+        ]
+    }
+    return import_backend(data['name'], data['path'], data['connector'], data['required'])
+
+
+def sqlite_catalog_backend():
+    """Get the loader for the SQlite backend"""
+    data = {
+        'name': 'sqlite',
+        'path': 'sage.database.sqlite_catalog.connector',
+        'connector': 'SQliteConnector',
+        'required': [
+            'database'
+        ]
+    }
+    return import_backend(data['name'], data['path'], data['connector'], data['required'])
+
+
 def import_backend(name, module_path, class_name, required_params):
     """Load a new backend from the config file"""
 

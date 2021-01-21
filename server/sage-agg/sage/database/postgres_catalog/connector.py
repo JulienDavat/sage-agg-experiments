@@ -8,9 +8,9 @@ from time import time
 
 from sage.database.db_connector import DatabaseConnector
 from sage.database.db_iterator import DBIterator, EmptyIterator
-from sage.database.postgres.queries import get_start_query, get_resume_query, get_insert_query, get_delete_query
-from sage.database.postgres.transaction_manager import TransactionManager
-from sage.database.postgres.utils import id_to_predicate
+from sage.database.postgres_catalog.queries import get_start_query, get_resume_query, get_insert_query, get_delete_query
+from sage.database.postgres_catalog.transaction_manager import TransactionManager
+from sage.database.postgres_catalog.utils import id_to_predicate
 from sage.query_engine.optimizer.utils import is_variable
 
 
@@ -86,9 +86,8 @@ class PostgresIterator(DBIterator):
         cur = time()
         self._redtab.append(cur - self._cur)
         self._cur = cur
-        # decode the triple's predicate (if needed)
-        triple = triple[0], id_to_predicate(triple[1]), triple[2]
-        return triple
+
+        return (f'id_{triple[0]}', f'id_{triple[1]}', f'id_{triple[2]}')
 
     def has_next(self):
         """Return True if there is still results to read, and False otherwise"""
@@ -209,36 +208,33 @@ class PostgresConnector(DatabaseConnector):
             Returns:
                 The estimated cardinality of the triple pattern
         """
-        subject = subject if (subject is not None) and (not is_variable(subject)) else None
-        predicate = predicate if (predicate is not None) and (not is_variable(predicate)) else None
-        obj = obj if (obj is not None) and (not is_variable(obj)) else None
-        # try to encode predicate if needed
-        # if predicate is not None:
-        #     predicate = predicate_to_id(predicate)
+        s = int(subject.split('_')[1]) if (subject is not None) and (not is_variable(subject)) else None
+        p = int(predicate.split('_')[1]) if (predicate is not None) and (not is_variable(predicate)) else None
+        o = int(obj.split('_')[1]) if (obj is not None) and (not is_variable(obj)) else None
 
         # estimate the selectivity of the triple pattern using PostgreSQL histograms
         selectivity = 1
         # avoid division per zero when some histograms are not fully up-to-date
         try:
             # compute the selectivity of a bounded subject
-            if subject is not None:
-                if subject in self._subject_histograms['selectivities']:
-                    selectivity *= self._subject_histograms['selectivities'][subject]
+            if s is not None:
+                if s in self._subject_histograms['selectivities']:
+                    selectivity *= self._subject_histograms['selectivities'][s]
                 else:
                     selectivity *= (1 - self._subject_histograms['sum_freqs']) / (
                             self._subject_histograms['n_distinct'] - len(self._subject_histograms['selectivities']))
             # compute the selectivity of a bounded predicate
-            if predicate is not None:
-                if predicate in self._predicate_histograms['selectivities']:
-                    selectivity *= self._predicate_histograms['selectivities'][predicate]
+            if p is not None:
+                if p in self._predicate_histograms['selectivities']:
+                    selectivity *= self._predicate_histograms['selectivities'][p]
                 else:
                     selectivity *= (1 - self._predicate_histograms['sum_freqs']) / (
                             self._predicate_histograms['n_distinct'] - len(
                         self._predicate_histograms['selectivities']))
             # compute the selectivity of a bounded object
-            if obj is not None:
-                if obj in self._object_histograms['selectivities']:
-                    selectivity *= self._object_histograms['selectivities'][obj]
+            if o is not None:
+                if o in self._object_histograms['selectivities']:
+                    selectivity *= self._object_histograms['selectivities'][o]
                 else:
                     selectivity *= (1 - self._object_histograms['sum_freqs']) / (
                             self._object_histograms['n_distinct'] - len(self._object_histograms['selectivities']))
@@ -247,6 +243,27 @@ class PostgresConnector(DatabaseConnector):
         # estimate the cardinality from the estimated selectivity
         cardinality = int(ceil(selectivity * self._avg_row_count))
         return cardinality if cardinality > 0 else 1
+
+    def get_value(self, term):
+        if not isinstance(term, str) or not term.startswith('id_'):
+            return term
+        self.open()
+        term_id = int(term.split('_')[1])
+        cursor = self._manager.get_connection().cursor(str(uuid.uuid4()))
+        cursor.execute(f'SELECT value FROM {self._table_name}_catalog WHERE id = {term_id}')
+        result = cursor.fetchone()
+        if result is None:
+            raise Exception(f'Unknown id ({term_id}) for table {self._table_name}')
+        return result[0]
+
+    def get_identifiant(self, term):
+        if not isinstance(term, str):
+            return term
+        self.open()
+        cursor = self._manager.get_connection().cursor(str(uuid.uuid4()))
+        cursor.execute(f'SELECT id FROM {self._table_name}_catalog WHERE value = \'{term}\'')
+        result = cursor.fetchone()
+        return 'id_-1' if result is None else f'id_{result[0]}'
 
     def search(self, subject, predicate, obj, last_read=None, as_of=None):
         """
@@ -264,13 +281,10 @@ class PostgresConnector(DatabaseConnector):
         self.open()
 
         # format triple patterns for the PostgreSQL API
-        subject = subject if (subject is not None) and (not is_variable(subject)) else None
-        predicate = predicate if (predicate is not None) and (not is_variable(predicate)) else None
-        obj = obj if (obj is not None) and (not is_variable(obj)) else None
-        pattern = {'subject': subject, 'predicate': predicate, 'object': obj}
-        # try to encode predicate (if needed)
-        # if predicate is not None:
-        #     predicate = predicate_to_id(predicate)
+        s = int(subject.split('_')[1]) if (subject is not None) and (not is_variable(subject)) else None
+        p = int(predicate.split('_')[1]) if (predicate is not None) and (not is_variable(predicate)) else None
+        o = int(obj.split('_')[1]) if (obj is not None) and (not is_variable(obj)) else None
+        pattern = {'subject': s, 'predicate': p, 'object': o}
 
         # dedicated cursor used to scan this triple pattern
         # WARNING: we need to use a dedicated cursor per triple pattern iterator.
@@ -279,7 +293,7 @@ class PostgresConnector(DatabaseConnector):
 
         # create a SQL query to start a new index scan
         if last_read is None:
-            start_query, start_params = get_start_query(subject, predicate, obj, self._table_name)
+            start_query, start_params = get_start_query(s, p, o, self._table_name)
         else:
             # empty last_read key => the scan has already been completed
             if len(last_read) == 0:
@@ -287,7 +301,7 @@ class PostgresConnector(DatabaseConnector):
             # otherwise, create a SQL query to resume the index scan
             last_read = json.loads(last_read)
             t = (last_read["s"], last_read["p"], last_read["o"])
-            start_query, start_params = get_resume_query(subject, predicate, obj, t, self._table_name)
+            start_query, start_params = get_resume_query(s, p, o, t, self._table_name)
 
         # create the iterator to yield the matching RDF triples
         iterator = PostgresIterator(cursor, self._manager.get_connection(), start_query, start_params, self._table_name,

@@ -51,8 +51,7 @@ class ScanIterator(PreemptableIterator):
         """Scan the relation and return the next set of solution mappings"""
         if not self.has_next():
             raise IteratorExhausted()
-        mappings = selection(next(self._source), self._variables)
-        return mappings
+        return selection(next(self._source), self._variables)
 
     def save(self):
         """Save the operator using protocol buffers"""

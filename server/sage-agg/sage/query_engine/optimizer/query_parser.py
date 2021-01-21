@@ -112,11 +112,22 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
             node.p['PV'] = query_vars
             return parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities)
         child = parse_query_node(node.p, dataset, current_graphs, server_url, cardinalities)
-        return ProjectionIterator(child, query_vars)
+        return ProjectionIterator(child, dataset, current_graphs[0], query_vars)
     elif node.name == 'BGP':
         # bgp_vars = node._vars
         triples = list(localize_triple(node.triples, current_graphs))
-        iterator, query_vars, c = build_left_plan(triples, dataset, current_graphs)
+        # format triple patterns for the backend API
+        patterns = []
+        for triple in triples:
+            graph_uri = triple['graph'] if 'graph' in triple else current_graphs[0]
+            graph = dataset.get_graph(graph_uri)
+            patterns.append({
+                'subject': triple['subject'] if triple['subject'].startswith('?') else graph.get_identifiant(triple['subject']),
+                'predicate': triple['predicate'] if triple['predicate'].startswith('?') else graph.get_identifiant(triple['predicate']),
+                'object': triple['object'] if triple['object'].startswith('?') else graph.get_identifiant(triple['object']),
+                'graph': graph_uri
+            })
+        iterator, query_vars, c = build_left_plan(patterns, dataset, current_graphs)
         # track cardinalities of every triple pattern
         cardinalities += c
         return iterator
@@ -170,7 +181,7 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         # add the GROUP BY operator (with aggregators) to the pipeline
         source = GroupByAggregator(source, groupby_variables, aggregators=aggregators, max_size=dataset.max_group_keys)
         # add the projection to the pipeline, depending of the context
-        return AggregatesProjectionIterator(source, node.PV)
+        return AggregatesProjectionIterator(source, dataset, current_graphs[0], node.PV)
     else:
         raise UnsupportedSPARQL("Unsupported SPARQL feature: {}".format(node.name))
 

@@ -21,7 +21,9 @@ console_scripts = [
     'sage-postgres-init = sage.cli.postgres:init_postgres',
     'sage-postgres-index = sage.cli.postgres:index_postgres',
     'sage-postgres-put = sage.cli.postgres:put_postgres',
-    'sage-postgres-sput = sage.cli.postgres:stream_postgres'
+    'sage-sqlite-init = sage.cli.sqlite:init_sqlite',
+    'sage-sqlite-index = sage.cli.sqlite:index_sqlite',
+    'sage-sqlite-put = sage.cli.sqlite:put_sqlite'
 ]
 
 with open('README.rst') as file:

@@ -8,51 +8,30 @@ from time import time
 
 from sage.database.db_connector import DatabaseConnector
 from sage.database.db_iterator import DBIterator, EmptyIterator
-from sage.database.postgres.queries import get_start_query, get_resume_query, get_insert_query, get_delete_query
-from sage.database.postgres.transaction_manager import TransactionManager
-from sage.database.postgres.utils import id_to_predicate
+from sage.database.sqlite.queries import get_start_query, get_resume_query, get_insert_query, get_delete_query
+from sage.database.sqlite.transaction_manager import TransactionManager
+from sage.database.sqlite.utils import id_to_predicate
 from sage.query_engine.optimizer.utils import is_variable
+from sage.database.utils import get_kind
 
 
-def fetch_histograms(cursor, table_name, attribute_name):
-    """
-        Download PostgreSQL histograms from a given table and attribute
-    """
-    base_query = "SELECT null_frac, n_distinct, most_common_vals, most_common_freqs FROM pg_stats WHERE tablename = '{}' AND attname = '{}'".format(
-        table_name, attribute_name)
-    cursor.execute(base_query)
-    record = cursor.fetchone()
-    null_frac, n_distinct, most_common_vals, most_common_freqs = record
-    # build selectivity table
-    selectivities = {}
-    cpt = 0
-    for common_val in most_common_vals[1:-1].split(","):
-        if cpt < len(most_common_freqs):
-            selectivities[common_val] = most_common_freqs[cpt]
-        cpt += 1
-    return (null_frac, n_distinct, selectivities, sum(most_common_freqs))
-
-
-class PostgresIterator(DBIterator):
+class SQliteIterator(DBIterator):
     """An PostgresIterator implements a DBIterator for a triple pattern evaluated using a Postgre database file"""
 
     def __init__(self, cursor, connection, start_query, start_params, table_name, pattern, fetch_size=2000):
-        super(PostgresIterator, self).__init__(pattern)
+        super(SQliteIterator, self).__init__(pattern)
         self._cursor = cursor
         self._connection = connection
         self._current_query = start_query
         self._table_name = table_name
         self._fetch_size = fetch_size
-        # resume query execution with a SQL query
-        # print('[PostgresIterator] Executing: {} with {}'.format(start_query, start_params))
         self._start = time()
         self._cursor.execute(self._current_query, start_params)
         # always keep the current set of rows buffered inside the iterator
         self._last_reads = self._cursor.fetchmany(size=100)
-        # print('fetching one in {}seconds'.format(time() - self._start))
         # stats
-        self._red = 0
-        self._redtab = []
+        self._read = 0
+        self._readtab = []
         self._cur = time()
 
     def __del__(self):
@@ -64,12 +43,12 @@ class PostgresIterator(DBIterator):
         if not self.has_next():
             return ''
         triple = self._last_reads[0]
-        print('[PostgresIterator] Red {} triples during this quantum'.format(self._red))
-        if len(self._redtab) > 0:
-            res = reduce(lambda a, b: a + b, self._redtab) / len(self._redtab)
+        print('[SQliteIterator] Red {} triples during this quantum'.format(self._read))
+        if len(self._readtab) > 0:
+            res = reduce(lambda a, b: a + b, self._readtab) / len(self._readtab)
         else:
             res = 0
-        print('[PostgresIterator] Average overhead per triple is: {}'.format(res))
+        print('[SQliteIterator] Average overhead per triple is: {}'.format(res))
         return json.dumps({
             's': triple[0],
             'p': triple[1],
@@ -81,13 +60,13 @@ class PostgresIterator(DBIterator):
         if not self.has_next():
             return None
         triple = self._last_reads.pop(0)
-        self._red += 1
+        self._read += 1
 
         cur = time()
-        self._redtab.append(cur - self._cur)
+        self._readtab.append(cur - self._cur)
         self._cur = cur
-        # decode the triple's predicate (if needed)
-        triple = triple[0], id_to_predicate(triple[1]), triple[2]
+
+        triple = triple[0], triple[1], triple[2]
         return triple
 
     def has_next(self):
@@ -99,7 +78,7 @@ class PostgresIterator(DBIterator):
         return len(self._last_reads) > 0
 
 
-class PostgresConnector(DatabaseConnector):
+class SQliteConnector(DatabaseConnector):
     """
         A PostgresConnector search for RDF triples in a PostgreSQL database.
         Constructor arguments:
@@ -112,33 +91,32 @@ class PostgresConnector(DatabaseConnector):
             - fetch_size `int`: how many RDF triples are fetched per SQL query (default to 2000)
     """
 
-    def __init__(self, table_name, dbname, user, password, host='', port=5432, fetch_size=2000):
-        super(PostgresConnector, self).__init__()
+    def __init__(self, table_name, database, fetch_size=2000):
+        super(SQliteConnector, self).__init__()
         self._table_name = table_name
-        self._manager = TransactionManager(dbname, user, password, host=host, port=port)
+        self._manager = TransactionManager(database)
         self._fetch_size = fetch_size
         self._warmup = True
 
         # Data used for cardinality estimation.
-        # They are initialized using PostgreSQL histograms, after the 1st connection to the DB.
-        self._avg_row_count = 0
-        self._subject_histograms = {
-            'selectivities': dict(),
-            'null_frac': 0,
-            'n_distinct': 0,
-            'sum_freqs': 0
+        # They are initialized using SQlite statistics, after the 1st connection to the DB.
+        self._spo_index_stats = {
+            'row_count': 0,
+            'same_s_row_count': 0,
+            'same_sp_row_count': 0,
+            'same_spo_row_count': 0
         }
-        self._predicate_histograms = {
-            'selectivities': dict(),
-            'null_frac': 0,
-            'n_distinct': 0,
-            'sum_freqs': 0
+        self._pos_index_stats = {
+            'row_count': 0,
+            'same_p_row_count': 0,
+            'same_po_row_count': 0,
+            'same_pos_row_count': 0
         }
-        self._object_histograms = {
-            'selectivities': dict(),
-            'null_frac': 0,
-            'n_distinct': 0,
-            'sum_freqs': 0
+        self._osp_index_stats = {
+            'row_count': 0,
+            'same_o_row_count': 0,
+            'same_os_row_count': 0,
+            'same_osp_row_count': 0
         }
 
     def open(self):
@@ -149,33 +127,32 @@ class PostgresConnector(DatabaseConnector):
         # Do warmup phase if required, i.e., fetch stats for query execution
         if self._warmup:
             cursor = self._manager.start_transaction()
-            # fetch estimated table cardinality
-            cursor.execute(
-                "SELECT reltuples AS approximate_row_count FROM pg_class WHERE relname = '{}'".format(self._table_name))
-            self._avg_row_count = cursor.fetchone()[0]
-            # fetch subject histograms
-            (null_frac, n_distinct, selectivities, sum_freqs) = fetch_histograms(cursor, self._table_name, 'subject')
-            self._subject_histograms = {
-                'selectivities': selectivities,
-                'null_frac': null_frac,
-                'n_distinct': n_distinct,
-                'sum_freqs': sum_freqs
+            # fetch SPO index statistics
+            cursor.execute(f'SELECT stat FROM sqlite_stat1 WHERE idx = \'{self._table_name}_spo_index\'')
+            (row_count, same_s_row_count, same_sp_row_count, same_spo_row_count) = cursor.fetchone()[0].split(' ')
+            self._spo_index_stats = {
+                'row_count': int(row_count),
+                'same_s_row_count': int(same_s_row_count),
+                'same_sp_row_count': int(same_sp_row_count),
+                'same_spo_row_count': int(same_spo_row_count)
             }
-            # fetch predicate histograms
-            (null_frac, n_distinct, selectivities, sum_freqs) = fetch_histograms(cursor, self._table_name, 'predicate')
-            self._predicate_histograms = {
-                'selectivities': selectivities,
-                'null_frac': null_frac,
-                'n_distinct': n_distinct,
-                'sum_freqs': sum_freqs
+            # fetch POS index statistics
+            cursor.execute(f'SELECT stat FROM sqlite_stat1 WHERE idx = \'{self._table_name}_pos_index\'')
+            (row_count, same_p_row_count, same_po_row_count, same_pos_row_count) = cursor.fetchone()[0].split(' ')
+            self._pos_index_stats = {
+                'row_count': int(row_count),
+                'same_p_row_count': int(same_p_row_count),
+                'same_po_row_count': int(same_po_row_count),
+                'same_pos_row_count': int(same_pos_row_count)
             }
-            # fetch object histograms
-            (null_frac, n_distinct, selectivities, sum_freqs) = fetch_histograms(cursor, self._table_name, 'object')
-            self._object_histograms = {
-                'selectivities': selectivities,
-                'null_frac': null_frac,
-                'n_distinct': n_distinct,
-                'sum_freqs': sum_freqs
+            # fetch OSP index statistics
+            cursor.execute(f'SELECT stat FROM sqlite_stat1 WHERE idx = \'{self._table_name}_osp_index\'')
+            (row_count, same_o_row_count, same_os_row_count, same_osp_row_count) = cursor.fetchone()[0].split(' ')
+            self._osp_index_stats = {
+                'row_count': int(row_count),
+                'same_o_row_count': int(same_o_row_count),
+                'same_os_row_count': int(same_os_row_count),
+                'same_osp_row_count': int(same_osp_row_count)
             }
             # commit & close cursor
             self._manager.commit()
@@ -209,44 +186,30 @@ class PostgresConnector(DatabaseConnector):
             Returns:
                 The estimated cardinality of the triple pattern
         """
+        # format triple patterns for the SQlite API
         subject = subject if (subject is not None) and (not is_variable(subject)) else None
         predicate = predicate if (predicate is not None) and (not is_variable(predicate)) else None
         obj = obj if (obj is not None) and (not is_variable(obj)) else None
-        # try to encode predicate if needed
-        # if predicate is not None:
-        #     predicate = predicate_to_id(predicate)
-
-        # estimate the selectivity of the triple pattern using PostgreSQL histograms
-        selectivity = 1
-        # avoid division per zero when some histograms are not fully up-to-date
-        try:
-            # compute the selectivity of a bounded subject
-            if subject is not None:
-                if subject in self._subject_histograms['selectivities']:
-                    selectivity *= self._subject_histograms['selectivities'][subject]
-                else:
-                    selectivity *= (1 - self._subject_histograms['sum_freqs']) / (
-                            self._subject_histograms['n_distinct'] - len(self._subject_histograms['selectivities']))
-            # compute the selectivity of a bounded predicate
-            if predicate is not None:
-                if predicate in self._predicate_histograms['selectivities']:
-                    selectivity *= self._predicate_histograms['selectivities'][predicate]
-                else:
-                    selectivity *= (1 - self._predicate_histograms['sum_freqs']) / (
-                            self._predicate_histograms['n_distinct'] - len(
-                        self._predicate_histograms['selectivities']))
-            # compute the selectivity of a bounded object
-            if obj is not None:
-                if obj in self._object_histograms['selectivities']:
-                    selectivity *= self._object_histograms['selectivities'][obj]
-                else:
-                    selectivity *= (1 - self._object_histograms['sum_freqs']) / (
-                            self._object_histograms['n_distinct'] - len(self._object_histograms['selectivities']))
-        except ZeroDivisionError:
-            pass
-        # estimate the cardinality from the estimated selectivity
-        cardinality = int(ceil(selectivity * self._avg_row_count))
-        return cardinality if cardinality > 0 else 1
+        # estimate triple cardinality using sqlite statistics (more or less a variable counting join ordering)
+        kind = get_kind(subject, predicate, obj)
+        if kind == 'spo':
+            return self._spo_index_stats['same_spo_row_count']
+        elif kind == '???':
+            return self._spo_index_stats['row_count']
+        elif kind == 's??':
+            return self._spo_index_stats['same_s_row_count']
+        elif kind == 'sp?':
+            return self._spo_index_stats['same_sp_row_count']
+        elif kind == '?p?':
+            return self._pos_index_stats['same_p_row_count']
+        elif kind == '?po':
+            return self._pos_index_stats['same_po_row_count']
+        elif kind == 's?o':
+            return self._osp_index_stats['same_os_row_count']
+        elif kind == '??o':
+            return self._osp_index_stats['same_o_row_count']
+        else:
+            raise Exception("Unkown pattern type: {}".format(kind))
 
     def search(self, subject, predicate, obj, last_read=None, as_of=None):
         """
@@ -262,20 +225,16 @@ class PostgresConnector(DatabaseConnector):
         """
         # do warmup if necessary
         self.open()
-
-        # format triple patterns for the PostgreSQL API
+        # format triple patterns for the SQlite API
         subject = subject if (subject is not None) and (not is_variable(subject)) else None
         predicate = predicate if (predicate is not None) and (not is_variable(predicate)) else None
         obj = obj if (obj is not None) and (not is_variable(obj)) else None
         pattern = {'subject': subject, 'predicate': predicate, 'object': obj}
-        # try to encode predicate (if needed)
-        # if predicate is not None:
-        #     predicate = predicate_to_id(predicate)
 
         # dedicated cursor used to scan this triple pattern
         # WARNING: we need to use a dedicated cursor per triple pattern iterator.
         # Otherwise, we might reset a cursor whose results were not fully consumed.
-        cursor = self._manager.get_connection().cursor(str(uuid.uuid4()))
+        cursor = self._manager.get_connection().cursor()
 
         # create a SQL query to start a new index scan
         if last_read is None:
@@ -290,24 +249,26 @@ class PostgresConnector(DatabaseConnector):
             start_query, start_params = get_resume_query(subject, predicate, obj, t, self._table_name)
 
         # create the iterator to yield the matching RDF triples
-        iterator = PostgresIterator(cursor, self._manager.get_connection(), start_query, start_params, self._table_name,
-                                    pattern, fetch_size=self._fetch_size)
+        iterator = SQliteIterator(
+            cursor, self._manager.get_connection(), 
+            start_query, start_params, 
+            self._table_name, 
+            pattern, 
+            fetch_size=self._fetch_size)
         card = self._estimate_cardinality(subject, predicate, obj) if iterator.has_next() else 0
         return iterator, card
 
     def from_config(config):
-        """Build a PostgresConnector from a configuration object"""
-        if 'dbname' not in config or 'user' not in config or 'password' not in config:
+        """Build a SQliteConnector from a configuration object"""
+        if 'database' not in config:
             raise SyntaxError(
-                'A valid configuration for a PostgreSQL connector must contains the dbname, user and password fields')
+                'A valid configuration for a SQlite connector must contains the database file')
 
         table_name = config['name']
-        host = config['host'] if 'host' in config else ''
-        port = config['port'] if 'port' in config else 5432
+        database = config['database']
         fetch_size = config['fetch_size'] if 'fetch_size' in config else 5000
 
-        return PostgresConnector(table_name, config['dbname'], config['user'], config['password'], host=host, port=port,
-                                 fetch_size=fetch_size)
+        return SQliteConnector(table_name, database, fetch_size=fetch_size)
 
     def insert(self, subject, predicate, obj):
         """

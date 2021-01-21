@@ -3,7 +3,7 @@
 from math import inf
 from urllib.parse import quote_plus
 
-from sage.database.import_manager import import_backend, hdt_backend, postgres_backend
+from sage.database.import_manager import import_backend, hdt_backend, postgres_backend, postgres_catalog_backend, sqlite_backend, sqlite_catalog_backend
 from yaml import load
 
 
@@ -33,7 +33,10 @@ def load_config(config_file="config.yaml"):
     # available backends (populated with sage's native backends)
     backends = {
         'hdt-file': hdt_backend(),
-        'postgres': postgres_backend()
+        'postgres': postgres_backend(),
+        'postgres-catalog': postgres_catalog_backend(),
+        'sqlite': sqlite_backend(),
+        'sqlite-catalog': sqlite_catalog_backend()
     }
     # build custom backend (if there is some)
     if 'backends' in config and len(config['backends']) > 0:
@@ -122,6 +125,12 @@ class Graph(object):
     def delete(self, subject, predicate, obj):
         """Delete a RDF triple from the RDF graph"""
         self._connector.delete(subject, predicate, obj)
+
+    def get_value(self, term):
+        return self._connector.get_value(term)
+
+    def get_identifiant(self, term):
+        return self._connector.get_identifiant(term)
 
     def commit(self):
         """Commit any ongoing transaction (at the database level)"""

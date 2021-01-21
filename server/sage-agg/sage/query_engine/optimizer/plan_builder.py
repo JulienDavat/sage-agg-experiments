@@ -67,7 +67,7 @@ def build_union_plan(union, dataset, default_graph):
 def build_join_plan(bgp, dataset, default_graph):
     """Build a join plan with a projection at the end"""
     iterator, query_vars, cardinalities = build_left_plan(bgp, dataset, default_graph)
-    return ProjectionIterator(iterator, query_vars), cardinalities
+    return ProjectionIterator(iterator, dataset, default_graph[0], query_vars), cardinalities
 
 
 def build_left_plan(bgp, dataset, default_graph):

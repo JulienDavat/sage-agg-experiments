@@ -23,6 +23,7 @@ message SavedProjectionIterator {
         SavedBagUnionIterator union_source = 4;
         SavedFilterIterator filter_source = 5;
     }
+    string graph = 6;
 }
 
 message SavedAggregatesProjectionIterator {
@@ -34,6 +35,7 @@ message SavedAggregatesProjectionIterator {
         SavedFilterIterator filter_source = 5;
         SavedGroupByAgg groupby_source = 6;
     }
+    string graph = 7;
 }
 
 message SavedIndexJoinIterator {

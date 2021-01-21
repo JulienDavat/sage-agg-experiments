@@ -4,7 +4,11 @@
 
 def get_vars(triple):
     """Get variables in a triple pattern"""
-    return set([v for k, v in triple.items() if v.startswith('?')])
+    return set([v for k, v in triple.items() if is_variable(v)])
+
+
+def is_variable(term):
+    return isinstance(term, str) and term.startswith('?')
 
 
 def find_connected_pattern(variables, triples):

@@ -10,9 +10,11 @@ class AggregatesProjectionIterator(PreemptableIterator):
     An AggregatesProjectionIterator performs a projection over solution mappings for aggregation queries
     """
 
-    def __init__(self, source, values=None):
+    def __init__(self, source, dataset, default_graph, values=None):
         super(AggregatesProjectionIterator, self).__init__()
         self._source = source
+        self._dataset = dataset
+        self._default_graph = default_graph
         self._values = values
 
     def __repr__(self):
@@ -36,7 +38,8 @@ class AggregatesProjectionIterator(PreemptableIterator):
         bindings_list = self._source.generate_results()
         if self._values is None:
             return [{}] * len(bindings_list)
-        return [{k: v for k, v in value.items() if (k in self._values or k == '?__group_key')} for value in bindings_list]
+        graph = self._dataset.get_graph(self._default_graph)
+        return [{k: graph.get_value(v) for k, v in value.items() if (k in self._values or k == '?__group_key')} for value in bindings_list]
 
     async def next(self):
         """
@@ -50,6 +53,7 @@ class AggregatesProjectionIterator(PreemptableIterator):
     def save(self):
         """Save and serialize the iterator as a machine-readable format"""
         saved_proj = SavedAggregatesProjectionIterator()
+        saved_proj.graph = self._default_graph
         saved_proj.values.extend(self._values)
         source_field = self._source.serialized_name() + '_source'
         getattr(saved_proj, source_field).CopyFrom(self._source.save())

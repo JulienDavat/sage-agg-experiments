@@ -45,10 +45,11 @@ def load(protoMsg, dataset):
 
 def load_projection(saved_plan, dataset):
     """Load a ProjectionIterator from a protobuf serialization"""
+    default_graph = saved_plan.graph
     sourceField = saved_plan.WhichOneof('source')
     source = load(getattr(saved_plan, sourceField), dataset)
     values = saved_plan.values if len(saved_plan.values) > 0 else None
-    return ProjectionIterator(source, values)
+    return ProjectionIterator(source, dataset, default_graph, values)
 
 
 def load_filter(saved_plan, dataset):
@@ -120,7 +121,8 @@ def load_groupby(saved_plan, dataset):
 
 def load_aggregates_projection(saved_plan, dataset):
     """Load a AggregatesProjectionIterator from a protobuf serialization"""
+    default_graph = saved_plan.graph
     sourceField = saved_plan.WhichOneof('source')
     source = load(getattr(saved_plan, sourceField), dataset)
     values = saved_plan.values if len(saved_plan.values) > 0 else None
-    return AggregatesProjectionIterator(source, values)
+    return AggregatesProjectionIterator(source, dataset, default_graph, values)
