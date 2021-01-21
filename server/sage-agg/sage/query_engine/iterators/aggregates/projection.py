@@ -35,11 +35,8 @@ class AggregatesProjectionIterator(PreemptableIterator):
             Results are generated after each quantum
             see sage.sage_engine.py
         """
-        bindings_list = self._source.generate_results()
-        if self._values is None:
-            return [{}] * len(bindings_list)
         graph = self._dataset.get_graph(self._default_graph)
-        return [{k: graph.get_value(v) for k, v in value.items() if (k in self._values or k == '?__group_key')} for value in bindings_list]
+        return self._source.generate_results(self._values, graph)
 
     async def next(self):
         """

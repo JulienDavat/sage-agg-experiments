@@ -44,16 +44,11 @@ class PostgresIterator(DBIterator):
         self._table_name = table_name
         self._fetch_size = fetch_size
         # resume query execution with a SQL query
-        # print('[PostgresIterator] Executing: {} with {}'.format(start_query, start_params))
-        self._start = time()
         self._cursor.execute(self._current_query, start_params)
         # always keep the current set of rows buffered inside the iterator
-        self._last_reads = self._cursor.fetchmany(size=100)
-        # print('fetching one in {}seconds'.format(time() - self._start))
+        self._last_reads = self._cursor.fetchmany(size=self._fetch_size)
         # stats
-        self._red = 0
-        self._redtab = []
-        self._cur = time()
+        self._read = 0
 
     def __del__(self):
         """Destructor (close the database cursor)"""
@@ -64,12 +59,7 @@ class PostgresIterator(DBIterator):
         if not self.has_next():
             return ''
         triple = self._last_reads[0]
-        print('[PostgresIterator] Red {} triples during this quantum'.format(self._red))
-        if len(self._redtab) > 0:
-            res = reduce(lambda a, b: a + b, self._redtab) / len(self._redtab)
-        else:
-            res = 0
-        print('[PostgresIterator] Average overhead per triple is: {}'.format(res))
+        print('[PostgresIterator] Red {} triples during this quantum'.format(self._read))
         return json.dumps({
             's': triple[0],
             'p': triple[1],
@@ -80,21 +70,14 @@ class PostgresIterator(DBIterator):
         """Return the next solution mapping or raise `StopIteration` if there are no more solutions"""
         if not self.has_next():
             return None
+        self._read += 1
         triple = self._last_reads.pop(0)
-        self._red += 1
-
-        cur = time()
-        self._redtab.append(cur - self._cur)
-        self._cur = cur
-
         return (f'id_{triple[0]}', f'id_{triple[1]}', f'id_{triple[2]}')
 
     def has_next(self):
         """Return True if there is still results to read, and False otherwise"""
         if len(self._last_reads) == 0:
-            st = time()
             self._last_reads = self._cursor.fetchmany(size=self._fetch_size)
-            # print('fetching many {} in {}seconds'.format(self._fetch_size, time() - st))
         return len(self._last_reads) > 0
 
 

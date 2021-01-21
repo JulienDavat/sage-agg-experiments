@@ -25,14 +25,11 @@ class SQliteIterator(DBIterator):
         self._current_query = start_query
         self._table_name = table_name
         self._fetch_size = fetch_size
-        self._start = time()
         self._cursor.execute(self._current_query, start_params)
         # always keep the current set of rows buffered inside the iterator
         self._last_reads = self._cursor.fetchmany(size=100)
         # stats
         self._read = 0
-        self._readtab = []
-        self._cur = time()
 
     def __del__(self):
         """Destructor (close the database cursor)"""
@@ -44,11 +41,6 @@ class SQliteIterator(DBIterator):
             return ''
         triple = self._last_reads[0]
         print('[SQliteIterator] Red {} triples during this quantum'.format(self._read))
-        if len(self._readtab) > 0:
-            res = reduce(lambda a, b: a + b, self._readtab) / len(self._readtab)
-        else:
-            res = 0
-        print('[SQliteIterator] Average overhead per triple is: {}'.format(res))
         return json.dumps({
             's': triple[0],
             'p': triple[1],
@@ -59,13 +51,8 @@ class SQliteIterator(DBIterator):
         """Return the next solution mapping or raise `StopIteration` if there are no more solutions"""
         if not self.has_next():
             return None
-        triple = self._last_reads.pop(0)
         self._read += 1
-
-        cur = time()
-        self._readtab.append(cur - self._cur)
-        self._cur = cur
-
+        triple = self._last_reads.pop(0)
         return (f'id_{triple[0]}', f'id_{triple[1]}', f'id_{triple[2]}')
 
     def has_next(self):

@@ -149,8 +149,8 @@ class GenericReducer():
 
     def accumulate(self, bindings):
         if not '?__group_key' in bindings:
-            logger.error('Group key is missing')
-            sys.exit(1)
+            logger.warning('Group key is missing')
+            return
         group_key = bindings['?__group_key']
         if group_key not in self._groups:
             self.create_group(group_key, bindings)

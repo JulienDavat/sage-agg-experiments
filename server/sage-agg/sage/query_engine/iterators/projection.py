@@ -31,8 +31,6 @@ class ProjectionIterator(PreemptableIterator):
         if not self.has_next():
             raise IteratorExhausted()
         value = await self._source.next()
-        # if self._values is None:
-        #     return value
         graph = self._dataset.get_graph(self._default_graph)
         return {k: graph.get_value(v) for k, v in value.items() if k in self._values}
 

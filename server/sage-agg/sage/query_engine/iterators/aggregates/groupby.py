@@ -45,7 +45,7 @@ class GroupByAggregator(PreemptableIterator):
                 raise Exception('MalformedQueryException: Bad aggregate')
             return sha256(bytes('_'.join(key).encode('utf-8'))).hexdigest()
 
-    def generate_results(self):
+    def generate_results(self, projection, graph):
         """
             Default behavior when the optimization is not applied
             Results are generated after each quantum
@@ -59,7 +59,8 @@ class GroupByAggregator(PreemptableIterator):
             # recopy keys
             elt['?__group_key'] = key
             for variable in self._grouping_variables:
-                elt[variable] = bindings[variable] # values[0][variable]
+                if variable in projection:
+                    elt[variable] = graph.get_value(bindings[variable])
             for agg in self._aggregators:
                 elt[agg.get_binds_to()] = agg.done(key)
             res.append(elt)
@@ -76,7 +77,6 @@ class GroupByAggregator(PreemptableIterator):
         group_key = self.__get_group_key(bindings)
         if group_key not in self._groups:
             self._groups[group_key] = bindings
-        # self._groups[group_key].append(bindings)
         size = 0
         for agg in self._aggregators:
             agg.update(group_key, bindings)

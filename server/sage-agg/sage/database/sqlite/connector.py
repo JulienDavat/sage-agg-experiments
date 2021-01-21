@@ -25,14 +25,11 @@ class SQliteIterator(DBIterator):
         self._current_query = start_query
         self._table_name = table_name
         self._fetch_size = fetch_size
-        self._start = time()
         self._cursor.execute(self._current_query, start_params)
         # always keep the current set of rows buffered inside the iterator
-        self._last_reads = self._cursor.fetchmany(size=100)
+        self._last_reads = self._cursor.fetchmany(size=self._fetch_size)
         # stats
         self._read = 0
-        self._readtab = []
-        self._cur = time()
 
     def __del__(self):
         """Destructor (close the database cursor)"""
@@ -44,11 +41,6 @@ class SQliteIterator(DBIterator):
             return ''
         triple = self._last_reads[0]
         print('[SQliteIterator] Red {} triples during this quantum'.format(self._read))
-        if len(self._readtab) > 0:
-            res = reduce(lambda a, b: a + b, self._readtab) / len(self._readtab)
-        else:
-            res = 0
-        print('[SQliteIterator] Average overhead per triple is: {}'.format(res))
         return json.dumps({
             's': triple[0],
             'p': triple[1],
@@ -59,22 +51,13 @@ class SQliteIterator(DBIterator):
         """Return the next solution mapping or raise `StopIteration` if there are no more solutions"""
         if not self.has_next():
             return None
-        triple = self._last_reads.pop(0)
         self._read += 1
-
-        cur = time()
-        self._readtab.append(cur - self._cur)
-        self._cur = cur
-
-        triple = triple[0], triple[1], triple[2]
-        return triple
+        return self._last_reads.pop(0)
 
     def has_next(self):
         """Return True if there is still results to read, and False otherwise"""
         if len(self._last_reads) == 0:
-            st = time()
             self._last_reads = self._cursor.fetchmany(size=self._fetch_size)
-            # print('fetching many {} in {}seconds'.format(self._fetch_size, time() - st))
         return len(self._last_reads) > 0
 
 
