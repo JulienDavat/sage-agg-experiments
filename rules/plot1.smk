@@ -10,12 +10,12 @@
 
 rule plot1_sage_run:
     input: 
-        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/performance/sage/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
+        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/bsbm-performance/sage/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        stats='output/data/performance/sage/{workload}/{dataset}/{run}/query_{query}.csv',
-        result='output/data/performance/sage/{workload}/{dataset}/{run}/query_{query}.xml'
+        stats='output/data/bsbm-performance/sage/{workload}/{dataset}/{run}/query_{query}.csv',
+        result='output/data/bsbm-performance/sage/{workload}/{dataset}/{run}/query_{query}.xml'
     params:
         port=lambda wcs: config["information"]["ports"]['sage-exact-150ms']
     shell:
@@ -27,12 +27,12 @@ rule plot1_sage_run:
 
 rule plot1_sage_agg_run:
     input: 
-        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/performance/sage-agg/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
+        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/bsbm-performance/sage-agg/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        stats='output/data/performance/sage-agg/{workload}/{dataset}/{run}/query_{query}.csv',
-        result='output/data/performance/sage-agg/{workload}/{dataset}/{run}/query_{query}.xml'
+        stats='output/data/bsbm-performance/sage-agg/{workload}/{dataset}/{run}/query_{query}.csv',
+        result='output/data/bsbm-performance/sage-agg/{workload}/{dataset}/{run}/query_{query}.xml'
     params:
         port=lambda wcs: config["information"]["ports"]['sage-exact-150ms']
     shell:
@@ -44,12 +44,12 @@ rule plot1_sage_agg_run:
 
 rule plot1_sage_approx_run:
     input: 
-        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/performance/sage-approx/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
+        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/bsbm-performance/sage-approx/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        stats='output/data/performance/sage-approx/{workload}/{dataset}/{run}/query_{query}.csv',
-        result='output/data/performance/sage-approx/{workload}/{dataset}/{run}/query_{query}.xml'
+        stats='output/data/bsbm-performance/sage-approx/{workload}/{dataset}/{run}/query_{query}.csv',
+        result='output/data/bsbm-performance/sage-approx/{workload}/{dataset}/{run}/query_{query}.xml'
     params:
         port=lambda wcs: config["information"]["ports"]['sage-approx-98-150ms']
     shell:
@@ -61,12 +61,12 @@ rule plot1_sage_approx_run:
 
 rule plot1_virtuoso_run:
     input: 
-        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/performance/virtuoso/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
+        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/bsbm-performance/virtuoso/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        stats='output/data/performance/virtuoso/{workload}/{dataset}/{run}/query_{query}.csv',
-        result='output/data/performance/virtuoso/{workload}/{dataset}/{run}/query_{query}.xml'
+        stats='output/data/bsbm-performance/virtuoso/{workload}/{dataset}/{run}/query_{query}.csv',
+        result='output/data/bsbm-performance/virtuoso/{workload}/{dataset}/{run}/query_{query}.xml'
     params:
         port=lambda wcs: config["information"]["ports"]['virtuoso']
     shell:
@@ -78,12 +78,12 @@ rule plot1_virtuoso_run:
 
 rule plot1_comunica_run:
     input: 
-        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/performance/comunica/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
+        previous_run_complete=lambda wcs: [] if int(wcs.run) == 1 else [f'output/data/bsbm-performance/comunica/{wcs.workload}/{wcs.dataset}/{int(wcs.run) - 1}/all.csv'],
         graph=ancient('graphs/{dataset}.nt'),
         query=ancient('queries/{workload}/query_{query}.sparql')
     output:
-        stats='output/data/performance/comunica/{workload}/{dataset}/{run}/query_{query}.csv',
-        result='output/data/performance/comunica/{workload}/{dataset}/{run}/query_{query}.xml'
+        stats='output/data/bsbm-performance/comunica/{workload}/{dataset}/{run}/query_{query}.csv',
+        result='output/data/bsbm-performance/comunica/{workload}/{dataset}/{run}/query_{query}.xml'
     params:
         port=lambda wcs: config["information"]["ports"]['ldf']
     shell:
@@ -95,9 +95,9 @@ rule plot1_comunica_run:
 
 rule plot1_format_query_file:
     input:
-        ancient('output/data/performance/{approach}/{workload}/{dataset}/{run}/query_{query}.csv')
+        ancient('output/data/bsbm-performance/{approach}/{workload}/{dataset}/{run}/query_{query}.csv')
     output:
-        'output/data/performance/{approach}/{workload}/{dataset}/{run}/query_{query}.mergeable.csv'
+        'output/data/bsbm-performance/{approach}/{workload}/{dataset}/{run}/mergeable_query_{query}.csv'
     params:
         label=lambda wcs: config["information"]["datasets_label"][wcs.dataset]
     shell:
@@ -110,41 +110,50 @@ rule plot1_format_query_file:
 
 rule plot1_merge_query_files:
     input:
-        expand('output/data/performance/{{approach}}/{{workload}}/{{dataset}}/{{run}}/query_{query}.mergeable.csv', 
+        expand('output/data/bsbm-performance/{{approach}}/{{workload}}/{{dataset}}/{{run}}/mergeable_query_{query}.csv', 
             query=config["settings"]["plot1"]["settings"]["queries"])
     output:
-        'output/data/performance/{approach}/{workload}/{dataset}/{run}/all.csv'
+        'output/data/bsbm-performance/{approach}/{workload}/{dataset}/{run}/all.csv'
     shell:
         'bash scripts/merge_csv.sh {input} > {output}'
 
 
 rule plot1_compute_average:
     input:
-        expand('output/data/performance/{{approach}}/{{workload}}/{{dataset}}/{run}/all.csv', 
+        expand('output/data/bsbm-performance/{{approach}}/{{workload}}/{{dataset}}/{run}/all.csv', 
             run=[x for x in range(1, last_run(1) + 1)])
     output:
-        'output/data/performance/{approach}/{workload}/{dataset}/all-plot1.csv'
+        'output/data/bsbm-performance/{approach}/{workload}/{dataset}/data.csv'
     params:
-        files=lambda wcs: [f'output/data/performance/{wcs.approach}/{wcs.workload}/{wcs.dataset}/{run}/all.csv' for run in range(first_run(1), last_run(1) + 1)]
+        files=lambda wcs: [f'output/data/bsbm-performance/{wcs.approach}/{wcs.workload}/{wcs.dataset}/{run}/all.csv' for run in range(first_run(1), last_run(1) + 1)]
     shell:
         'python scripts/average.py {output} "approach,workload,dataset,query" {params.files}'
 
 
-rule plot1_merge_all_files:
+rule plot1_merge_all_queries:
     input:
-        expand('output/data/performance/{approach}/{workload}/{dataset}/all-plot1.csv', 
-            approach=config["settings"]["plot1"]["settings"]["approaches"], 
+        expand('output/data/bsbm-performance/{{approach}}/{workload}/{dataset}/data.csv', 
             workload=config["settings"]["plot1"]["settings"]["workloads"], 
             dataset=config["settings"]["plot1"]["settings"]["datasets"])
     output:
-        'output/data/plot1.csv'
+        'output/data/bsbm-performance/{approach}/data.csv'
+    shell:
+        'bash scripts/merge_csv.sh {input} > {output}'
+
+
+rule plot1_merge_all_approaches:
+    input:
+        expand('output/data/bsbm-performance/{approach}/data.csv', 
+            approach=config["settings"]["plot1"]["settings"]["approaches"])
+    output:
+        'output/data/bsbm-performance/data.csv'
     shell:
         'bash scripts/merge_csv.sh {input} > {output}'
 
 
 rule build_plot1:
     input:
-        ancient('output/data/plot1.csv')
+        ancient('output/data/bsbm-performance/data.csv')
     output:
         'output/figures/bsbm.png'
     shell:

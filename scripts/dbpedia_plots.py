@@ -27,8 +27,8 @@ if input_file is None or output_file is None:
 def transform_ms_to_sec(data):
     data['execution_time'] = data['execution_time'].div(1000)
 
-def transform_bytes_to_kbytes(data):
-    data['data_transfer'] = data['data_transfer'].div(1024)
+def transform_bytes_to_Mbytes(data):
+    data['data_transfer'] = data['data_transfer'].div(1048576)
 
 # def sort_by_approach(data):
 #     data.loc[data['approach'] == 'Virtuoso', 'order'] = 1
@@ -56,51 +56,53 @@ def plot_metric(ax, data, metric, title, xlabel, ylabel, logscale=False, display
         fontsize='large'
     )
 
-# def create_figure(data, logscale=False):
-#     # initialization of the figure
-#     fig = plt.figure(figsize=(12, 4))
-#     plt.subplots_adjust(wspace=0.25)
-#     # creation of the left part (SP workload)
-#     ax1 = fig.add_subplot(121)
-#     plot_metric(ax1, data, 'execution_time', '', '', 'Execution Time (sec)', logscale=logscale)
-#     plt.legend().remove()
-#     fig.legend(loc='upper center', bbox_to_anchor=(0.5, 0.99), fancybox=True, shadow=True, ncol=5)
-#     ax2 = fig.add_subplot(122)
-#     plot_metric(ax2, data, 'data_transfer', '', '', 'Traffic (KBytes)', logscale=logscale)
-#     plt.legend().remove()
-#     plt.show()
-#     return fig
-
 def create_figure(data, logscale=False):
-    sp_workload = data[(data['workload'] == 'SP')]
-    sp_nd_workload = data[(data['workload'] == 'SP-ND')]
     # initialization of the figure
-    fig = plt.figure(figsize=(14, 8))
-    plt.subplots_adjust(hspace=0.1)
-    # creation of the left part (SP workload)
-    ax1 = fig.add_subplot(221)
-    plot_metric(ax1, sp_workload, 'execution_time', '', '', 'Execution Time (sec)', logscale=logscale, display_x=False)
-    ax1.axhline(60, ls='--', color='darkred')
+    fig = plt.figure(figsize=(12, 4.5))
+    plt.subplots_adjust(wspace=0.25)
+    # creation of the left part (execution time)
+    ax1 = fig.add_subplot(121)
+    plot_metric(ax1, data, 'execution_time', '', '', 'Execution Time (sec)', logscale=logscale)
     plt.legend().remove()
-    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 0.97), fancybox=True, shadow=True, ncol=5)
-    ax2 = fig.add_subplot(223)
-    plot_metric(ax2, sp_workload, 'data_transfer', '', '', 'Traffic (KBytes)', logscale=logscale)
+    # creation of the left part (data transfer)
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 0.99), fancybox=True, shadow=True, ncol=5)
+    ax2 = fig.add_subplot(122)
+    plot_metric(ax2, data, 'data_transfer', '', '', 'Traffic (MBytes)', logscale=logscale)
     plt.legend().remove()
-    # creattion of the right part (SP-ND workload)
-    ax3 = fig.add_subplot(222)
-    plot_metric(ax3, sp_nd_workload, 'execution_time', '', '', '', logscale=logscale, display_x=False)
-    ax3.axhline(60, ls='--', color='darkred')
-    plt.legend().remove()
-    ax4 = fig.add_subplot(224)
-    plot_metric(ax4, sp_nd_workload, 'data_transfer', '', '', '', logscale=logscale)
-    plt.legend().remove()
-    
+  
     plt.show()
     return fig
 
+# def create_figure(data, logscale=False):
+#     sp_workload = data[(data['workload'] == 'SP')]
+#     sp_nd_workload = data[(data['workload'] == 'SP-ND')]
+#     # initialization of the figure
+#     fig = plt.figure(figsize=(14, 8))
+#     plt.subplots_adjust(hspace=0.1)
+#     # creation of the left part (SP workload)
+#     ax1 = fig.add_subplot(221)
+#     plot_metric(ax1, sp_workload, 'execution_time', '', '', 'Execution Time (sec)', logscale=logscale, display_x=False)
+#     ax1.axhline(60, ls='--', color='darkred')
+#     plt.legend().remove()
+#     fig.legend(loc='upper center', bbox_to_anchor=(0.5, 0.97), fancybox=True, shadow=True, ncol=5)
+#     ax2 = fig.add_subplot(223)
+#     plot_metric(ax2, sp_workload, 'data_transfer', '', '', 'Traffic (KBytes)', logscale=logscale)
+#     plt.legend().remove()
+#     # creattion of the right part (SP-ND workload)
+#     ax3 = fig.add_subplot(222)
+#     plot_metric(ax3, sp_nd_workload, 'execution_time', '', '', '', logscale=logscale, display_x=False)
+#     ax3.axhline(60, ls='--', color='darkred')
+#     plt.legend().remove()
+#     ax4 = fig.add_subplot(224)
+#     plot_metric(ax4, sp_nd_workload, 'data_transfer', '', '', '', logscale=logscale)
+#     plt.legend().remove()
+    
+#     plt.show()
+#     return fig
+
 dataframe = read_csv(input_file, sep=',')
 print(dataframe)
-transform_bytes_to_kbytes(dataframe)
+transform_bytes_to_Mbytes(dataframe)
 
 # sorted_dataframe = sort_by_approach(dataframe)
 # print(sorted_dataframe)
