@@ -77,16 +77,16 @@ class CountDistinctReducer(AggregationReducer):
         super(CountDistinctReducer, self).__init__()
 
     def create_group(self, group_key, aggregation):
-        self._groups[group_key] = aggregation['__value__']
+        self._groups[group_key] = set()
+        for elt in aggregation['__value__']:
+            self._groups[group_key].add(elt)
 
     def update_group(self, group_key, aggregation):
-        self._groups[group_key].extend(aggregation['__value__'])
+        for elt in aggregation['__value__']:
+            self._groups[group_key].add(elt)
 
     def result(self, group_key):
-        seen = set()
-        seq = self._groups[group_key]
-        distinct = [x for x in seq if x not in seen and not seen.add(x)]
-        return Literal(len(distinct), datatype=XSD.integer).n3()
+        return Literal(len(self._groups[group_key]), datatype=XSD.integer).n3()
 
 
 class GenericReducer():
