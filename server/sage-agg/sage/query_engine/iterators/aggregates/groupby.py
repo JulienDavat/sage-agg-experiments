@@ -3,7 +3,7 @@
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
 from sage.query_engine.protobuf.iterators_pb2 import SavedGroupByAgg
 from sage.query_engine.iterators.utils import GroupByTooManyEntries
-from hashlib import sha256
+import xxhash
 import re
 
 class GroupByAggregator(PreemptableIterator):
@@ -43,7 +43,7 @@ class GroupByAggregator(PreemptableIterator):
             key = ['null' if v not in bindings else bindings[v] for v in self._grouping_variables]
             if self.__malformed_key(key):
                 raise Exception('MalformedQueryException: Bad aggregate')
-            return sha256(bytes('_'.join(key).encode('utf-8'))).hexdigest()
+            return xxhash.xxh64_hexdigest('_'.join(key))
 
     def generate_results(self, projection, graph):
         """

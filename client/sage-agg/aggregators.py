@@ -75,15 +75,24 @@ class CountDistinctReducer(AggregationReducer):
 
     def __init__(self):
         super(CountDistinctReducer, self).__init__()
+        self._catalog = dict()
+        self._key = -1
+
+    def __get_key(self, value):
+        if value in self._catalog:
+            return self._catalog[value]
+        self._key += 1
+        self._catalog[value] = self._key
+        return self._key
 
     def create_group(self, group_key, aggregation):
         self._groups[group_key] = set()
         for elt in aggregation['__value__']:
-            self._groups[group_key].add(elt)
+            self._groups[group_key].add(self.__get_key(elt))
 
     def update_group(self, group_key, aggregation):
         for elt in aggregation['__value__']:
-            self._groups[group_key].add(elt)
+            self._groups[group_key].add(self.__get_key(elt))
 
     def result(self, group_key):
         return Literal(len(self._groups[group_key]), datatype=XSD.integer).n3()
