@@ -5,7 +5,7 @@ from asyncio import TimeoutError as asyncTimeoutError
 from math import inf
 
 import uvloop
-from sage.query_engine.iterators.utils import IteratorExhausted, GroupByTooManyEntries
+from sage.query_engine.iterators.utils import IteratorExhausted, GroupByOutOfMemoryException
 from sage.query_engine.protobuf.iterators_pb2 import RootTree
 
 set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -79,7 +79,7 @@ class SageEngine(object):
             query_done = True
         except asyncTimeoutError:
             pass
-        except GroupByTooManyEntries:
+        except GroupByOutOfMemoryException:
             pass
         except TooManyResults:
             pass

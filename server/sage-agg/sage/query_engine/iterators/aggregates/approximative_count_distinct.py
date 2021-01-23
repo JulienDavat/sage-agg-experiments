@@ -20,7 +20,7 @@ class ApproximateCountDistinctAggregator(PartialAggregator):
         if self._variable in bindings:
             if group_key not in self._groups:
                 self._groups[group_key] = HyperLogLog(self._error_rate)
-                self._size += 1
+                self._size += self._groups[group_key].size()
             self._groups[group_key].add(bindings[self._variable])
 
     def done(self, group_key):

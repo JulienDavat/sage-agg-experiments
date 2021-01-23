@@ -1,7 +1,7 @@
 name: SaGe Experiment server
 maintainer: Grall Arnaud
 public_url: http://localhost:8000
-quota: 15000
+quota: 30000
 max_results: 10000
 max_group_by_size: 10485760 # 10MB
 enable_approximation: true

@@ -179,7 +179,7 @@ def parse_query_node(node, dataset, current_graphs, server_url, cardinalities, r
         # build source iterator from child node
         source = parse_query_node(node.p.p, dataset, current_graphs, server_url, cardinalities)
         # add the GROUP BY operator (with aggregators) to the pipeline
-        source = GroupByAggregator(source, groupby_variables, aggregators=aggregators, max_size=dataset.max_group_keys)
+        source = GroupByAggregator(source, groupby_variables, aggregators=aggregators, max_size=dataset.max_group_by_size)
         # add the projection to the pipeline, depending of the context
         return AggregatesProjectionIterator(source, dataset, current_graphs[0], node.PV)
     else:

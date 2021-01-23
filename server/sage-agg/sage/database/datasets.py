@@ -214,8 +214,8 @@ class Dataset(object):
         return self._config['error_rate']
 
     @property
-    def max_group_keys(self):
-        return self._config['max_group_keys']
+    def max_group_by_size(self):
+        return self._config['max_group_by_size']
 
     def describe(self, url):
         """Gives a generator over dataset descriptions"""

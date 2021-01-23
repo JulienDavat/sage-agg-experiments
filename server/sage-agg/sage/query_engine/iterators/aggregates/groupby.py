@@ -2,7 +2,7 @@
 # Author: Thomas MINIER - MIT License 2017-2019
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
 from sage.query_engine.protobuf.iterators_pb2 import SavedGroupByAgg
-from sage.query_engine.iterators.utils import GroupByTooManyEntries
+from sage.query_engine.iterators.utils import GroupByOutOfMemoryException
 import xxhash
 import re
 
@@ -82,8 +82,8 @@ class GroupByAggregator(PreemptableIterator):
             agg.update(group_key, bindings)
             size += agg.size()
         if size > self._max_size:
-            print(f"too many group keys: {size}")
-            raise GroupByTooManyEntries()
+            print(f"GroupByOutOfMemoryException: {size}/{self._max_size} bytes")
+            raise GroupByOutOfMemoryException()
         return None
 
     def save(self):

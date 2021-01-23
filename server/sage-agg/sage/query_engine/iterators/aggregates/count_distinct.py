@@ -17,11 +17,12 @@ class CountDistinctAggregator(PartialAggregator):
         if self._variable in bindings:
             if group_key not in self._groups:
                 self._groups[group_key] = set()
+                self._size += 16 # size of the group key in bytes (xxhash64 generates 16 bytes strings)
             value = bindings[self._variable]
             elt = xxhash.xxh64_hexdigest(value)
             if not elt in self._groups[group_key]:
                 self._groups[group_key].add(elt)
-                self._size += 1
+                self._size += 16 # size of an item in bytes (xxhash64 generates 16 bytes strings)
 
     def done(self, group_key):
         """Return the group for the distinct aggregation given the group key"""
