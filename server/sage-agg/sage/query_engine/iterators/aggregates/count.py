@@ -16,7 +16,7 @@ class CountAggregator(PartialAggregator):
         if self._variable in bindings:
             if group_key not in self._groups:
                 self._groups[group_key] = 0
-                self._size += 16 # size of the group key in bytes (xxhash64 generates 16 bytes strings)
+                self._size += len(group_key)
             self._groups[group_key] += 1
 
     def done(self, group_key):

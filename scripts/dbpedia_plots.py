@@ -30,13 +30,9 @@ def transform_ms_to_sec(data):
 def transform_bytes_to_Mbytes(data):
     data['data_transfer'] = data['data_transfer'].div(1048576)
 
-# def sort_by_approach(data):
-#     data.loc[data['approach'] == 'Virtuoso', 'order'] = 1
-#     data.loc[data['approach'] == 'Jena-Fuseki', 'order'] = 2
-#     data.loc[data['approach'] == 'SaGe-PTC-20', 'order'] = 3
-#     data.loc[data['approach'] == 'SaGe-PTC-5', 'order'] = 4
-#     data.loc[data['approach'] == 'SaGe-Multi', 'order'] = 5
-#     return data.sort_values(by=['order', 'query'])
+def sort_by_name(data):
+    data['order'] = data['query'].str[1:].astype(int)
+    return data.sort_values(by=['order'])
 
 def plot_metric(ax, data, metric, title, xlabel, ylabel, logscale=False, display_x=True):
     chart = barplot(x='query', y=metric, hue='approach', data=data, ax=ax)
@@ -63,6 +59,7 @@ def create_figure(data, logscale=False):
     # creation of the left part (execution time)
     ax1 = fig.add_subplot(121)
     plot_metric(ax1, data, 'execution_time', '', '', 'Execution Time (sec)', logscale=logscale)
+    ax1.axhline(60, ls='--', color='darkred')
     plt.legend().remove()
     # creation of the left part (data transfer)
     fig.legend(loc='upper center', bbox_to_anchor=(0.5, 0.99), fancybox=True, shadow=True, ncol=5)
@@ -104,8 +101,5 @@ dataframe = read_csv(input_file, sep=',')
 print(dataframe)
 transform_bytes_to_Mbytes(dataframe)
 
-# sorted_dataframe = sort_by_approach(dataframe)
-# print(sorted_dataframe)
-
-figure = create_figure(dataframe, logscale=True)
+figure = create_figure(sort_by_name(dataframe), logscale=True)
 figure.savefig(output_file)

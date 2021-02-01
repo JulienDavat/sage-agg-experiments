@@ -14,7 +14,7 @@ def compute_average(files, group_by_variables):
 if __name__ == '__main__':
     output = sys.argv[1]
     group_by_variables = sys.argv[2].split(',')
-    files = sys.argv[3:-1]
+    files = sys.argv[3:]
     result = compute_average(files, group_by_variables)
     with open(output, 'w') as out_file:
         out_file.write(result.to_csv())
