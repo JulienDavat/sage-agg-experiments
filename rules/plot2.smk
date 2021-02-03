@@ -108,7 +108,7 @@ rule plot2_compute_average:
     params:
         files=lambda wcs: [f'output/data/bsbm-quantum/{wcs.approach}/{wcs.workload}/{wcs.quantum}/{run}/all.csv' for run in range(first_run(2), last_run(2) + 1)]
     shell:
-        'python scripts/average.py {output} "approach,workload,quantum,query" {params.files}'
+        'python scripts/average.py {output} {params.files}'
 
 
 rule plot2_merge_all_queries:

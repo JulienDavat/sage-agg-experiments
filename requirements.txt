@@ -5,4 +5,5 @@ matplotlib
 coloredlogs
 click
 SPARQLWrapper
+pylru
 git+https://github.com/JulienDavat/hyperloglog.git

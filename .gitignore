@@ -1,5 +1,6 @@
 output/log
 output/data
+aggregates
 data/virtuoso-data/
 data/datasets/dbpedia351.ttl
 .DS_Store
@@ -68,6 +69,7 @@ db.sqlite3
 
 # Node stuff:
 node_modules
+package-lock.json
 
 # Flask stuff:
 instance/

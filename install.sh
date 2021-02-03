@@ -19,5 +19,5 @@ cd ../..
 cd server/sage-agg
 pip install -r requirements.txt
 pip install pybind11
-pip install -e .[hdt,postgres]
+pip install -e .[hdt]
 cd ../..

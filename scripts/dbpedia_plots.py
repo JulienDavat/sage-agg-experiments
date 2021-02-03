@@ -3,6 +3,7 @@ from seaborn import barplot
 from pandas import read_csv
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 # ====================================================================================================
 # ===== Command line interface =======================================================================
@@ -44,6 +45,7 @@ def plot_metric(ax, data, metric, title, xlabel, ylabel, logscale=False, display
     chart.legend().set_title('')
     if not display_x:
         chart.set(xticklabels=[])
+    # Makes queries label more readable
     chart.set_xticklabels(
         chart.get_xticklabels(),
         rotation=90, 
@@ -51,22 +53,33 @@ def plot_metric(ax, data, metric, title, xlabel, ylabel, logscale=False, display
         fontweight='light',
         fontsize='large'
     )
+    # Makes the difference between queries with or without a DISTINCT modifier
+    for xtick in chart.get_xticklabels():
+        if xtick.get_text() in ['Q1', 'Q6', 'Q11', 'Q14', 'Q17', 'Q18']:
+            xtick.set_color('black')
+        else:
+            xtick.set_color('blue')
 
 def create_figure(data, logscale=False):
     # initialization of the figure
     fig = plt.figure(figsize=(12, 4.5))
     plt.subplots_adjust(wspace=0.25)
-    # creation of the left part (execution time)
+    # creates of the left part (execution time)
     ax1 = fig.add_subplot(121)
     plot_metric(ax1, data, 'execution_time', '', '', 'Execution Time (sec)', logscale=logscale)
     ax1.axhline(60, ls='--', color='darkred')
     plt.legend().remove()
-    # creation of the left part (data transfer)
-    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 0.99), fancybox=True, shadow=True, ncol=5)
+    # creates of the left part (data transfer)
     ax2 = fig.add_subplot(122)
     plot_metric(ax2, data, 'data_transfer', '', '', 'Traffic (MBytes)', logscale=logscale)
     plt.legend().remove()
   
+    # creates the legen
+    handles, labels = ax1.get_legend_handles_labels()
+    timeout = plt.Line2D((0,1),(0,0), linestyle='--', color='darkred', label='Virtuoso timeout (60s)')
+    handles.append(timeout)
+    plt.figlegend(handles=handles, loc='upper center', bbox_to_anchor=(0.5, 0.99), fancybox=True, shadow=True, ncol=5)
+
     plt.show()
     return fig
 

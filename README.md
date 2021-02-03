@@ -16,89 +16,108 @@ Experimental results demonstrate that our approach outperforms existing approach
 
 ## Dataset and Queries
 
-In our experiments, we use two workloads of 18 aggregation queries extracted from the
+In our experiments, we use two workloads of 18 SPARQL aggregation queries extracted from the
 [SPORTAL](https://www.researchgate.net/publication/324907489_SPORTAL_Profiling_the_content_of_public_SPARQL_endpoints)
-queries. The first workload, denoted [SP](https://github.com/JulienDavat/sage-sparql-void/blob/master/SP), is composed of the extracted SPORTAL
-queries, while the second workload, denoted [SP-ND](https://github.com/JulienDavat/sage-sparql-void/blob/master/SP-ND), is defined by removing the 
-DISTINCT modifier from the queries of SP. SP-ND is used to study the impact of
-the DISTINCT modifier on the query execution performance. We run the SP
+queries. The first workload, denoted [SP](https://github.com/JulienDavat/sage-sparql-void/blob/master/SP), is composed 
+of 18 SPORTAL queries where *CONSTRUCT* and *FILTER* clauses have been removed. The second workload, 
+denoted [SP-ND](https://github.com/JulienDavat/sage-sparql-void/blob/master/SP-ND), is defined by removing the 
+*DISTINCT* modifier from the queries of SP. SP-ND is used to study the impact of
+the *DISTINCT* modifier on the query execution performance. We run the SP
 and SP-ND workloads on synthetic and real-world datasets: the Berlin SPARQL
 Benchmark ([BSBM](https://www.researchgate.net/publication/220123872_The_Berlin_SPARQL_benchmark)) 
 with different sizes (5k, 40k, 370k triples for BSBM-10, BSBM-100 and BSBM-1k respectively) and 
-a fragment of DBpedia *v3.5.1* (150M triples) respectively.
+a fragment of DBpedia *v3.5.1* (100M triples) respectively.
+
+
+## Compared Approaches
+
+We compare the following approaches:
+- **SaGe** is the SaGe query engine as defined in the [web preemption](https://hal.archives-ouvertes.fr/hal-02017155/document) model.
+The SaGe server is implemented in Python and the code is available [here](https://github.com/JulienDavat/sage-sparql-void/tree/master/server/sage-agg). The SaGe smart client is implemented as an extension
+of Apache Jena. The code is available [here](https://github.com/JulienDavat/sage-sparql-void/tree/master/client/sage). In our experiments, the SaGe server is configured with a maximum page size of results
+of **10000** mappings. The data are stored in an SQlite database with indexes on *SPO*, *OSP* and *POS*.
+
+- **SaGe-agg** is an extension of SaGe with our new partial aggregation operator. The server-side algorithm (Algorithm 1 in the paper)
+is implemented on the SaGe server. The code is available [here](https://github.com/JulienDavat/sage-sparql-void/tree/master/server/sage-agg/sage/query_engine/iterators/aggregates). The client-side algorithm (Algorithm 2 in the paper) is
+implemented in a Python client. The code is available [here](https://github.com/JulienDavat/sage-sparql-void/tree/master/client/sage-agg). For a fair comparison, SaGe-agg runs against the same server as SaGe.
+Moreover, we add a space limitation to bound the space allocated to the partial aggregation operator. When partial aggregations are used,
+this space limit replaces the page size limit. We set it to **10MBytes**.
+
+- **SaGe-approx** is the same extension as SaGe-agg where *COUNT DISTINCT* queries are evaluated using a probabilistic count algorithm
+([Hyperloglog](https://hal.archives-ouvertes.fr/hal-00406166/)). When SaGe-approx is used, the SaGe server is configured to compute 
+*COUNT DISTINCT* queries with an error rate of **2%**.
+
+- **TPF** is the TPF query engine as defined in the [Triple Pattern Fragments](https://www.sciencedirect.com/science/article/pii/S1570826816000214?casa_token=zWODejXE39sAAAAA:RPCFYKEWtqJWpO2XF-zr55ze7M46PxRldPDt-NDwVgKZ2bIiGhJa2UEOXCCkgrPMYA6I6KZ9TKA) model. We use the 
+[Linked Data Fragments Server](https://www.npmjs.com/package/ldf-server) as the TPF server and [Comunica](https://github.com/comunica/comunica) 
+as the TPF smart client. The server is configured without Web cache and with a page size of **10000** triples. The data are stored
+using the HDT format.
+
+- **Virtuoso** is the Virtuoso SPARQL endpoint (v7.2.4). Virtuoso is configured **without quotas** in order to deliver complete results and optimal data transfer. We also configured Virtuoso with a *single thread* per query to fairly compare with other engines.
+
+
+## Evaluation Metrics
+- **Execution time** is the total time between starting the query execution and
+the production of the final results by the client.
+- **Data transfer** is the total number of bytes transferred from the server to 
+the client during the query execution.
+
 
 ## Machine configuration on GCP (Google Cloud Platform)
 
-- type: `n1-standard-2 :4 vCPU, 15 Go of memory`
+- type: `n2-highmem-4 :4 vCPU, 32 Go of memory`
 - processor platform: `Intel Broadwell`
-- OS:  ubuntu-1910-eoan-v20191114
-- SSD disk of 250GB
+- OS:  `ubuntu-1910-eoan-v20191114`
+- Disk: `Local SSD disk of 375GB`
+
 
 ## Plots
 
-**Plot 1 legend**: Data Transfer and execution time for BSBM-10, BSBM-100 and BSBM-1k, when running the SP (left) and SP-ND (right) workloads
+**Plot 1:** Data Transfer and execution time for BSBM-10, BSBM-100 and BSBM-1k, when running the SP (left) and SP-ND (right) workloads
 
 ![](output/figures/bsbm.png?raw=true)
 
-**Plot 2 legend**: Time quantum impact executing SP (left) and SP-ND (right) on BSBM1k
+**Plot 2:** Impact of the quantum when running SP (left) and SP-ND (right) workloads on BSBM1k
 
 ![](output/figures/quantum_impacts.png?raw=true)
 
-**Plot 3 legend**: Execution time and data transferred for SP-ND on DBpedia
+**Plot 3:** Data transfer and execution time when running the SP workload on DBpedia
 
-![](output/figures/dbpedia.png?raw=true)
+![](output/figures/dbpedia_performance.png?raw=true)
 
-**Plot 4 legend**: Hyperloglog precision impact executing SP on BSBM1k
+**Plot 4** Impact of the Hyperloglog precision when running the SP workload on BSBM1k
 
 ![](output/figures/precision_impacts.png?raw=true)
 
-# Experimental study
+
+# Steps to reproduce the results and figures
 
 ## Dependencies Installation
 
 To run our experiments, the following softwares and packages have to be installed on your system.
 * [Virtuoso](https://github.com/openlink/virtuoso-opensource/releases/tag/v7.2.5) (v7.2.5)
-* [PostgreSQL](https://www.postgresql.org/) (v13.1) 
 * [Gradle](https://gradle.org/)
 * [NodeJS](https://nodejs.org/en/) (v14.15.4)
-* [Java]() (v11.0.9.1)
-* [Python3.7]()
-* [Miniconda](https://docs.conda.io/en/latest/miniconda.html#) (for Python3.7)
+* [Java](https://www.java.com/fr/) (v11.0.9.1)
+* [Python3.7](https://www.python.org) and [Python3-dev]()
 
-**Caution:** The default location of Virtuoso is ```/usr/local/virtuoso-opensource```. If you
-change it during the installation of Virtuoso, please update the
+**Caution:** In the next sections, we assume that Virtuoso is installed at its default location 
+```/usr/local/virtuoso-opensource```. If you change the location of Virtuoso, do not forget to 
+propagate this change in the next instructions and please update the
 [start_server.sh](https://github.com/JulienDavat/sage-sparql-void/blob/master/scripts/start_servers.sh) and
 [stop_server.sh](https://github.com/JulienDavat/sage-sparql-void/blob/master/scripts/stop_servers.sh) scripts.
 
 ## Configuration
 
 **Virtuoso** needs to be configured to use a single thread per query and to disable quotas.
-First open the file ```${VIRTUOSO_DIRECTORY}/var/lib/virtuoso/db/virtuoso.ini``` and apply
-the following changes:
-- In the *SPARQL* section
-    - set *ResultSetMaxRows*, *MaxQueryCostEstimationTime* and *MaxQueryExecutionTime* to **10^9** in order to disable quotas
-- In the *Parameters* section
-    - set *MaxQueryMem*, *NumberOfBuffers* and *MaxDirtyBuffers* to an appropriate value based on the amount of space available on your system
-    - set *ThreadsPerQuery* to **1**
-    - add your *home* directory to *DirsAllowed*
+- In the *\[SPARQL\]* section of the file ```/usr/local/virtuoso-opensource/var/lib/virtuoso/db/virtuoso.ini```
+    - set *ResultSetMaxRows*, *MaxQueryCostEstimationTime* and *MaxQueryExecutionTime* to **10^9** in order to disable quotas.
+- In the *\[Parameters\]* section of the file ```/usr/local/virtuoso-opensource/var/lib/virtuoso/db/virtuoso.ini```
+    - set *MaxQueryMem*, *NumberOfBuffers* and *MaxDirtyBuffers* to an appropriate value based on the 
+    amount of RAM available on your machine. In our experiments, we used the settings recommended for 
+    a machine with 16Go of RAM.
+    - set *ThreadsPerQuery* to **1**.
+    - add your *home* directory to *DirsAllowed*.
 
-**PostgreSQL** needs to be configured to prepare the data loading and tuned for the web preemption
-server. First open the file ```${POSTGRESQL_DIRECTORY}/main/postgresql.conf``` and apply the
-following changes in the *Planner Method Configuration* section:
-- Uncomment all enable_XYZ options
-- Set *enable_indexscan*, *enable_indexonlyscan* and *enable_nestloop* to **on**
-- Set all the other enable_XYZ options to **off**
-
-Then, open the file ```${POSTGRESQL_DIRECTORY}/main/pg_hba.conf``` and apply the following change:
-- Set the connection method for the local unix domain socket to **trust**
-
-Finally, create a user and a database, both named aggregates
-```bash 
-$ sudo -u postgres psql
-postgres=$ create database aggregates
-postgres=$ create user aggregates with encrypted password 'aggregates'
-postgres=$ grant all privileges on database aggregates to aggregates
-```
 
 ## Project installation
 
@@ -112,13 +131,28 @@ bash install.sh
 
 ## Datasets ingestion
 
-All the datasets used in our experiments are available online:
-- **BSBM-10** in the [.hdt]() and [.nt]() formats
-- **BSBM-100** in the [.hdt]() and [.nt]() formats
-- **BSBM-1k** in the [.hdt]() and [.nt]() formats
-- **DBpedia-150M** in the [.nt]() format
+All datasets used in our experiments are available online. Download all datasets,
+both the **.hdt** and the **.nt** formats, into the **graphs** directory.
 
-First, download all datasets, both the **.nt** and **.hdt** formats, into the **graphs** directory.
+```bash
+# Move into the graphs directory
+cd graphs
+
+# Downloads the BSBM-10 dataset
+wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm10.hdt
+wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm10.nt
+
+# Downloads the BSBM-100 dataset
+wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm100.hdt
+wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm100.nt
+
+# Downloads the BSBM-1K dataset
+wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm1k.hdt
+wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm1k.nt
+
+# Downloads the DBpedia100M dataset. We do not need the .hdt as TPF is not tested on the DBpedia100M dataset.
+wget jadserver.fr/thesis/projects/aggregates/datasets/dbpedia100M.nt
+```
 
 ### Ingest data in SaGe
 
@@ -127,91 +161,148 @@ First, download all datasets, both the **.nt** and **.hdt** formats, into the **
 source aggregates/bin/activate
 ```
 
-- Create a postgreSQL table for each dataset
+- Create a table for each dataset
 ```bash 
-sage-postgres-init --no-index configs/sage/sage-exact-150ms.yaml bsbm10
-sage-postgres-init --no-index configs/sage/sage-exact-150ms.yaml bsbm100
-sage-postgres-init --no-index configs/sage/sage-exact-150ms.yaml bsbm1k
-sage-postgres-init --no-index configs/sage/sage-exact-150ms.yaml subdbpedia
+sage-sqlite-init --no-index configs/sage/sage-exact-150ms.yaml bsbm10
+sage-sqlite-init --no-index configs/sage/sage-exact-150ms.yaml bsbm100
+sage-sqlite-init --no-index configs/sage/sage-exact-150ms.yaml bsbm1k
+sage-sqlite-init --no-index configs/sage/sage-exact-150ms.yaml dbpedia100M
 ```
 
-- Load each dataset into postgreSQL
+- Load each dataset into the database
 ```bash
-sage-postgres-put graphs/bsbm10.nt configs/sage/sage-exact-150ms.yaml bsbm10
-sage-postgres-put graphs/bsbm100.nt configs/sage/sage-exact-150ms.yaml bsbm100
-sage-postgres-put graphs/bsbm1k.nt configs/sage/sage-exact-150ms.yaml bsbm1k
-sage-postgres-put graphs/subdbpedia.nt configs/sage/sage-exact-150ms.yaml subdbpedia
+sage-sqlite-put graphs/bsbm10.nt configs/sage/sage-exact-150ms.yaml bsbm10
+sage-sqlite-put graphs/bsbm100.nt configs/sage/sage-exact-150ms.yaml bsbm100
+sage-sqlite-put graphs/bsbm1k.nt configs/sage/sage-exact-150ms.yaml bsbm1k
+sage-sqlite-put graphs/dbpedia100M.nt configs/sage/sage-exact-150ms.yaml dbpedia100M
 ```
 
-- Create SPO, OSP and POS indexes for each postgreSQL table
+- Create SPO, OSP and POS indexes for each table
 ```bash
-sage-postgres-index configs/sage/sage-exact-150ms.yaml bsbm10
-sage-postgres-index configs/sage/sage-exact-150ms.yaml bsbm100
-sage-postgres-index configs/sage/sage-exact-150ms.yaml bsbm1k
-sage-postgres-index configs/sage/sage-exact-150ms.yaml subdbpedia
+sage-sqlite-index configs/sage/sage-exact-150ms.yaml bsbm10
+sage-sqlite-index configs/sage/sage-exact-150ms.yaml bsbm100
+sage-sqlite-index configs/sage/sage-exact-150ms.yaml bsbm1k
+sage-sqlite-index configs/sage/sage-exact-150ms.yaml dbpedia100M
 ```
 
 ### Ingest data in Virtuoso
 
 ```bash
-# loading bsbm10
-isql 'EXEC=DB.DBA.TTLP(file_to_string_output("${PROJECT_DIRECTORY}/graphs/bsbm10.nt"),"","http://example.org/datasets/bsbm10",0);'
-# loading bsbm100
-isql 'EXEC=DB.DBA.TTLP(file_to_string_output("${PROJECT_DIRECTORY}/graphs/bsbm100.nt"),"","http://example.org/datasets/bsbm100",0);'
-# loading bsbm1k
-isql 'EXEC=DB.DBA.TTLP(file_to_string_output("${PROJECT_DIRECTORY}/graphs/bsbm1k.nt"),"","http://example.org/datasets/bsbm1k",0);'
-# loading dbpedia150M
-isql 'EXEC=DB.DBA.TTLP(file_to_string_output("${PROJECT_DIRECTORY}/graphs/subdbpedia.nt"),"","http://example.org/datasets/subdbpedia",0);'
+# Loads all .nt files stored in the graphs directory
+/usr/local/virtuoso-opensource/bin/isql "EXEC=ld_dir('{PROJECT_DIRECTORY}/graphs', '*.nt', 'http://example.org/datasets/default');"
+/usr/local/virtuoso-opensource/bin/isql "EXEC=rdf_loader_run();"
+/usr/local/virtuoso-opensource/bin/isql "EXEC=checkpoint;"
 ```
 
-## Experiments configuration
+## Servers configuration
+
+### SaGe server configuration
+
+The SaGe server can be configured using a *.yaml* file. The different configurations used in our experiments are available in the directory
+[configs/sage](https://github.com/JulienDavat/sage-sparql-void/tree/master/configs/sage). An example of a valid configuration file is detailed below.
+
+```yaml
+quota: 150 # the time (in milliseconds) of a quantum.
+max_results: 10000 # the maximum number of mappings that can be returned per quantum.
+max_group_by_size: 10485760 # the maximum space (in bytes) allocated to the partial aggregation operator. Replaces 'max_results' for aggregation queries.
+enable_approximation: false # true to compute COUNT DISTINCT queries with a probabilistic count algorithm, false otherwise.
+error_rate: 0.02 # the error rate for the probabilistic count algorithm.
+datasets: # the datasets that can be queried.
+- name: bsbm10 # the name of the dataset. Used to select the dataset we want to query.
+  backend: sqlite # the backend used to store the dataset.
+  database: graphs/sage_sqlite.db # the location of the database file.
+- name: bsbm100
+  backend: sqlite
+  database: graphs/sage_sqlite.db
+- name: bsbm1k
+  backend: sqlite
+  database: graphs/sage_sqlite.db
+- name: dbpedia100M
+  backend: sqlite
+  database: graphs/sage_sqlite.db
+```
+
+### LDF server configuration
+
+The LDF server can be configured using a *.json* file. The different configurations used in our experiments are available in the directory
+[configs/ldf](https://github.com/JulienDavat/sage-sparql-void/tree/master/configs/ldf). An example of a valid configuration file is detailed below.
+
+```json
+{
+    "pageSize":10000, // the maximum number of mappings that can be returned per triple pattern query.
+    "datasources": { // the datasets that can be queried.
+        "bsbm10": { // the name of the dataset. Used to select the dataset we want to query.
+            "type": "HdtDatasource", // the backend used to store the dataset.
+            "settings": { 
+                "file": "graphs/bsbm10.hdt" // the location of the HDT file.
+            }
+        },
+        "bsbm100": {
+            "type": "HdtDatasource",
+            "settings": { "file": "graphs/bsbm100.hdt" }
+        },
+        "bsbm1k": {
+            "type": "HdtDatasource",
+            "settings": { "file": "graphs/bsbm1k.hdt" }
+        }
+    }
+}
+```
+
+### Virtuoso configuration
+
+The configuration of Virtuoso is explained in the *Configuration* section.
+
+## Experimental study configuration
 
 All our experiments can be configured using the file [xp.json](https://github.com/JulienDavat/sage-sparql-void/blob/master/configs/xp.json).
 
 ```json
-"settings": {
-    "plot1" : {
-        "title": "Data transfer and execution time for BSBM-10, BSBM-100 and BSBM-1k, when running the SP and SP-ND workload",
-        "settings": {
-            "datasets": ["bsbm10", "bsbm100", "bsbm1k"],
-            "approaches": ["sage", "sage-agg", "sage-approx", "virtuoso", "comunica"],
-            "workloads": ["SP", "SP-ND"],
-            "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-            "warmup": true,
-            "runs": 3
-        }
-    },
-    "plot2": {
-        "title": "Time quantum impacts executing SP and SP-ND over BSBM-1k",
-        "settings": {
-            "quantums": ["150", "1500", "15000"],
-            "approaches": ["sage", "sage-agg", "sage-approx", "virtuoso"],
-            "workloads": ["SP", "SP-ND"],
-            "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-            "runs": 3,
-            "warmup": true
-        }
-    },
-    "plot3": {
-        "title": "Data transfer and execution time for dbpedia, when running the SP and SP-ND workload",
-        "settings": {
-            "datasets": ["subdbpedia"],
-            "approaches": ["sage-agg", "sage-approx", "virtuoso"],
-            "workloads": ["SP", "SP-ND"],
-            "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-            "runs": 1,
-            "warmup": true
-        }
-    },
-    "plot4": {
-        "title": "Hyperloglog precision impacts executing SP and SP-ND over BSBM-1k",
-        "settings": {
-            "precisions": ["98", "95", "90"],
-            "approaches": ["sage", "sage-agg", "sage-approx", "virtuoso"],
-            "workloads": ["SP"],
-            "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-            "runs": 3,
-            "warmup": true
+{
+    "settings": {
+        "plot1" : {
+            "title": "Data transfer and execution time for BSBM-10, BSBM-100 and BSBM-1k, when running the SP and SP-ND workload",
+            "settings": {
+                "datasets": ["bsbm10", "bsbm100", "bsbm1k"],
+                "approaches": ["sage", "sage-agg", "sage-approx", "virtuoso", "comunica"],
+                "workloads": ["SP", "SP-ND"],
+                "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                "warmup": true,
+                "runs": 3
+            }
+        },
+        "plot2": {
+            "title": "Time quantum impacts executing SP and SP-ND over BSBM-1k",
+            "settings": {
+                "quantums": ["75", "150", "1500", "15000"],
+                "approaches": ["sage", "sage-agg", "sage-approx", "virtuoso"],
+                "workloads": ["SP", "SP-ND"],
+                "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                "runs": 3,
+                "warmup": true
+            }
+        },
+        "plot3": {
+            "title": "Data transfer and execution time for dbpedia, when running the SP and SP-ND workload",
+            "settings": {
+                "datasets": ["dbpedia100M"],
+                "approaches": ["sage-agg", "sage-approx", "virtuoso"],
+                "workloads": ["SP", "SP-ND"],
+                "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                "runs": 3,
+                "warmup": false
+            }
+        },
+        "plot4": {
+            "title": "Hyperloglog precision impacts executing SP and SP-ND over BSBM-1k",
+            "settings": {
+                "precisions": ["98", "95", "90"],
+                "approaches": ["sage", "sage-agg", "sage-approx", "virtuoso"],
+                "workloads": ["SP"],
+                "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                "runs": 3,
+                "warmup": true
+            }
         }
     }
 }
@@ -219,9 +310,9 @@ All our experiments can be configured using the file [xp.json](https://github.co
 
 Configurable fields are detailed below:
 - **datasets:** the datasets on which queries will be executed. 
-    - accepted values: bsbm10, bsbm100, bsbm1k and subdbpedia
+    - accepted values: bsbm10, bsbm100, bsbm1k and dbpedia100M
 - **quantums:** the different quantum values for which queries will be executed. 
-    - accepted values: 150, 1500 and 15000
+    - accepted values: 75, 150, 1500 and 15000
 - **precisions:** the different precisions for which queries will be executed. 
     - accepted values: 90, 95 and 98 
 - **workloads:** the workloads to execute. 
@@ -230,8 +321,7 @@ Configurable fields are detailed below:
     - accepted values: 1..18
 - **warmup:** true to compute a first run for which no statistics will be recorded, false otherwise
     - accepted value: true or false
-- **runs:** the number of run to compute. For each of these run, queries execution statistics will be
-recorded and the average will be retained for each metric.
+- **runs:** the number of run to compute. For each of these run, queries execution statistics will be recorded and the average will be retained for each metric.
     - accepted value: a non-zero positive integer
 
 ## Running the experiments 
@@ -240,36 +330,55 @@ Our experimental study is powered by **Snakemake**. To run any part of our exper
 For example, the main commands are given below:
 
 ```bash
-snakemake --cores 1 output/figures/bsbm.png # ask for the plot of the first experiment
+# Measures the performance in terms of execution time and data transfer for different graph sizes, for the SP and SP-ND workloads
+snakemake --cores 1 output/figures/bsbm_performance.png 
 
-snakemake --cores 1 output/figures/quantum_impacts.png # ask for the plot of the second experiment
+# Measures the impact of the quantum in terms of execution time and data transfer, for the SP and SP-ND workloads, on the BSBM-1k dataset
+snakemake --cores 1 output/figures/quantum_impacts.png
 
-snakemake --cores 1 output/figures/dbpedia.png # ask for the plot of the third experiment
+# Measures the performance in terms of execution time and data transfer, for the SP workload, on the DBpedia100M dataset
+snakemake --cores 1 output/figures/dbpedia_performance.png
 
-snakemake --cores 1 output/figures/{bsbm,quantum_impacts,dbpedia,precision_impacts}.png # ask for all plots
+# Measures the impact of the precision in terms of execution time and data transfer, for the SP workload, on the BSBM-1k dataset
+snakemake --cores 1 output/figures/precision_impacts.png 
+
+# Runs all experiments
+snakemake --cores 1 output/figures/{bsbm_performance,quantum_impacts,dbpedia,precision_impacts}.png
 ```
 
-It is also possible to run any part of the experiments without Snakemake. For example, the important commands are given below:
+It is also possible to run each part of our experiments without Snakemake. For example, some important commands are given below:
 
 ```bash
-# starts the SaGe server on the port 8080 with a time quantum of 150ms, approximations disable and 1 worker
-sage configs/sage/sage-exact-150ms.yaml -w 1 -p 8080
+# to start the SaGe server
+sage configs/sage/$CONFIG_FILE -w $NB_WORKERS -p $PORT 
 
-# starts the LDF server on the port 8000
-node_modules/ldf-server/bin/ldf-server configs/ldf/config.json 8000 1
+# to start the LDF server
+node_modules/ldf-server/bin/ldf-server configs/ldf/$CONFIG_FILE $PORT $NB_WORKERS
 
-# starts the Virtuoso server on the port 8890
-${VIRTUOSO_DIRECTORY}/bin/virtuoso-t -f -c ${VIRTUOSO_DIRECTORY}/var/lib/virtuoso/db/virtuoso.ini
+# to start the Virtuoso server on the port 8890
+/usr/local/virtuoso-opensource/bin/virtuoso-t -f -c /usr/local/virtuoso-opensource/var/lib/virtuoso/db/virtuoso.ini
 
-# evaluates the first query of the SP workload on the bsbm1k dataset with the SaGe client
-java -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:8080/sparql/bsbm1k --file queries/SP/query_1.sparql
+# to evaluate a query with SaGe-agg/approx (depending on the server configuration)
+python client/sage-agg/interface.py query http://localhost:$PORT/sparql http://localhost:$PORT/sparql/$DATASET_NAME \
+    --file $QUERY_FILE \
+    --measure $OUT_STATS \
+    --output $OUT_RESULT
 
-# evaluates the first query of the SP workload on the bsbm1k dataset with the SaGe-Agg client
-python client/sage-agg/interface.py query http://localhost:8080/sparql http://localhost:8080/sparql/bsbm1k --file queries/SP/query_1.sparql --display
+# to evaluate a query with SaGe
+java -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:$PORT/sparql/$DATASET_NAME \
+    --file $QUERY_FILE \
+    --measure $OUT_STATS \
+    --output $OUT_RESULT
 
-# evaluates the first query of the SP workload on the bsbm1k dataset with Virtuoso
-python client/virtuoso/interface.py query http://localhost:8890/sparql http://example.org/datasets/bsbm1k --file queries/SP/query_1.sparql --display
+# to evaluate a query with Virtuoso
+python client/virtuoso/interface.py query http://localhost:8890/sparql http://example.org/datasets/$DATASET_NAME \
+    --file $QUERY_FILE \
+    --measure $OUT_STATS \
+    --output $OUT_RESULT
 
-# evalutes the first query of the SP workload on the bsbm1k dataset with Comunica
-node client/comunica/interface.js http://localhost:8080/sparql/bsbm1k --file queries/SP/query_1.sparql --display
+# to evaluate a query with Comunica
+node client/comunica/interface.js http://localhost:$PORT/$DATASET_NAME \
+    --file $QUERY_FILE \
+    --measure $OUT_STATS \
+    --output $OUT_RESULT
 ```

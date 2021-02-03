@@ -8,9 +8,10 @@ program
   .usage('<server> [options]')
   .option('-q, --query <query>', 'evaluates the given SPARQL query')
   .option('-f, --file <file>', 'evaluates the SPARQL query stored in the given file')
-  .option('-m, --measure <output>', 'evaluates the query and writes the query execution statistics in the given file', __dirname + '/result.csv')
-  .option('-o, --output <output>', 'evaluates the query and writes the query output in the given file', __dirname + '/stats.xml')
+  .option('-m, --measure <output>', 'evaluates the query and writes the query execution statistics in the given file')
+  .option('-o, --output <output>', 'evaluates the query and writes the query output in the given file')
   .option('--format <format>', 'the format [xml,json] of the query output', "xml")
+  .option('--display', 'prints the query result')
   .parse(process.argv)
 
 if (program.args.length !== 1) {
@@ -53,14 +54,21 @@ async function start(server, query) {
         // parseXmlToCsv(res)
         const ActorHttpNative = require('@comunica/actor-http-native').ActorHttpNative
         let stats = ActorHttpNative.stats
-        if (program.measure) {
-          let endTime = Date.now()
-          let time = endTime - startTime
-          fs.appendFileSync(program.measure, `${time / 1000},${stats.calls},${stats.bytes}`)
+        let endTime = Date.now()
+        let time = (endTime - startTime) / 1000
+        if (program.measure) {  
+          fs.appendFileSync(program.measure, `${time},${stats.calls},${stats.bytes}`)
         }
         if (program.output) {
           fs.appendFileSync(program.output, res)
         }
+        if (program.display) {
+          console.log(res)
+        }
+        console.log(`Evaluation metrics:
+        time: ${time} sec
+        transfer: ${stats.bytes} bytes
+        calls: ${stats.calls}`)
       })
     })
   }).catch(e => {

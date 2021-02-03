@@ -1,6 +1,3 @@
-name: SaGe Experiment server
-maintainer: Grall Arnaud
-public_url: http://localhost:8000
 quota: 150
 max_results: 10000
 max_group_by_size: 10485760 # 10MB
@@ -8,22 +5,14 @@ enable_approximation: true
 error_rate: 0.05
 datasets:
 - name: bsbm10
-  uri: http://example.org/datasets/bsbm10
-  description: BSBM 10 products using SQlite backend
   backend: sqlite
   database: graphs/sage_sqlite.db
 - name: bsbm100
-  uri: http://example.org/datasets/bsbm100
-  description: BSBM 100 products using SQlite backend
   backend: sqlite
   database: graphs/sage_sqlite.db
 - name: bsbm1k
-  uri: http://example.org/datasets/bsbm1k
-  description: BSBM 1K products using SQlite backend
   backend: sqlite
   database: graphs/sage_sqlite.db
 - name: dbpedia100M
-  uri: http://example.org/datasets/dbpedia100M
-  description: Dbpedia 3.5.1 using SQlite backend
   backend: sqlite
   database: graphs/sage_sqlite.db

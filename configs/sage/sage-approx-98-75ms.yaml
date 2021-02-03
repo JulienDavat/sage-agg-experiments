@@ -1,0 +1,18 @@
+quota: 75
+max_results: 10000
+max_group_by_size: 10485760 # 10MB
+enable_approximation: true
+error_rate: 0.02
+datasets:
+- name: bsbm10
+  backend: sqlite
+  database: graphs/sage_sqlite.db
+- name: bsbm100
+  backend: sqlite
+  database: graphs/sage_sqlite.db
+- name: bsbm1k
+  backend: sqlite
+  database: graphs/sage_sqlite.db
+- name: dbpedia100M
+  backend: sqlite
+  database: graphs/sage_sqlite.db

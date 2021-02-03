@@ -17,7 +17,7 @@ rule plot3_sage_run:
         stats='output/data/dbpedia-performance/sage/{workload}/{dataset}/{run}/query_{query}.csv',
         result='output/data/dbpedia-performance/sage/{workload}/{dataset}/{run}/query_{query}.xml'
     params:
-        port=lambda wcs: config["information"]["ports"]['sage-exact-150ms']
+        port=lambda wcs: config["information"]["ports"]['sage-exact-30000ms']
     shell:
         'java -Xmx6g -jar client/sage/build/libs/sage-jena-fat-1.0.jar query http://localhost:{params.port}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format xml 1> {output.result}'
 
@@ -34,7 +34,7 @@ rule plot3_sage_agg_run:
         stats='output/data/dbpedia-performance/sage-agg/{workload}/{dataset}/{run}/query_{query}.csv',
         result='output/data/dbpedia-performance/sage-agg/{workload}/{dataset}/{run}/query_{query}.xml'
     params:
-        port=lambda wcs: config["information"]["ports"]['sage-exact-150ms']
+        port=lambda wcs: config["information"]["ports"]['sage-exact-30000ms']
     shell:
         'python client/sage-agg/interface.py query http://localhost:{params.port}/sparql http://localhost:{params.port}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
@@ -51,7 +51,7 @@ rule plot3_sage_approx_run:
         stats='output/data/dbpedia-performance/sage-approx/{workload}/{dataset}/{run}/query_{query}.csv',
         result='output/data/dbpedia-performance/sage-approx/{workload}/{dataset}/{run}/query_{query}.xml'
     params:
-        port=lambda wcs: config["information"]["ports"]['sage-approx-98-150ms']
+        port=lambda wcs: config["information"]["ports"]['sage-approx-98-30000ms']
     shell:
         'python client/sage-agg/interface.py query http://localhost:{params.port}/sparql http://localhost:{params.port}/sparql/{wildcards.dataset} --file {input.query} --measure {output.stats} --format w3c/xml --output {output.result}; '
 
@@ -127,7 +127,7 @@ rule plot3_compute_average:
     params:
         files=lambda wcs: [f'output/data/dbpedia-performance/{wcs.approach}/{wcs.workload}/{wcs.dataset}/{run}/all.csv' for run in range(first_run(3), last_run(3) + 1)]
     shell:
-        'python scripts/average.py {output} "approach,workload,dataset,query" {params.files}'
+        'python scripts/average.py {output} {params.files}'
 
 
 rule plot3_merge_all_queries:

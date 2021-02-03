@@ -14,7 +14,7 @@
         "plot2": {
             "title": "Time quantum impacts executing SP and SP-ND over BSBM-1k",
             "settings": {
-                "quantums": ["150", "1500", "15000"],
+                "quantums": ["75", "150", "1500", "15000"],
                 "approaches": ["sage", "sage-agg", "sage-approx", "virtuoso"],
                 "workloads": ["SP", "SP-ND"],
                 "queries": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
@@ -53,14 +53,18 @@
             "dbpedia100M": "DBpedia-100M"
         },
         "ports": {
-            "sage-exact-150ms": "8080",
-            "sage-exact-1500ms": "8081",
-            "sage-exact-15000ms": "8082",
-            "sage-approx-98-150ms": "8083",
-            "sage-approx-98-1500ms": "8084",
-            "sage-approx-98-15000ms": "8085",
-            "sage-approx-95-150ms": "8086",
-            "sage-approx-90-150ms": "8087",
+            "sage-exact-75ms": "8080",
+            "sage-exact-150ms": "8081",
+            "sage-exact-1500ms": "8082",
+            "sage-exact-15000ms": "8083",
+            "sage-exact-30000ms": "8084",
+            "sage-approx-98-75ms": "8085",
+            "sage-approx-98-150ms": "8086",
+            "sage-approx-98-1500ms": "8087",
+            "sage-approx-98-15000ms": "8088",
+            "sage-approx-98-30000ms": "8089",
+            "sage-approx-95-150ms": "8090",
+            "sage-approx-90-150ms": "8091",
             "virtuoso": "8890",
             "ldf": "8000"
         }

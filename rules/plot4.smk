@@ -108,7 +108,7 @@ rule plot4_compute_average:
     params:
         files=lambda wcs: [f'output/data/bsbm-precision/{wcs.approach}/{wcs.workload}/{wcs.precision}/{run}/all.csv' for run in range(first_run(4), last_run(4) + 1)]
     shell:
-        'python scripts/average.py {output} "approach,workload,precision,query" {params.files}'
+        'python scripts/average.py {output} {params.files}'
 
 
 rule plot4_merge_all_queries:

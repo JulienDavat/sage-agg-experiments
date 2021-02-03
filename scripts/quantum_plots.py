@@ -2,6 +2,7 @@ from argparse import ArgumentParser, ArgumentTypeError
 from seaborn import lineplot
 from pandas import read_csv
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 # ====================================================================================================
@@ -30,19 +31,11 @@ def transform_ms_to_sec(data):
 def transform_bytes_to_kbytes(data):
     data['data_transfer'] = data['data_transfer'].div(1024)
 
-# def sort_by_query_names(data):
-#     return data.sort_values(by=['approach', 'query'])
-
-# def sort_by_approach(data):
-#     data.loc[data['approach'] == 'Virtuoso', 'order'] = 1
-#     data.loc[data['approach'] == 'Jena-Fuseki', 'order'] = 2
-#     data.loc[data['approach'] == 'SaGe-PTC-20', 'order'] = 3
-#     data.loc[data['approach'] == 'SaGe-PTC-5', 'order'] = 4
-#     data.loc[data['approach'] == 'SaGe-Multi', 'order'] = 5
-#     return data.sort_values(by=['order', 'query'])
-
 def plot_metric(ax, data, metric, title, xlabel, ylabel, logscale=False, display_x=True):
-    df = data[['approach', 'quantum', metric]].groupby(['approach', 'quantum']).sum()
+    df = data.copy()
+    df['quantum'] = pd.Categorical(df['quantum'], categories=['75','150','1500','15000'], ordered=True)
+    df = df[['approach', 'quantum', metric]].groupby(['approach', 'quantum']).sum()
+    
     dashes = [(2,2)] * data['approach'].nunique()
     chart = lineplot(x='quantum', y=metric, hue='approach', data=df, ax=ax, markers=True, style="approach", dashes=dashes)
     if logscale:
@@ -83,9 +76,6 @@ def create_figure(data, logscale=False):
 dataframe = read_csv(input_file, sep=',')
 print(dataframe)
 transform_bytes_to_kbytes(dataframe)
-
-# sorted_dataframe = sort_by_approach(dataframe)
-# print(sorted_dataframe)
 
 figure = create_figure(dataframe, logscale=True)
 figure.savefig(output_file)

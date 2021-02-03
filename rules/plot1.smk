@@ -127,7 +127,7 @@ rule plot1_compute_average:
     params:
         files=lambda wcs: [f'output/data/bsbm-performance/{wcs.approach}/{wcs.workload}/{wcs.dataset}/{run}/all.csv' for run in range(first_run(1), last_run(1) + 1)]
     shell:
-        'python scripts/average.py {output} "approach,workload,dataset,query" {params.files}'
+        'python scripts/average.py {output} {params.files}'
 
 
 rule plot1_merge_all_queries:
@@ -155,6 +155,6 @@ rule build_plot1:
     input:
         ancient('output/data/bsbm-performance/data.csv')
     output:
-        'output/figures/bsbm.png'
+        'output/figures/bsbm_performance.png'
     shell:
         'python scripts/bsbm_plots.py --input {input} --output {output}'

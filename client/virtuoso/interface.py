@@ -21,7 +21,6 @@ def cli():
 @click.option("--output", type=click.STRING)
 @click.option("--display", is_flag=True, default=False)
 def query(server, dataset, query, file, measure, format, output, display):
-    logger.info(query)
     # Extracts the query from the arguments
     if file is not None:
         query = open(file, 'r').read()
