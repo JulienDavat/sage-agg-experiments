@@ -1,16 +1,15 @@
 # Processing SPARQL Aggregate Queries with Web Preemption
 
-**Paper submission date**: 12 December 2019
-
-**Authors:** Arnaud Grall (GFI Informatique, LS2N), Thomas Minier (LS2N), Hala Skaf-Molli (LS2N), and Pascal Molli (LS2N)
+**Authors:** Julien Aimonier-Davat (LS2N), Hala Skaf-Molli (LS2N), and Pascal Molli (LS2N), Arnaud Grall (GFI Informatique, LS2N), Thomas Minier (LS2N)
 
 **Abstract** 
-Executing aggregate queries on the web of data allows to compute useful statistics ranging from the number of properties per class in a dataset to the average life of famous scientists per country. 
-However, processing aggregate queries on public SPARQL endpoints is challeng- ing, mainly due to quotas enforcement that prevents queries to deliver complete results. 
-Existing distributed query engines allow to go beyond quota limitations, but their data transfer and execution times are clearly prohibitive when processing aggregate queries. 
-Following the web pre- emption model, we define a new preemptable aggregation operator that allows to suspend and resume aggregate queries.
-Web preemption allows to continue query execution beyond quota limits and server-side aggre- gation drastically reduces data transfer and execution time of aggregate queries. 
-Experimental results demonstrate that our approach outperforms existing approaches by several orders of magnitude in terms of execution time and the amount of transferred data.
+Getting complete results when processing aggregate queries on public SPARQL endpoints is challenging, mainly due
+to quotas enforcement. Although the Web preemption allows to process aggregation queries online, on preemptable SPARQL
+servers, data transfer is still very large when processing count-distinct aggregate queries. In this paper, it is shown that countdistinct aggregate queries can be approximated with low data transfer by extending the partial aggregation operator with HyperLogLog sketches. Experimental results demonstrate that the proposed approach outperforms existing approaches by orders of
+magnitude in terms of the amount of transferred data.
+
+> This paper is an extension of the ESWC2020 article: [Processing SPARQL Aggregate Queries with Web Preemption](https://hal.archives-ouvertes.fr/hal-02511819/document). The experimental results of the first paper are available [here](https://github.com/folkvir/sage-sparql-void).
+
 
 # Experimental results
 

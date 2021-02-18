@@ -44,7 +44,8 @@ def start_sage_server(config, port, workers, log_level, gunicorn_config):
             options = {
                 'bind': '%s:%s' % ('0.0.0.0', port),
                 'workers': workers,
-                'log-level': log_level
+                'log-level': log_level,
+                'timeout': 120
             }
             StandaloneApplication(sage_app(config), options).run()
         else:

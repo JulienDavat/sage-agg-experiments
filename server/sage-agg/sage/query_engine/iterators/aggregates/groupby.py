@@ -3,7 +3,7 @@
 from sage.query_engine.iterators.preemptable_iterator import PreemptableIterator
 from sage.query_engine.protobuf.iterators_pb2 import SavedGroupByAgg
 from sage.query_engine.iterators.utils import GroupByOutOfMemoryException
-from hashlib import sha256
+from hashlib import md5
 import re
 
 class GroupByAggregator(PreemptableIterator):
@@ -43,7 +43,7 @@ class GroupByAggregator(PreemptableIterator):
             key = ['null' if v not in bindings else bindings[v] for v in self._grouping_variables]
             if self.__malformed_key(key):
                 raise Exception('MalformedQueryException: Bad aggregate')
-            return sha256('_'.join(key).encode('utf-8')).hexdigest()
+            return md5('_'.join(key).encode('utf-8')).hexdigest()
 
     def generate_results(self, projection, graph):
         """

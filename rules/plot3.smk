@@ -157,4 +157,4 @@ rule build_plot3:
     output:
         'output/figures/dbpedia_performance.png'
     shell:
-        'python scripts/bsbm_plots.py --input {input} --output {output}'
+        'python scripts/dbpedia_plots.py --input {input} --output {output}'
