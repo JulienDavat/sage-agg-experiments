@@ -138,19 +138,19 @@ both the **.hdt** and the **.nt** formats, into the **graphs** directory.
 cd graphs
 
 # Downloads the BSBM-10 dataset
-wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm10.hdt
-wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm10.nt
+wget nas.jadserver.fr/thesis/projects/aggregates/datasets/bsbm10.hdt
+wget nas.jadserver.fr/thesis/projects/aggregates/datasets/bsbm10.nt
 
 # Downloads the BSBM-100 dataset
-wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm100.hdt
-wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm100.nt
+wget nas.jadserver.fr/thesis/projects/aggregates/datasets/bsbm100.hdt
+wget nas.jadserver.fr/thesis/projects/aggregates/datasets/bsbm100.nt
 
 # Downloads the BSBM-1K dataset
-wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm1k.hdt
-wget jadserver.fr/thesis/projects/aggregates/datasets/bsbm1k.nt
+wget nas.jadserver.fr/thesis/projects/aggregates/datasets/bsbm1k.hdt
+wget nas.jadserver.fr/thesis/projects/aggregates/datasets/bsbm1k.nt
 
 # Downloads the DBpedia100M dataset. We do not need the .hdt as TPF is not tested on the DBpedia100M dataset.
-wget jadserver.fr/thesis/projects/aggregates/datasets/dbpedia100M.nt
+wget nas.jadserver.fr/thesis/projects/aggregates/datasets/dbpedia100M.nt
 ```
 
 ### Ingest data in SaGe
