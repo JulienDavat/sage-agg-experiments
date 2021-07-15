@@ -85,7 +85,7 @@ the client during the query execution.
 
 ![](output/figures/dbpedia_performance.png?raw=true)
 
-**Plot 5** Impact of the Hyperloglog precision when running the SP workload on BSBM1k
+**Plot 5** Impact of the Hyperloglog++ precision when running the SP workload on BSBM1k
 
 ![](output/figures/precision_impacts.png?raw=true)
 
