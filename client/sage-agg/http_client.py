@@ -37,10 +37,11 @@ def execute(server, dataset, query, accumulator, spy):
         response = send_request(server, payload)
         has_next = response['hasNext']
         payload["next"] = response["next"]
-        
+
         spy.report_nb_calls(1)
-        spy.report_data_transfer(sys.getsizeof(json.dumps(response)))
-        
+        # spy.report_data_transfer(sys.getsizeof(json.dumps(response)))
+        spy.report_data_transfer(sys.getsizeof(json.dumps(response['bindings'])))
+
         for bindings in response['bindings']:
             logger.debug(bindings)
             accumulator.accumulate(bindings)

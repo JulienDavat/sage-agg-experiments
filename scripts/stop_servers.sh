@@ -11,4 +11,4 @@ rm .pids
 $VIRTUOSO_DIR/bin/isql EXEC='shutdown;'
 
 echo "Stopping all servers..."
-sleep 15
+sleep 30

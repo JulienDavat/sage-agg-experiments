@@ -4,12 +4,11 @@
 
 **Abstract**
 Getting complete results when processing aggregate queries on public SPARQL endpoints is challenging, mainly due
-to quotas enforcement. Although the Web preemption allows to process aggregation queries online, on preemptable SPARQL
-servers, data transfer is still very large when processing count-distinct aggregate queries. In this paper, it is shown that countdistinct aggregate queries can be approximated with low data transfer by extending the partial aggregation operator with HyperLogLog sketches. Experimental results demonstrate that the proposed approach outperforms existing approaches by orders of
-magnitude in terms of the amount of transferred data.
+to quota enforcement. Although Web preemption allows to process aggregate queries online, on preemptable SPARQL
+servers, data transfer is still very large when processing count-distinct aggregate queries. In this paper, it is shown that count-distinct aggregate queries can be approximated with low data transfer by extending the partial aggregations operator with HyperLogLog++ sketches. Experimental results demonstrate that the proposed approach outperforms existing approaches by orders of
+magnitude in terms of data transfer.
 
 > This paper is an extension of the ESWC2020 article: [Processing SPARQL Aggregate Queries with Web Preemption](https://hal.archives-ouvertes.fr/hal-02511819/document). The experimental results of the first paper are available [here](https://github.com/folkvir/sage-sparql-void).
-
 
 # Experimental results
 
@@ -33,17 +32,15 @@ a fragment of DBpedia *v3.5.1* (100M triples) respectively.
 We compare the following approaches:
 - **SaGe** is the SaGe query engine as defined in the [web preemption](https://hal.archives-ouvertes.fr/hal-02017155/document) model.
 The SaGe server is implemented in Python and the code is available [here](https://github.com/JulienDavat/sage-sparql-void/tree/master/server/sage-agg). The SaGe smart client is implemented as an extension
-of Apache Jena. The code is available [here](https://github.com/JulienDavat/sage-sparql-void/tree/master/client/sage). In our experiments, the SaGe server is configured with a maximum page size of results
-of **10000** mappings. The data are stored in an SQlite database with indexes on *SPO*, *OSP* and *POS*.
+of Apache Jena. The code is available [here](https://github.com/JulienDavat/sage-sparql-void/tree/master/client/sage). In our experiments, the SaGe server is configured with a maximum page size of **10MB**.
+Datasets are stored in an SQLite database with B-Tree indexes on *SPO*, *OSP* and *POS*.
 
-- **SaGe-agg** is an extension of SaGe with our new partial aggregation operator. The server-side algorithm (Algorithm 1 in the paper)
-is implemented on the SaGe server. The code is available [here](https://github.com/JulienDavat/sage-sparql-void/tree/master/server/sage-agg/sage/query_engine/iterators/aggregates). The client-side algorithm (Algorithm 2 in the paper) is
+- **SaGe-agg** is an extension of SaGe with our new partial aggregations operator. The server-side algorithms (Algorithms 1, 2 and 3 in the paper)
+are implemented on the SaGe server. The code is available [here](https://github.com/JulienDavat/sage-sparql-void/tree/master/server/sage-agg/sage/query_engine/iterators/aggregates). The client-side algorithms (Algorithms 3 and 4 in the paper) are
 implemented in a Python client. The code is available [here](https://github.com/JulienDavat/sage-sparql-void/tree/master/client/sage-agg). For a fair comparison, SaGe-agg runs against the same server as SaGe.
-Moreover, we add a space limitation to bound the space allocated to the partial aggregation operator. When partial aggregations are used,
-this space limit replaces the page size limit. We set it to **10MBytes**.
 
 - **SaGe-approx** is the same extension as SaGe-agg where *COUNT DISTINCT* queries are evaluated using a probabilistic count algorithm
-([Hyperloglog](https://hal.archives-ouvertes.fr/hal-00406166/)). When SaGe-approx is used, the SaGe server is configured to compute
+([Hyperloglog++](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/40671.pdf)). When SaGe-approx is used, the SaGe server is configured to compute
 *COUNT DISTINCT* queries with an error rate of **2%**.
 
 - **TPF** is the TPF query engine as defined in the [Triple Pattern Fragments](https://www.sciencedirect.com/science/article/pii/S1570826816000214?casa_token=zWODejXE39sAAAAA:RPCFYKEWtqJWpO2XF-zr55ze7M46PxRldPDt-NDwVgKZ2bIiGhJa2UEOXCCkgrPMYA6I6KZ9TKA) model. We use the
@@ -51,7 +48,7 @@ this space limit replaces the page size limit. We set it to **10MBytes**.
 as the TPF smart client. The server is configured without Web cache and with a page size of **10000** triples. The data are stored
 using the HDT format.
 
-- **Virtuoso** is the Virtuoso SPARQL endpoint (v7.2.4). Virtuoso is configured **without quotas** in order to deliver complete results and optimal data transfer. We also configured Virtuoso with a *single thread* per query to fairly compare with other engines.
+- **Virtuoso** is the Virtuoso SPARQL endpoint (v7.2.4). Virtuoso is configured **without quotas** in order to deliver complete results. We also configured Virtuoso with a *single thread* per query to fairly compare with other engines.
 
 
 ## Evaluation Metrics
@@ -59,6 +56,7 @@ using the HDT format.
 the production of the final results by the client.
 - **Data transfer** is the total number of bytes transferred from the server to
 the client during the query execution.
+- **Error rate** is defined as the difference between the real cardinality *c* and the estimated cardinality *c'* : (1 - (min(*c*, *c'*) / max(*c*, *c'*)) x 100
 
 
 ## Machine configuration on GCP (Google Cloud Platform)
@@ -91,11 +89,9 @@ the client during the query execution.
 
 ![](output/figures/precision_impacts.png?raw=true)
 
-**Plot 6** Average error rate of group keys (for the SP workload on DBpedia with an error rate of 1.625%) according to the number of distinct values
+**Plot 6** Average error rate for the *GroupKeys* of the SP workload queries on DBpedia according to the number of distinct values
 
-![](output/figures/dbpedia_average_error_rates.png?raw=true)
-
-![](output/figures/dbpedia_error_rates.png?raw=true)
+![](output/figures/error_rates.png?raw=true)
 
 
 # Steps to reproduce the results and figures

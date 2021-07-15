@@ -12,7 +12,7 @@ logger = logging.getLogger()
 
 @click.group()
 def cli():
-    pass  
+    pass
 
 @cli.command()
 @click.argument("server")

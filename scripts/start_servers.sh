@@ -30,6 +30,8 @@ nohup sage -w 1 -p 8090 "configs/sage/sage-approx-95-150ms.yaml" > output/log/sa
 echo -n "$! " >> .pids
 nohup sage -w 1 -p 8091 "configs/sage/sage-approx-90-150ms.yaml" > output/log/sage-approx-90-150.log 2>&1 &
 echo -n "$! " >> .pids
+nohup sage -w 1 -p 8092 "configs/sage/sage-approx-98-1h.yaml" > output/log/sage-approx-98-1h.log 2>&1 &
+echo -n "$! " >> .pids
 
 # Starting Virtuoso
 nohup sudo $VIRTUOSO_DIR/bin/virtuoso-t -f -c $VIRTUOSO_DIR/var/lib/virtuoso/db/virtuoso.ini > output/log/virtuoso.log 2>&1 &

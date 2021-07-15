@@ -20,8 +20,14 @@ def stringify_result(result, format):
         return json.dumps(result)
     elif format == "w3c/xml":
         return result.toxml()
-    else:
-        return json.dumps(result)
+    else: # format virtuoso results into the default SaGe format, for a fair comparison !
+        sage_format = []
+        for solution in result['results']['bindings']:
+            sage_solution = {}
+            for variable in solution.keys():
+                sage_solution[variable] = solution[variable]['value']
+            sage_format.append(sage_solution)
+        return json.dumps(sage_format)
 
 def execute(server, dataset, query, format):
     sparql = SPARQLWrapper(server)
@@ -36,7 +42,7 @@ def execute(server, dataset, query, format):
         results = sparql.query()
         formatedResults = stringify_result(results.convert(), format)
         execution_time = time() - start
-        
+
         stats.report_execution_time(execution_time)
         stats.report_data_transfer(sys.getsizeof(formatedResults))
         stats.report_nb_calls(1)

@@ -47,8 +47,8 @@
     },
     "information": {
         "datasets_label": {
-            "bsbm10": "BSBM-10", 
-            "bsbm100": "BSBM-100", 
+            "bsbm10": "BSBM-10",
+            "bsbm100": "BSBM-100",
             "bsbm1k": "BSBM-1k",
             "dbpedia100M": "DBpedia-100M"
         },
@@ -65,6 +65,7 @@
             "sage-approx-98-30000ms": "8089",
             "sage-approx-95-150ms": "8090",
             "sage-approx-90-150ms": "8091",
+            "sage-approx-98-1h": "8092",
             "virtuoso": "8890",
             "ldf": "8000"
         }
